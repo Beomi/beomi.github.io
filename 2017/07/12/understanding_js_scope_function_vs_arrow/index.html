@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>자바스크립트: function declaration와 Arrow Function의 this 스코프 차이 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/understanding_js_scope_function_vs_arrow.png" alt="자바스크립트: function declaration와 Arrow Function의 this 스코프 차이">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-11T15:00:00.000Z">2017-07-12</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/javascript/">javascript</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                자바스크립트: function declaration와 Arrow Function의 this 스코프 차이
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 포스팅은 ES6 JavaScript 대상입니다.</p>
+</blockquote>
+<p>자바스크립트가 ES6로 개정되며 새로 들어온 것 중 <code>Arrow Function</code>이라는 것이 있습니다. <code>() =&gt; {}</code>의 모양을 갖고 있고 동작하는 것도 비슷하게 보입니다.</p>
+<p>하지만 기존의 <code>function() {}</code> 함수형태를 1:1로 바로 변환할 수 있는 것은 아닙니다.</p>
+<h2 id="this-arguments의-바인딩이-다르다"><a href="#this-arguments의-바인딩이-다르다" class="headerlink" title="this, arguments의 바인딩이 다르다."></a><code>this</code>, <code>arguments</code>의 바인딩이 다르다.</h2><p><code>Arrow Function</code>은 <code>this</code> 바인딩을 갖지 않습니다. 기존의 <code>function</code>에서 <code>this</code>의 탐색 범위가 함수의 <code>{}</code> 안에서 찾은 반면 <code>Arrow Function</code>에서 <code>this</code>는 일반적인 인자/변수와 동일하게 취급됩니다. 따라서 아래와 같은 상황이 발생합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// function()&#123;&#125;방식으로 호출할 때</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">objFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Inside `objFunction`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    foo: <span class="number">25</span>,</span><br><span class="line">    bar: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Inside `bar`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">objFunction.call(&#123;<span class="attr">foo</span>: <span class="number">13</span>&#125;).bar(); <span class="comment">// objFunction의 `this`를 오버라이딩합니다.</span></span><br></pre></td></tr></table></figure>
+
+<p>위 결과는 아래와 같습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside <span class="string">`objFunction`</span>: <span class="number">13</span> <span class="comment">// 처음에 인자로 전달한 값을 받음</span></span><br><span class="line">Inside <span class="string">`bar`</span>: <span class="number">25</span> <span class="comment">// 자신이 있는 Object를 this로 인지해서 25를 반환</span></span><br></pre></td></tr></table></figure>
+
+<p>우리가 기대한 그대로 나옵니다. </p>
+<p>하지만 <code>Arrow Function</code>을 실행하면 이야기가 약간 달라집니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Arrow Function방식으로 호출할 때</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">objFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Inside `objFunction`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    foo: <span class="number">25</span>,</span><br><span class="line">    bar: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Inside `bar`:'</span>, <span class="keyword">this</span>.foo),</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">objFunction.call(&#123;<span class="attr">foo</span>: <span class="number">13</span>&#125;).bar(); <span class="comment">// objFunction의 `this`를 오버라이딩합니다.</span></span><br></pre></td></tr></table></figure>
+
+<p>위 코드의 결과는 아래와 같습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside <span class="string">`objFunction`</span>: <span class="number">13</span> <span class="comment">// 처음에 인자로 전달한 값을 받음</span></span><br><span class="line">Inside <span class="string">`bar`</span>: <span class="number">13</span> <span class="comment">// Arrow Function에서 this는 일반 인자로 전달되었기 때문에 이미 값이 13로 지정됩니다.</span></span><br></pre></td></tr></table></figure>
+
+<p>즉, Arrow Function 안의 <code>this</code>는 <code>objFunction</code>의 <code>this</code>가 됩니다.</p>
+<p>그리고 이 ArrowFunction은 <code>this</code>의 Scope를 바꾸고 싶지 않을 때 특히 유용합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ES5 function에서는 `this` Scope가 function안에 들어가면 변하기 때문에 새로운 변수를 만들어 씁니다.</span></span><br><span class="line"><span class="keyword">var</span> someVar = <span class="keyword">this</span>;</span><br><span class="line">getData(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  someVar.data = data;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 Arrow Function에서는 `this` Scope의 변화가 없기 때문에 `this`를 그대로 사용하면 됩니다.</span></span><br><span class="line">getData(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.data = data;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 Arrow Function에서는 <code>.bind</code> method와 <code>.call</code> method를 사용할 수 없습니다.</p>
+<p>즉, 비슷하게 보이지만 실제로 동작하는 것이 다르기 때문에 사용하는 때를 구별하는 것이 필요합니다.</p>
+<h2 id="Arrow-Function은-new로-호출할-수-없다"><a href="#Arrow-Function은-new로-호출할-수-없다" class="headerlink" title="Arrow Function은 new로 호출할 수 없다"></a>Arrow Function은 <code>new</code>로 호출할 수 없다</h2><p>ES6에서 함수는 <code>callable</code>한 것과 <code>constructable</code>한 것의 차이를 두고 있습니다.</p>
+<p>만약 어떤 함수가 constructable하다면 <code>new</code>로 만들어야 합니다. 반면 함수가 callable하다면 일반적인 함수처럼 <code>함수()</code>식으로 호출하는 것이 가능합니다.</p>
+<p><code>function newFunc() {}</code>와 <code>const newFunc = function() {}</code>와 같은 방식으로 만든 함수는 <code>callable</code>하며 동시에 <code>constructable</code>합니다. 하지만 Arrow Function(<code>() =&gt; {}</code>)은 <code>callable</code>하지만 <code>constructable</code>하지 <strong>않기</strong>때문에 호출만 가능합니다.</p>
+<p>ps. ES6의 <code>class</code>는 <code>constructable</code>하지만 <code>callable</code>하지 않습니다.</p>
+<h2 id="정리"><a href="#정리" class="headerlink" title="정리"></a>정리</h2><p>함수 정의 방식을 바꿔서 사용할 수 있는 경우는 다음과 같습니다.</p>
+<ul>
+<li><code>this</code>나 <code>arguments</code>를 사용하지 않는 경우</li>
+<li><code>.bind(this)</code>를 사용하는 경우</li>
+</ul>
+<p>함수 정의 방식을 바꿔서 사용할 수 <strong>없는</strong> 경우는 다음과 같습니다.</p>
+<ul>
+<li><code>new</code>등을 사용하는 constructable한 함수</li>
+<li><code>prototype</code>에 덧붙여진 함수나 method들(보통 <code>this</code>를 사용합니다.)</li>
+<li><code>arguments</code>를 함수의 인자로 사용한 경우</li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/07/16/Use-Autoenv/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Autoenv로 편리한 개발하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/07/10/Ubuntu-Locale-to-ko_KR/">
+                <span class="level-item">Ubuntu Locale 한글로 바꾸기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

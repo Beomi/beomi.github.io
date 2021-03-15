@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Colab에서 TPU로 BERT 처음부터 학습시키기 - Tensorflow/Google ver. - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-25-081414.jpg" alt="Colab에서 TPU로 BERT 처음부터 학습시키기 - Tensorflow/Google ver.">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-02-25T15:00:00.000Z">2020-02-26</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/NLP/">NLP</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/NLP/LanguageModel/BERT/">BERT</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Colab에서 TPU로 BERT 처음부터 학습시키기 - Tensorflow/Google ver.
+            
+        </h1>
+        <div class="content">
+            <p>2018년말부터 현재까지 NLP 연구에서 BERT는 여전히 압도적인 위치를 차지하고 있다.</p>
+<p>한편, BERT모델을 사용하는 이유 중 가장 큰 것 하나가 바로 <strong>한국어로 Pretrained된 모델이 있다</strong>는 점이다. Google에서 논문을 처음 공개했을 때 Multilingual pretrained model을 공개해 Fine-tuning만으로도 우리가 필요한 데이터셋에 맞춰 분류기를 만드는 등의 여러 응용이 가능하고, 동시에 <strong>높은 성능</strong>을 보여주었기 때문에 BERT 자체를 학습시키는 것에 대해서는 크게 신경쓰지 않은 것이 사실이다.</p>
+<p>한편 작년 <a href="http://aiopen.etri.re.kr/service_dataset.php">ETRI의 한국어 BERT 언어모델</a>, 그리고 <a href="https://github.com/SKTBrain/KoBERT">SKTBrain의 KoBERT</a> 등 한국어 데이터셋으로 학습시킨 모델들이 등장했고, 이런 모델들을 Fine-tuning할 경우 기존 구글의 다국어 모델을 사용한 것보다 성능이 조금이라도 더 잘 나오기도 한다. (특히 <strong>정제되지 않은</strong> 글에 대해 좀 더 나은 성능을 보여줬다. OOV문제가 덜한 편이었다.)</p>
+<p>다만 이런 모델들 역시 굉장히 ‘보편적’ 글로 학습된 것이라 도메인 특화된 분야에 있어서는 성능이 잘 나오지 않을 수도 있다. 따라서 <strong>특수한 경우의 특수한 도메인에 최적화된 Pretrained model을 만든다</strong>면 우리의 NLP 모델도 좀 더 성능이 좋아질 수 있다!</p>
+<p>이번 글에서는 BERT 모델을 TPU와 Tensorflow를 이용해 처음부터 학습시켜보는 과정을 다뤄본다.</p>
+<blockquote>
+<p>이번 글은 <a href="https://colab.research.google.com/drive/1nVn6AFpQSzXBt8_ywfx6XR8ZfQXlKGAz">Colab Notebook: Pre-training BERT from scratch with cloud TPU</a>를 기반으로 작성되었습니다.</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="어떤-환경에서-개발하나"><a href="#어떤-환경에서-개발하나" class="headerlink" title="어떤 환경에서 개발하나?"></a>어떤 환경에서 개발하나?</h2><p>2020년 2월 26일자 기준 Google Colab에서 TPU를 활성화 시킨 상태에서 정상적으로 학습이 가능하다.</p>
+<p>단, GCP 서비스 중 Cloud Bucket을 사용하기 때문에 활성화된 GCP 계정이 필요하다. (가입하면 1년 쓸 수 있는 $300을 준다!)</p>
+<h2 id="준비물"><a href="#준비물" class="headerlink" title="준비물"></a>준비물</h2><ul>
+<li>Google 계정 &amp; 구글 Colab</li>
+<li>GCP Storage Bucket</li>
+</ul>
+<h2 id="필요한-라이브러리-설치하기"><a href="#필요한-라이브러리-설치하기" class="headerlink" title="필요한 라이브러리 설치하기"></a>필요한 라이브러리 설치하기</h2><p>BERT를 학습시키기 위해서는 Tokenized된 데이터를 넣어줘야 한다. 이때 우리는 토크나이저로 <code>sentencepiece</code> 를 주로 사용한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!pip install sentencepiece</span><br><span class="line">!git <span class="built_in">clone</span> https://github.com/google-research/bert</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>sentencepiece</code> 대신 <code>konlpy</code> 등을 사용할 수 있습니다.</p>
+</blockquote>
+<p>또한, 구글 리서치에서 공식적으로 제공하는 BERT Repo를 받아서 쓰면 모델과 최적화 등을 곧바로 가져와 사용할 수 있다.</p>
+<h2 id="필요한-패키지-가져오기"><a href="#필요한-패키지-가져오기" class="headerlink" title="필요한 패키지 가져오기"></a>필요한 패키지 가져오기</h2><p>tensorflow, sentencepiece등을 가져오고 bert 레포에서 모델 등을 가져온다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> nltk</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> sentencepiece <span class="keyword">as</span> spm</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> glob <span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">from</span> google.colab <span class="keyword">import</span> auth, drive</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.utils <span class="keyword">import</span> Progbar</span><br><span class="line"></span><br><span class="line">sys.path.append(<span class="string">"bert"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> bert <span class="keyword">import</span> modeling, optimization, tokenization</span><br><span class="line"><span class="keyword">from</span> bert.run_pretraining <span class="keyword">import</span> input_fn_builder, model_fn_builder</span><br><span class="line"></span><br><span class="line">auth.authenticate_user()</span><br></pre></td></tr></table></figure>
+
+<p>마지막 줄(19번째 줄)에서는 GCP 계정으로 구글에 로그인 한 뒤 나온 토큰 값을 입력하면 구글드라이브에 대한 접근과 GCS 버킷에 대한 접근을 허용해줄 수 있다.</p>
+<p>이 부분은 이후 Tensorflow에서 TPU를 접근할 때 GCS에 있는 자원에만 접근이 가능하기 때문에 모델 파일과 데이터셋을 GCS 버킷에 업로드할 때 필요하다.</p>
+<p>만약 이부분이 진행되지 않으면 TPU에서는 <code>[local]</code> 파일 시스템에 접근할 수 없다는 <code>NotImplementedError</code>가 발생한다.</p>
+<blockquote>
+<p>한편, PyTorch/XLA에서는 TPU 디바이스를 로컬 GPU처럼 간편하게 연결해서 Tensor 객체를 자유롭게 주고받던데, 어떤 방식으로 구현했는지 의문이다.</p>
+</blockquote>
+<h2 id="TPU-위치-찾기"><a href="#TPU-위치-찾기" class="headerlink" title="TPU 위치 찾기"></a>TPU 위치 찾기</h2><p>Colab에서 TPU를 활성화시키면 <code>os.environ[&#39;COLAB_TPU_ADDR&#39;]</code> 이라는 시스템 환경변수에 GRPC로 통신가능한 로컬 IP를 얻을 수 있다.</p>
+<p>아래 코드를 통해 학습 과정을 로깅하는 것과 함께 TPU에 연결하는 것을 설정해줄 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># configure logging</span></span><br><span class="line">log = logging.getLogger(<span class="string">'tensorflow'</span>)</span><br><span class="line">log.setLevel(logging.INFO)</span><br><span class="line"></span><br><span class="line"><span class="comment"># create formatter and add it to the handlers</span></span><br><span class="line">formatter = logging.Formatter(<span class="string">'%(asctime)s :  %(message)s'</span>)</span><br><span class="line">sh = logging.StreamHandler()</span><br><span class="line">sh.setLevel(logging.INFO)</span><br><span class="line">sh.setFormatter(formatter)</span><br><span class="line">log.handlers = [sh]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">'COLAB_TPU_ADDR'</span> <span class="keyword">in</span> os.environ:</span><br><span class="line">  log.info(<span class="string">"Using TPU runtime"</span>)</span><br><span class="line">  USE_TPU = <span class="literal">True</span></span><br><span class="line">  TPU_ADDRESS = <span class="string">'grpc://'</span> + os.environ[<span class="string">'COLAB_TPU_ADDR'</span>]</span><br><span class="line"></span><br><span class="line">  <span class="keyword">with</span> tf.Session(TPU_ADDRESS) <span class="keyword">as</span> session:</span><br><span class="line">    log.info(<span class="string">'TPU address is '</span> + TPU_ADDRESS)</span><br><span class="line">    <span class="comment"># Upload credentials to TPU.</span></span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'/content/adc.json'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">      auth_info = json.load(f)</span><br><span class="line">    tf.contrib.cloud.configure_gcs(session, credentials=auth_info)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  log.warning(<span class="string">'Not connected to TPU runtime'</span>)</span><br><span class="line">  USE_TPU = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>위에서 설정한 과정은 <code>/content/adc.json</code> 파일에 저장되고, 이 파일 설정으로 TPU를 사용하게 된다.</p>
+<h2 id="데이터-다운받기"><a href="#데이터-다운받기" class="headerlink" title="데이터 다운받기"></a>데이터 다운받기</h2><p>학습하는 데이터를 모으는 것은 사실 학습과 별개로 굉장히 중요한 부분이다.</p>
+<p>이번에는 간단하게 <a href="http://www.opensubtitles.org/">OpenSubtitles</a> 데이터셋을 이용해 한글 데이터를 다운받아보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">AVAILABLE =  &#123;<span class="string">'af'</span>,<span class="string">'ar'</span>,<span class="string">'bg'</span>,<span class="string">'bn'</span>,<span class="string">'br'</span>,<span class="string">'bs'</span>,<span class="string">'ca'</span>,<span class="string">'cs'</span>,</span><br><span class="line">              <span class="string">'da'</span>,<span class="string">'de'</span>,<span class="string">'el'</span>,<span class="string">'en'</span>,<span class="string">'eo'</span>,<span class="string">'es'</span>,<span class="string">'et'</span>,<span class="string">'eu'</span>,</span><br><span class="line">              <span class="string">'fa'</span>,<span class="string">'fi'</span>,<span class="string">'fr'</span>,<span class="string">'gl'</span>,<span class="string">'he'</span>,<span class="string">'hi'</span>,<span class="string">'hr'</span>,<span class="string">'hu'</span>,</span><br><span class="line">              <span class="string">'hy'</span>,<span class="string">'id'</span>,<span class="string">'is'</span>,<span class="string">'it'</span>,<span class="string">'ja'</span>,<span class="string">'ka'</span>,<span class="string">'kk'</span>,<span class="string">'ko'</span>,</span><br><span class="line">              <span class="string">'lt'</span>,<span class="string">'lv'</span>,<span class="string">'mk'</span>,<span class="string">'ml'</span>,<span class="string">'ms'</span>,<span class="string">'nl'</span>,<span class="string">'no'</span>,<span class="string">'pl'</span>,</span><br><span class="line">              <span class="string">'pt'</span>,<span class="string">'pt_br'</span>,<span class="string">'ro'</span>,<span class="string">'ru'</span>,<span class="string">'si'</span>,<span class="string">'sk'</span>,<span class="string">'sl'</span>,<span class="string">'sq'</span>,</span><br><span class="line">              <span class="string">'sr'</span>,<span class="string">'sv'</span>,<span class="string">'ta'</span>,<span class="string">'te'</span>,<span class="string">'th'</span>,<span class="string">'tl'</span>,<span class="string">'tr'</span>,<span class="string">'uk'</span>,</span><br><span class="line">              <span class="string">'ur'</span>,<span class="string">'vi'</span>,<span class="string">'ze_en'</span>,<span class="string">'ze_zh'</span>,<span class="string">'zh'</span>,<span class="string">'zh_cn'</span>,</span><br><span class="line">              <span class="string">'zh_en'</span>,<span class="string">'zh_tw'</span>,<span class="string">'zh_zh'</span>&#125;</span><br><span class="line"></span><br><span class="line">LANG_CODE = <span class="string">"ko"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> LANG_CODE <span class="keyword">in</span> AVAILABLE, <span class="string">"Invalid language code selected"</span></span><br><span class="line"></span><br><span class="line">!wget http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2016/mono/OpenSubtitles.raw.'$LANG_CODE'.gz -O dataset.txt.gz</span><br><span class="line">!gzip -d dataset.txt.gz</span><br><span class="line">!tail dataset.txt</span><br></pre></td></tr></table></figure>
+
+<p>11번째줄의 “LANG_CODE”를 변경해주면 원하는 언어의 데이터셋을 받을 수 있다.</p>
+<blockquote>
+<p> 한글 데이터셋의 경우 압축된 상태 기준으로 약 8MB의 데이터셋이다.</p>
+</blockquote>
+<h2 id="옵션-일부만-사용해-학습하기"><a href="#옵션-일부만-사용해-학습하기" class="headerlink" title="(옵션) 일부만 사용해 학습하기"></a>(옵션) 일부만 사용해 학습하기</h2><p>데이터셋 전체를 사용해 학습하면 학습시간이 굉장히 오래 걸린다.</p>
+<p>만약 실제 모델을 얻고싶은 것이 아니라 단순히 학습 가능한지만 알고 싶다면 아래 첫 줄에서 <code>DEMO_MODE=True</code> 로 설정해주면 수량을 100만개 데이터로만 학습한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DEMO_MODE = <span class="literal">True</span> <span class="comment">#@param &#123;type:"boolean"&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> DEMO_MODE:</span><br><span class="line">  CORPUS_SIZE = <span class="number">1000000</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  CORPUS_SIZE = <span class="number">100000000</span> <span class="comment">#@param &#123;type: "integer"&#125;</span></span><br><span class="line">  </span><br><span class="line">!(head -n $CORPUS_SIZE dataset.txt) &gt; subdataset.txt</span><br><span class="line">!mv subdataset.txt dataset.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="텍스트-데이터-전처리하기"><a href="#텍스트-데이터-전처리하기" class="headerlink" title="텍스트 데이터 전처리하기"></a>텍스트 데이터 전처리하기</h2><p>텍스트 데이터에서 많이 쓰는 문장부호나 기타 이모티콘🤩등을 학습에서 <strong>제거할지, 제거하지 않을지</strong>는 우리가 학습시키는 모델이 <strong>어떤 목적</strong>이냐에 따라 달라진다.</p>
+<p>위와 같은 이모티콘은 사용 빈도가 낮은 편이기 때문에 위 이모티콘을 임베딩에 포함시킬 경우 Vocab의 용량이 굉장히 커지게 되어 보편적인 Language Model을 만들기 위해서는 보통 특수문자나 이모티콘 등을 제거해준다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">regex_tokenizer = nltk.RegexpTokenizer(<span class="string">"\w+"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize_text</span><span class="params">(text)</span>:</span></span><br><span class="line">  <span class="comment"># lowercase text</span></span><br><span class="line">  text = str(text).lower()</span><br><span class="line">  <span class="comment"># remove non-UTF</span></span><br><span class="line">  text = text.encode(<span class="string">"utf-8"</span>, <span class="string">"ignore"</span>).decode()</span><br><span class="line">  <span class="comment"># remove punktuation symbols</span></span><br><span class="line">  text = <span class="string">" "</span>.join(regex_tokenizer.tokenize(text))</span><br><span class="line">  <span class="keyword">return</span> text</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_lines</span><span class="params">(filename)</span>:</span></span><br><span class="line">  count = <span class="number">0</span></span><br><span class="line">  <span class="keyword">with</span> open(filename) <span class="keyword">as</span> fi:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fi:</span><br><span class="line">      count += <span class="number">1</span></span><br><span class="line">  <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">RAW_DATA_FPATH = <span class="string">"dataset.txt"</span> <span class="comment">#@param &#123;type: "string"&#125;</span></span><br><span class="line">PRC_DATA_FPATH = <span class="string">"proc_dataset.txt"</span> <span class="comment">#@param &#123;type: "string"&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># apply normalization to the dataset</span></span><br><span class="line"><span class="comment"># this will take a minute or two</span></span><br><span class="line"></span><br><span class="line">total_lines = count_lines(RAW_DATA_FPATH)</span><br><span class="line">bar = Progbar(total_lines)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(RAW_DATA_FPATH,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> fi:</span><br><span class="line">  <span class="keyword">with</span> open(PRC_DATA_FPATH, <span class="string">"w"</span>,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> fo:</span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> fi:</span><br><span class="line">      fo.write(normalize_text(l)+<span class="string">"\n"</span>)</span><br><span class="line">      bar.add(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="데이터셋-텍스트-토크나이징하기"><a href="#데이터셋-텍스트-토크나이징하기" class="headerlink" title="데이터셋 텍스트 토크나이징하기"></a>데이터셋 텍스트 토크나이징하기</h2><p>BERT등 NLP 모델을 학습시킬때는 토크나이징한 Vocab의 크기를 적절히 제한하는 것이 모델의 성능을 높이는데 도움이 된다. (용량도 역시)</p>
+<p>큰 모델일수록 Vocab의 크기도 커지지만, 보통의 경우는 3만개 내외의 Vocab을 만드는 것으로 보인다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">MODEL_PREFIX = <span class="string">"tokenizer"</span> <span class="comment">#@param &#123;type: "string"&#125;</span></span><br><span class="line">VOC_SIZE = <span class="number">32000</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">SUBSAMPLE_SIZE = <span class="number">12800000</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">NUM_PLACEHOLDERS = <span class="number">256</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line"></span><br><span class="line">SPM_COMMAND = (<span class="string">'--input=&#123;&#125; --model_prefix=&#123;&#125; '</span></span><br><span class="line">               <span class="string">'--vocab_size=&#123;&#125; --input_sentence_size=&#123;&#125; '</span></span><br><span class="line">               <span class="string">'--shuffle_input_sentence=true '</span> </span><br><span class="line">               <span class="string">'--bos_id=-1 --eos_id=-1'</span>).format(</span><br><span class="line">               PRC_DATA_FPATH, MODEL_PREFIX, </span><br><span class="line">               VOC_SIZE - NUM_PLACEHOLDERS, SUBSAMPLE_SIZE)</span><br><span class="line"></span><br><span class="line">spm.SentencePieceTrainer.Train(SPM_COMMAND)</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 실행하면 SentencePiece에서 해당 모델을 열심히 잘라가며 Vocab을 생성하고, 이후 텍스트를 자르기 위한 Tokenizer를 학습한다.</p>
+<p>학습된 Sentencepiece Vocab을 로딩해주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_sentencepiece_vocab</span><span class="params">(filepath)</span>:</span></span><br><span class="line">  voc = []</span><br><span class="line">  <span class="keyword">with</span> open(filepath, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> fi:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fi:</span><br><span class="line">      voc.append(line.split(<span class="string">"\t"</span>)[<span class="number">0</span>])</span><br><span class="line">  <span class="comment"># skip the first &lt;unk&gt; token</span></span><br><span class="line">  voc = voc[<span class="number">1</span>:]</span><br><span class="line">  <span class="keyword">return</span> voc</span><br><span class="line"></span><br><span class="line">snt_vocab = read_sentencepiece_vocab(<span class="string">"&#123;&#125;.vocab"</span>.format(MODEL_PREFIX))</span><br><span class="line">print(<span class="string">"Learnt vocab size: &#123;&#125;"</span>.format(len(snt_vocab)))</span><br><span class="line">print(<span class="string">"Sample tokens: &#123;&#125;"</span>.format(random.sample(snt_vocab, <span class="number">10</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>위 SentencePiece를 통해 학습한 Vocab을 BERT가 이해하는 형태로 바꿔주기 위해서는 <code>_</code>로 시작한 토큰들을 <code>##</code> 으로 시작하도록 바꿔주면 되고, <code>[&quot;[PAD]&quot;,&quot;[UNK]&quot;,&quot;[CLS]&quot;,&quot;[SEP]&quot;,&quot;[MASK]&quot;]</code>의 경우는 BERT에서 사용하는 특수 토큰이기 때문에 해당 토큰에 대한 정보들을 추가해 최종적인 <code>bert_vocab</code>을 만들어준다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_sentencepiece_token</span><span class="params">(token)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> token.startswith(<span class="string">"▁"</span>):</span><br><span class="line">        <span class="keyword">return</span> token[<span class="number">1</span>:]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"##"</span> + token</span><br><span class="line"></span><br><span class="line">bert_vocab = list(map(parse_sentencepiece_token, snt_vocab))</span><br><span class="line">ctrl_symbols = [<span class="string">"[PAD]"</span>,<span class="string">"[UNK]"</span>,<span class="string">"[CLS]"</span>,<span class="string">"[SEP]"</span>,<span class="string">"[MASK]"</span>]</span><br><span class="line">bert_vocab = ctrl_symbols + bert_vocab</span><br></pre></td></tr></table></figure>
+
+<p>마지막으로 앞서서 사용하지 않은 vocab range에 있는 것들을 넣어 <code>bert_vocab</code>의 크기를 앞서 지정한 <code>VOC_SIZE</code>에 맞춰준다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bert_vocab += [<span class="string">"[UNUSED_&#123;&#125;]"</span>.format(i) <span class="keyword">for</span> i <span class="keyword">in</span> range(VOC_SIZE - len(bert_vocab))]</span><br><span class="line">print(len(bert_vocab))</span><br></pre></td></tr></table></figure>
+
+<p>이 과정이 마무리되면 <code>vocab.txt</code> 텍스트 파일에 위 토큰들을 모두 한줄 한줄 저장해주면 이후에 사용할 것들이 끝나게 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VOC_FNAME = <span class="string">"vocab.txt"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(VOC_FNAME, <span class="string">"w"</span>) <span class="keyword">as</span> fo:</span><br><span class="line">  <span class="keyword">for</span> token <span class="keyword">in</span> bert_vocab:</span><br><span class="line">    fo.write(token+<span class="string">"\n"</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="학습-데이터-쪼개기"><a href="#학습-데이터-쪼개기" class="headerlink" title="학습 데이터 쪼개기"></a>학습 데이터 쪼개기</h2><p>학습 데이터의 크기가 굉장히 클 수 있기 때문에 학습 원천 데이터를 적당한 사이즈로 잘라준다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">!mkdir ./shards</span><br><span class="line">!split -a 4 -l 256000 -d <span class="variable">$PRC_DATA_FPATH</span> ./shards/shard_</span><br><span class="line">!ls ./shards/</span><br></pre></td></tr></table></figure>
+
+<h2 id="BERT-Pretraining을-위한-데이터-변수-설정하기"><a href="#BERT-Pretraining을-위한-데이터-변수-설정하기" class="headerlink" title="BERT Pretraining을 위한 데이터 변수 설정하기"></a>BERT Pretraining을 위한 데이터 변수 설정하기</h2><p>BERT를 위한 데이터를 준비하는 과정에 있어서 몇가지 설정해줘야 하는 것들이 있다.</p>
+<ul>
+<li>MAX_SEQ_LENGTH: BERT의 모델 입력의 최장 토큰 길이<ul>
+<li>이 이상으로는 BERT모델이 이해하지 못한다.</li>
+</ul>
+</li>
+<li>MASKED_LM_PROB: BERT의 학습 중 Masked LM의 비율을 조정한다.</li>
+<li>MAX_PREDICTIONS: Sequence별 예측할 최대 길이</li>
+<li>DO_LOWER_CASE: 영문자를 lower(소문자화) 할 지. 한글에는 의미없다.</li>
+<li>PROCESSES: 전처리할때 CPU 몇개 쓸지</li>
+<li>PRETRAINING_DIR: 프리트레인 데이터 폴더 이름</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MAX_SEQ_LENGTH = <span class="number">128</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">MASKED_LM_PROB = <span class="number">0.15</span> <span class="comment">#@param</span></span><br><span class="line">MAX_PREDICTIONS = <span class="number">20</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">DO_LOWER_CASE = <span class="literal">True</span> <span class="comment">#@param &#123;type:"boolean"&#125;</span></span><br><span class="line">PROCESSES = <span class="number">4</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">PRETRAINING_DIR = <span class="string">"pretraining_data"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>위ㅏ 같이 설정을 진행한 뒤, 아래 코드를 실행하면 Pretraining Data가 만들어진다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">XARGS_CMD = (<span class="string">"ls ./shards/ | "</span></span><br><span class="line">             <span class="string">"xargs -n 1 -P &#123;&#125; -I&#123;&#125; "</span></span><br><span class="line">             <span class="string">"python3 bert/create_pretraining_data.py "</span></span><br><span class="line">             <span class="string">"--input_file=./shards/&#123;&#125; "</span></span><br><span class="line">             <span class="string">"--output_file=&#123;&#125;/&#123;&#125;.tfrecord "</span></span><br><span class="line">             <span class="string">"--vocab_file=&#123;&#125; "</span></span><br><span class="line">             <span class="string">"--do_lower_case=&#123;&#125; "</span></span><br><span class="line">             <span class="string">"--max_predictions_per_seq=&#123;&#125; "</span></span><br><span class="line">             <span class="string">"--max_seq_length=&#123;&#125; "</span></span><br><span class="line">             <span class="string">"--masked_lm_prob=&#123;&#125; "</span></span><br><span class="line">             <span class="string">"--random_seed=34 "</span></span><br><span class="line">             <span class="string">"--dupe_factor=5"</span>)</span><br><span class="line"></span><br><span class="line">XARGS_CMD = XARGS_CMD.format(PROCESSES, <span class="string">'&#123;&#125;'</span>, <span class="string">'&#123;&#125;'</span>, PRETRAINING_DIR, <span class="string">'&#123;&#125;'</span>, </span><br><span class="line">                             VOC_FNAME, DO_LOWER_CASE, </span><br><span class="line">                             MAX_PREDICTIONS, MAX_SEQ_LENGTH, MASKED_LM_PROB)</span><br><span class="line"></span><br><span class="line">tf.gfile.MkDir(PRETRAINING_DIR)</span><br><span class="line">!$XARGS_CMD</span><br></pre></td></tr></table></figure>
+
+<h2 id="GCP-버킷에-모델-amp-학습-데이터-올리기"><a href="#GCP-버킷에-모델-amp-학습-데이터-올리기" class="headerlink" title="GCP 버킷에 모델 &amp; 학습 데이터 올리기"></a>GCP 버킷에 모델 &amp; 학습 데이터 올리기</h2><p>Tensorflow를 통해 TPU로 학습을 진행하려면 앞서 언급한 것과 같이 GCS에 데이터와 모델을 업로드해야 한다.</p>
+<p>첫째 줄의 <code>BUCKET_NAME</code>을 개개인의 GCS 버킷이름으로 수정하면 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BUCKET_NAME = <span class="string">"이부분을_수정해_주세요"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line">MODEL_DIR = <span class="string">"bert_model"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line">tf.gfile.MkDir(MODEL_DIR)</span><br></pre></td></tr></table></figure>
+
+<h2 id="BERT-Model-Hyper-Parameters-설정하기"><a href="#BERT-Model-Hyper-Parameters-설정하기" class="headerlink" title="BERT Model Hyper Parameters 설정하기"></a>BERT Model Hyper Parameters 설정하기</h2><p>BERT 모델을 어떤 구조의 모델을 사용할지에 대한 Hyper Parameters를 설정해야 한다.</p>
+<p>얼마나 Dropout을 해줄지, Bidirectional하게 할지, Activation Function을 뭘로 해줄지, Hidden Size를 얼마나 해줄지, Attention Head를 몇개로 해줄지, 레이어를 몇 층으로 쌓을 지 등등…</p>
+<p>아래 설정은 BERT Base 모델의 기본값이다. 아래 값을 수정하면 좀 더 다르게 학습된 BERT 모델을 만들 수 있게 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">bert_base_config = &#123;</span><br><span class="line">  <span class="string">"attention_probs_dropout_prob"</span>: <span class="number">0.1</span>, </span><br><span class="line">  <span class="string">"directionality"</span>: <span class="string">"bidi"</span>, </span><br><span class="line">  <span class="string">"hidden_act"</span>: <span class="string">"gelu"</span>, </span><br><span class="line">  <span class="string">"hidden_dropout_prob"</span>: <span class="number">0.1</span>, </span><br><span class="line">  <span class="string">"hidden_size"</span>: <span class="number">768</span>, </span><br><span class="line">  <span class="string">"initializer_range"</span>: <span class="number">0.02</span>, </span><br><span class="line">  <span class="string">"intermediate_size"</span>: <span class="number">3072</span>, </span><br><span class="line">  <span class="string">"max_position_embeddings"</span>: <span class="number">512</span>, </span><br><span class="line">  <span class="string">"num_attention_heads"</span>: <span class="number">12</span>, </span><br><span class="line">  <span class="string">"num_hidden_layers"</span>: <span class="number">12</span>, </span><br><span class="line">  <span class="string">"pooler_fc_size"</span>: <span class="number">768</span>, </span><br><span class="line">  <span class="string">"pooler_num_attention_heads"</span>: <span class="number">12</span>, </span><br><span class="line">  <span class="string">"pooler_num_fc_layers"</span>: <span class="number">3</span>, </span><br><span class="line">  <span class="string">"pooler_size_per_head"</span>: <span class="number">128</span>, </span><br><span class="line">  <span class="string">"pooler_type"</span>: <span class="string">"first_token_transform"</span>, </span><br><span class="line">  <span class="string">"type_vocab_size"</span>: <span class="number">2</span>, </span><br><span class="line">  <span class="string">"vocab_size"</span>: VOC_SIZE</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"&#123;&#125;/bert_config.json"</span>.format(MODEL_DIR), <span class="string">"w"</span>) <span class="keyword">as</span> fo:</span><br><span class="line">  json.dump(bert_base_config, fo, indent=<span class="number">2</span>)</span><br><span class="line">  </span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"&#123;&#125;/&#123;&#125;"</span>.format(MODEL_DIR, VOC_FNAME), <span class="string">"w"</span>) <span class="keyword">as</span> fo:</span><br><span class="line">  <span class="keyword">for</span> token <span class="keyword">in</span> bert_vocab:</span><br><span class="line">    fo.write(token+<span class="string">"\n"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>그리고 앞서 만들어준 모델, 프리트레이닝 데이터를 GCS 버킷에 업로드한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> BUCKET_NAME:</span><br><span class="line">  !gsutil -m cp -r $MODEL_DIR $PRETRAINING_DIR gs://$BUCKET_NAME</span><br></pre></td></tr></table></figure>
+
+<h2 id="모델-학습-Hyper-Parameters-설정하기"><a href="#모델-학습-Hyper-Parameters-설정하기" class="headerlink" title="모델 학습 Hyper Parameters 설정하기"></a>모델 학습 Hyper Parameters 설정하기</h2><p>GCS 버킷에 데이터와 모델을 모두 업로드해준 뒤, 실제 TPU에서 학습을 진행하도록 명령을 넘겨줘야 한다.</p>
+<p>첫번째 줄의 <code>BUCKET_NAME</code>만 위와 동일하게 설정해주면 된다.</p>
+<p>중간의 <code>BATCH_SIZE</code>, <code>LEARNING_RATE</code>, <code>TRAIN_STEPS</code>, <code>NUM_TPU_CORES</code> 등의 변수를 조절해 모델의 학습 속도를 결정할 수 있다.</p>
+<blockquote>
+<p>Colab의 TPU는 <code>v3-8</code>이므로 <code>NUM_TPU_CORES</code>는 8Core가 최대다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">BUCKET_NAME = <span class="string">"beomi-blog-sample"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line">MODEL_DIR = <span class="string">"bert_model"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line">PRETRAINING_DIR = <span class="string">"pretraining_data"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line">VOC_FNAME = <span class="string">"vocab.txt"</span> <span class="comment">#@param &#123;type:"string"&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Input data pipeline config</span></span><br><span class="line">TRAIN_BATCH_SIZE = <span class="number">128</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">MAX_PREDICTIONS = <span class="number">20</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">MAX_SEQ_LENGTH = <span class="number">128</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">MASKED_LM_PROB = <span class="number">0.15</span> <span class="comment">#@param</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Training procedure config</span></span><br><span class="line">EVAL_BATCH_SIZE = <span class="number">64</span></span><br><span class="line">LEARNING_RATE = <span class="number">2e-5</span></span><br><span class="line">TRAIN_STEPS = <span class="number">1000000</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">SAVE_CHECKPOINTS_STEPS = <span class="number">2500</span> <span class="comment">#@param &#123;type:"integer"&#125;</span></span><br><span class="line">NUM_TPU_CORES = <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> BUCKET_NAME:</span><br><span class="line">  BUCKET_PATH = <span class="string">"gs://&#123;&#125;"</span>.format(BUCKET_NAME)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  BUCKET_PATH = <span class="string">"."</span></span><br><span class="line"></span><br><span class="line">BERT_GCS_DIR = <span class="string">"&#123;&#125;/&#123;&#125;"</span>.format(BUCKET_PATH, MODEL_DIR)</span><br><span class="line">DATA_GCS_DIR = <span class="string">"&#123;&#125;/&#123;&#125;"</span>.format(BUCKET_PATH, PRETRAINING_DIR)</span><br><span class="line"></span><br><span class="line">VOCAB_FILE = os.path.join(BERT_GCS_DIR, VOC_FNAME)</span><br><span class="line">CONFIG_FILE = os.path.join(BERT_GCS_DIR, <span class="string">"bert_config.json"</span>)</span><br><span class="line"></span><br><span class="line">INIT_CHECKPOINT = tf.train.latest_checkpoint(BERT_GCS_DIR)</span><br><span class="line"></span><br><span class="line">bert_config = modeling.BertConfig.from_json_file(CONFIG_FILE)</span><br><span class="line">input_files = tf.gfile.Glob(os.path.join(DATA_GCS_DIR,<span class="string">'*tfrecord'</span>))</span><br><span class="line"></span><br><span class="line">log.info(<span class="string">"Using checkpoint: &#123;&#125;"</span>.format(INIT_CHECKPOINT))</span><br><span class="line">log.info(<span class="string">"Using &#123;&#125; data shards"</span>.format(len(input_files)))</span><br></pre></td></tr></table></figure>
+
+<h2 id="모델을-TPU로-올리고-학습하기"><a href="#모델을-TPU로-올리고-학습하기" class="headerlink" title="모델을 TPU로 올리고 학습하기"></a>모델을 TPU로 올리고 학습하기</h2><p><code>model_fn</code> 이라는 이름의 딥러닝 모델 설정 객체를 만들어주고 TPU에 연결해준 뒤, 어떻게 학습을 하고 어디에 CheckPoint를 정리할지 등을 지정해줘야 한다.</p>
+<p>이후 TPUEstimator를 통해 모델 객체, 설정 객체를 전달해주고, 해당 estimator를 <code>estimator.train()</code> 하면 TPU 위에서 BERT 모델의 학습이 진행된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">model_fn = model_fn_builder(</span><br><span class="line">      bert_config=bert_config,</span><br><span class="line">      init_checkpoint=INIT_CHECKPOINT,</span><br><span class="line">      learning_rate=LEARNING_RATE,</span><br><span class="line">      num_train_steps=TRAIN_STEPS,</span><br><span class="line">      num_warmup_steps=<span class="number">10</span>,</span><br><span class="line">      use_tpu=USE_TPU,</span><br><span class="line">      use_one_hot_embeddings=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(TPU_ADDRESS)</span><br><span class="line"></span><br><span class="line">run_config = tf.contrib.tpu.RunConfig(</span><br><span class="line">    cluster=tpu_cluster_resolver,</span><br><span class="line">    model_dir=BERT_GCS_DIR,</span><br><span class="line">    save_checkpoints_steps=SAVE_CHECKPOINTS_STEPS,</span><br><span class="line">    tpu_config=tf.contrib.tpu.TPUConfig(</span><br><span class="line">        iterations_per_loop=SAVE_CHECKPOINTS_STEPS,</span><br><span class="line">        num_shards=NUM_TPU_CORES,</span><br><span class="line">        per_host_input_for_training=tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2))</span><br><span class="line"></span><br><span class="line">estimator = tf.contrib.tpu.TPUEstimator(</span><br><span class="line">    use_tpu=USE_TPU,</span><br><span class="line">    model_fn=model_fn,</span><br><span class="line">    config=run_config,</span><br><span class="line">    train_batch_size=TRAIN_BATCH_SIZE,</span><br><span class="line">    eval_batch_size=EVAL_BATCH_SIZE)</span><br><span class="line">  </span><br><span class="line">train_input_fn = input_fn_builder(</span><br><span class="line">        input_files=input_files,</span><br><span class="line">        max_seq_length=MAX_SEQ_LENGTH,</span><br><span class="line">        max_predictions_per_seq=MAX_PREDICTIONS,</span><br><span class="line">        is_training=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 학습하자!!</span></span><br><span class="line">estimator.train(input_fn=train_input_fn, max_steps=TRAIN_STEPS)</span><br></pre></td></tr></table></figure>
+
+<h2 id="어디에-모델이-저장되나"><a href="#어디에-모델이-저장되나" class="headerlink" title="어디에 모델이 저장되나?"></a>어디에 모델이 저장되나?</h2><p><code>estimator.train</code> 코드를 실행하면 TPU위에서 학습이 이뤄지고, 동시에 우리가 지정한 체크포인트(<code>SAVE_CHECKPOINTS_STEPS</code>)별로 GCS 버킷의 폴더에 모델의 가중치값이 저장된다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-26-154241.png" alt="BERT 모델의 CheckPoint는 GCS에 업로드된다."></p>
+<p>Google Colab은 Pro를 쓰더라도 최대 24시간이 한계이고, 거대한 데이터로 학습시킬때는 세션이 종료되기 때문에 체크포인트를 가져와 해당 부분부터 학습을 재게하는 것이 필요하다.</p>
+<p>이와 같이 GCS 버킷에 저장을 하는 것을 통해서 BERT 모델을 Colab TPU로 처음부터 끝까지 우리 데이터를 통해 학습시킬수 있다.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
+<li><a href="https://towardsdatascience.com/pre-training-bert-from-scratch-with-cloud-tpu-6e2f71028379">Pre-training BERT from scratch with cloud TPU</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/bert/" rel="tag">bert</a>, <a class="has-link-grey -link" href="/tags/colab/" rel="tag">colab</a>, <a class="has-link-grey -link" href="/tags/nlp/" rel="tag">nlp</a>, <a class="has-link-grey -link" href="/tags/tensorflow/" rel="tag">tensorflow</a>, <a class="has-link-grey -link" href="/tags/tpu/" rel="tag">tpu</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/05/29/Gitlab-for-LFS/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/02/24/Pytorch-with-TPU-on-Colab/">
+                <span class="level-item">Colab에서 PyTorch 모델 TPU로 학습하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#어떤-환경에서-개발하나">
+        <span class="has-mr-6">1</span>
+        <span>어떤 환경에서 개발하나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#준비물">
+        <span class="has-mr-6">2</span>
+        <span>준비물</span>
+        </a></li><li>
+        <a class="is-flex" href="#필요한-라이브러리-설치하기">
+        <span class="has-mr-6">3</span>
+        <span>필요한 라이브러리 설치하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#필요한-패키지-가져오기">
+        <span class="has-mr-6">4</span>
+        <span>필요한 패키지 가져오기</span>
+        </a></li><li>
+        <a class="is-flex" href="#TPU-위치-찾기">
+        <span class="has-mr-6">5</span>
+        <span>TPU 위치 찾기</span>
+        </a></li><li>
+        <a class="is-flex" href="#데이터-다운받기">
+        <span class="has-mr-6">6</span>
+        <span>데이터 다운받기</span>
+        </a></li><li>
+        <a class="is-flex" href="#옵션-일부만-사용해-학습하기">
+        <span class="has-mr-6">7</span>
+        <span>(옵션) 일부만 사용해 학습하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#텍스트-데이터-전처리하기">
+        <span class="has-mr-6">8</span>
+        <span>텍스트 데이터 전처리하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#데이터셋-텍스트-토크나이징하기">
+        <span class="has-mr-6">9</span>
+        <span>데이터셋 텍스트 토크나이징하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#학습-데이터-쪼개기">
+        <span class="has-mr-6">10</span>
+        <span>학습 데이터 쪼개기</span>
+        </a></li><li>
+        <a class="is-flex" href="#BERT-Pretraining을-위한-데이터-변수-설정하기">
+        <span class="has-mr-6">11</span>
+        <span>BERT Pretraining을 위한 데이터 변수 설정하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#GCP-버킷에-모델-amp-학습-데이터-올리기">
+        <span class="has-mr-6">12</span>
+        <span>GCP 버킷에 모델 & 학습 데이터 올리기</span>
+        </a></li><li>
+        <a class="is-flex" href="#BERT-Model-Hyper-Parameters-설정하기">
+        <span class="has-mr-6">13</span>
+        <span>BERT Model Hyper Parameters 설정하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#모델-학습-Hyper-Parameters-설정하기">
+        <span class="has-mr-6">14</span>
+        <span>모델 학습 Hyper Parameters 설정하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#모델을-TPU로-올리고-학습하기">
+        <span class="has-mr-6">15</span>
+        <span>모델을 TPU로 올리고 학습하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#어디에-모델이-저장되나">
+        <span class="has-mr-6">16</span>
+        <span>어디에 모델이 저장되나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#References">
+        <span class="has-mr-6">17</span>
+        <span>References</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

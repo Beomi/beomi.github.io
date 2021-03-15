@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>로컬 개발서버를 HTTPS로 세상에 띄우기(like ngork) - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-08-26-SSH-Reverse-Proxy-like-ngrok.jpg" alt="로컬 개발서버를 HTTPS로 세상에 띄우기(like ngork)">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-08-25T15:00:00.000Z">2017-08-26</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/tips/">tips</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                로컬 개발서버를 HTTPS로 세상에 띄우기(like ngork)
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드를 따라가기 위해서는 HTTP(80/tcp) 포트가 열려있는 서버와 개인 도메인이 필요합니다.</p>
+</blockquote>
+<h2 id="들어가기-전"><a href="#들어가기-전" class="headerlink" title="들어가기 전"></a>들어가기 전</h2><p>django, node.js, react, vue와 같은 웹 개발(Backend &amp; Frontend)을 진행하다보면 모바일 디바이스나 타 디바이스에서 로컬 서버에 접근해야하는 경우가 있습니다. </p>
+<p>하지만 보통 개발환경에서는 개발기기가 공인 IP를 갖고 있는것이 아니라 내부 NAT에서 개발이 이루어지고, 웹과 내부 개발기기 사이에는 방화벽이 있습니다. 집에서 개발한다면 공유기가, 회사에서 개발한다면 회사의 라우터 정책 기준이 있습니다. </p>
+<p>일반적인 경우 네트워크 정책은 나가는(Outbound) 트래픽은 대부분의 포트가 열려있는 한편 들어오는(Inbound) 트래픽에는 극소수의 포트만 열려있습니다.</p>
+<p>만약 로컬 서버에서 일반적으로 HTTP가 사용하는 80/tcp 포트로 서버를 띄어놓았다면 대부분의 경우 이 포트는 막혀있습니다. (개발용 서버인 8000/8080/4000/3000등도 마찬가지입니다. 극소수 빼고는 기본적으로 다 막아둡니다.)</p>
+<p>이렇게 포트가 막혀있다면 우리가 로컬에 띄어둔 서버가 아무리 모든 IP에서의 접근을 허용한다고 해도 중간에 있는 라우터에서 막아버리기 때문에 LTE등의 모바일 셀룰러같은 외부에서의 접속은 사실상 불가능합니다.</p>
+<p>따라서 이를 해결하기 위해 <a href="https://ngrok.com/">ngrok</a>와 같은 SSH 터널링을 이용합니다. 하지만 ngrok 서비스 서버는 기본적으로 해외에 있고, 무료 Plan의 경우 분당 connection의 개수를 40개로 제한하고 있습니다. 만약 CSS나 JS, 이미지같은 static파일 요청 하나하나가 각각 connection을 사용한다면, 짧은 시간 내 여러번 새로고침은 수십개의 connection을 만들어버리고 ngrok은 요청을 즉시 차단해버립니다.</p>
+<blockquote>
+<p>물론 <code>keep-alive</code>를 지원하는 클라이언트/서버 설정이 이루어지면 connection은 새로고침을 해도 늘어나지 않습니다. 하지만 모든 클라이언트가 <code>keep-alive</code>를 지원하지는 않습니다.</p>
+</blockquote>
+<p>하지만 유료 플랜이라고 해서 무제한 connection을 지원하지는 않기 때문에 마음놓고 새로고침을 하기는 어렵습니다.</p>
+<p>이번 가이드에서는 ngrok같이 로컬 개발 서버(장고의 runserver, webpack의 webpack-dev-server)를 다른 서버에 SSH Proxy를 통해 전달하는 법, 그리고 CloudFlare를 통해 HTTPS서버로 만드는 것까지를 다룹니다.</p>
+<h2 id="재료준비"><a href="#재료준비" class="headerlink" title="재료준비"></a>재료준비</h2><h3 id="80-tcp가-열린-서버가-있어야-합니다"><a href="#80-tcp가-열린-서버가-있어야-합니다" class="headerlink" title="80/tcp가 열린 서버가 있어야 합니다"></a>80/tcp가 열린 서버가 있어야 합니다</h3><p>이번 가이드에서는 80/tcp 포트가 열려있는 서버가 “꼭” 있어야 합니다. 물론 서버에는 공인 IP가 할당되어야 합니다. 그래야 나중에 CloudFlare에서 DNS설정을 해줄 수 있습니다.</p>
+<blockquote>
+<p>만약 집에 이런 서버를 둔다면 포트포워딩을 통해 80/tcp만 열어줘도 됩니다.</p>
+</blockquote>
+<p>한국서버가 가장 좋지만(물리적으로 가까우니까) 일본 VPS도 속도면에서 큰 손해를 보지는 않습니다. (물론 게임서버라면 약간 이야기가 다르지만, 웹 서버용으로는 충분합니다.)</p>
+<p>이번엔 ubuntu server os를 세팅하는 방법으로 진행합니다. (ubuntu 14.04, 16.04 모두 가능합니다.)</p>
+<h3 id="HTTPS를-쓰려면-도메인이-있어야-합니다"><a href="#HTTPS를-쓰려면-도메인이-있어야-합니다" class="headerlink" title="(HTTPS를 쓰려면) 도메인이 있어야 합니다"></a>(HTTPS를 쓰려면) 도메인이 있어야 합니다</h3><p>개인 도메인이 있어야 CloudFlare라는 DNS서비스에 등록을 하고 HTTPS를 이용할 수 있습니다. 도메인이 없거나 HTTPS를 사용하지 않아도 되는 상황이라면 공인 IP만 있어도 무방합니다.</p>
+<h2 id="만들어보기"><a href="#만들어보기" class="headerlink" title="만들어보기"></a>만들어보기</h2><p>ubuntu 서버와 도메인이 준비되었다면 이제 시작해봅시다!</p>
+<h3 id="서버-세팅하기"><a href="#서버-세팅하기" class="headerlink" title="서버 세팅하기"></a>서버 세팅하기</h3><p>서버 세팅은 크게 어렵지 않습니다. ssh로 서버에 접속해 아래 명령어를 그대로 입력해보세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshd -T | grep -E <span class="string">'gatewayports|allowtcpforwarding'</span></span><br></pre></td></tr></table></figure>
+
+<p>위 명령어는 sshd의 <code>gatewayports</code>속성과 <code>allowtcpforwarding</code>속성값을 가져옵니다. 만약 여러분이 ubuntu를 설치하고 아무런 설정을 건드리지 않았다면 다음과 같이 뜰거에요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gatewayports no</span><br><span class="line">allowtcpforwarding yes</span><br></pre></td></tr></table></figure>
+
+<p>우리는 저 두개를 모두 <code>yes</code>로 만들어야 합니다. 아래 명령어를 ssh에 그대로 입력해주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">echo</span> <span class="string">"gatewayports yes\nallowtcpforwarding yes"</span> &gt;&gt; /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+
+<p>물론 <code>/etc/ssh/sshd_config</code> 파일에서 직접 수정해주셔도 됩니다.</p>
+<blockquote>
+<p>유의: 이와같이 사용하면 서버의 모든 유저가 SSH Proxy를 사용할수 있게 됩니다. 이를 막으려면 아래와 같이 <code>Match User 유저이름</code>을 넣고 진행해주세요. </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Match User beomi</span><br><span class="line">  AllowTcpForwarding yes</span><br><span class="line">  GatewayPorts yes</span><br></pre></td></tr></table></figure>
+
+<p>정말 간단하게 서버 설정이 끝났습니다 :)</p>
+<h3 id="로컬-8000포트를-원격-80포트로-연결하기"><a href="#로컬-8000포트를-원격-80포트로-연결하기" class="headerlink" title="로컬 8000포트를 원격 80포트로 연결하기"></a>로컬 8000포트를 원격 80포트로 연결하기</h3><p>로컬 터미널에서 아래와 같이 명령어를 입력하면 설정이 끝납니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ssh 원격서버유저이름@서버ip -N -R 서버포트:localhost:로컬포트 </span></span><br><span class="line">ssh beomi@47.156.24.36 -N -R 80:localhost:8000</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어는 <code>47.156.24.36</code>라는 ip를 가진 서버에 <code>beomi</code>라는 사용자로 ssh접속을 하고, 로컬의 8000번 포트를 원격 서버의 80포트로 연결하는 명령어입니다.</p>
+<p>즉, <code>localhost:8000</code> 은 <code>47.156.24.36:80</code>와 같아진거죠!</p>
+<p>이제 모바일 디바이스에서도 <code>http://47.156.24.36</code>라고 입력하면 개발 서버에 들어올 수 있어요.</p>
+<h3 id="CloudFlare로-SSL-붙이기"><a href="#CloudFlare로-SSL-붙이기" class="headerlink" title="CloudFlare로 SSL 붙이기"></a>CloudFlare로 SSL 붙이기</h3><p>만약 서버주소를 외우는게 불편하지 않으시고 &amp; HTTPS가 필요하지 않으시다면, 아래부분은 진행하지 않아도 괜찮습니다.</p>
+<p>이 챕터에서는 <a href="https://www.cloudflare.com/">CloudFlare</a>에 도메인을 연결할 때 제공받을 수 있는 SSL서비스를 통해 HTTP로 서빙되는 우리 서비스를 ‘안전한’ HTTPS로 서빙하도록 도와줍니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-08-26-SSH-Reverse-Proxy-like-ngrok-cloudflare-flexssl.png" alt=""></p>
+<p>CloudFlare의 Flex SSL을 사용하면 우리 서버가 HTTPS가 아닌 HTTP로 서빙되더라도 클라우드 플레어에서 HTTPS로 만들어줍니다.</p>
+<blockquote>
+<p>사실 이 기능은 보안을 위해서 있는 서비스라고 보기는 어렵습니다. 물론 브라우저/클라이언트와 CloudFlare 간 통신에서는 좀 더 안전한 통신이 가능하지만, 도메인별로 다른 SSL 인증서를 사용하지 않고 여러 도메인을 그룹핑한 인증서를 사용하고 있는 문제가 있고, 결국 CloudFlare와 우리 서버간에는 HTTP로 통신이 이루어지기 때문에 CloudFlare와 우리 서버 사이 Node에서 이루어지는 공격은 막기 어렵습니다. 따라서 이런 경우는 Geolocation와 같은 HTTPS 위에서만 사용할 수 있는 기능등을 테스트 서버를 통해 구동할 경우 유용합니다.</p>
+</blockquote>
+<p>우선 CloudFlare에 가입하고 도메인을 CloudFlare에 등록해주세요.</p>
+<p>도메인을 등록하고 <code>DNS</code> 탭에 들어가서 다음과 같이 서브 도메인(혹은 루트 도메인)을 서버 ip에 연결한 후 우측 하단의 구름모양을 켜 주세요. 이 구름모양을 켜 주면 이 도메인으로 온 요청은 CloudFlare의 CDN망을 통해 전달됩니다. (CSS/JS캐싱도 해줍니다!)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-08-27%2014.08.01.png?dl=1" alt=""></p>
+<p>도메인을 등록했으면 아래와 같이 <code>Crypto</code>탭에서 SSL을 <code>Flexible</code>로 바꿔주세요.</p>
+<ul>
+<li>off: 말 그대로 HTTPS를 끕니다.</li>
+<li><strong>flexible</strong>: 우리 서버가 HTTP라도 클라우드플레어로 온 HTTPS요청을 우리서버에 HTTP로 바꿔서 보내줍니다.</li>
+<li>full: 우리 서버도 HTTPS가 지원되어야 하지만, 꼭 CA에게 인증된 ‘안전한’ 인증서일 필요는 없습니다. 자체서명 인증서라도 괜찮아요.</li>
+<li>full (strict): 우리 서버가 CA에게 인증된 ‘안전한’ 인증서를 통해 HTTPS로 서빙을 해야만 합니다. 자체서명 인증서는 쓸 수 없어요.</li>
+</ul>
+<p>이 설정은 off에서 다른 옵션으로 바꿔주면 약간의 시간이 걸리지만 안전한 SSL 인증서를 CloudFlare에서 만들어줍니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-08-27%2013.58.36.png?dl=1" alt=""></p>
+<h2 id="proxy-명령어에-연결하기"><a href="#proxy-명령어에-연결하기" class="headerlink" title="proxy 명령어에 연결하기"></a><code>proxy</code> 명령어에 연결하기</h2><p>보통 <code>runserver</code>와 같은 개발 서버를 띄우는 명령은 자주 사용하지만 우리가 사용하는 긴 명령어는 한번에 치기도 어렵고 옵션 기억하기도 귀찮은 경우가 많습니다. 쉘에서 지원하는 <code>alias</code>를 통해 아래와 같이 만들어줍시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .zshrc / .bashrc / .bash_profile 와 같이 쉘이 켜질때 실행되는 부분에 넣어주세요</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> proxy=<span class="string">"ssh beomi@47.156.24.36 -N -R 80:localhost:8000"</span></span><br><span class="line"><span class="comment"># alias proxy="ssh 원격서버유저이름@서버ip -N -R 서버포트:localhost:로컬포트"</span></span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">이와 같이 입력하고 저장한 후 터미널을 다시 켜주면 이제 `proxy`라는 명령어를 치면 로컬 개발 서버가 HTTPS로 세상에 오픈되는 것을 볼 수 있습니다 :)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 마치며</span></span><br><span class="line"></span><br><span class="line">ngrok는 아주 간편하고 좋은 서비스입니다. 하지만 모바일과 PC 웹을 동시에 테스트 하는 경우 connection개수를 금방 넘어버리고 ngrok를 새로 실행할 때마다 도메인 이름이 바뀌는점이 불편해 위와 같이 Proxy서버를 만들어 개발하는데 사용합니다.</span><br><span class="line"></span><br><span class="line">다만 CloudFlare의 CSS/JS캐싱 전략에 의해 변경된 파일이 가져와지지 않는 점은 있는데, 이때는 Apache등의 웹서버에서 제공하는 virtualhost기능과 <span class="built_in">let</span><span class="string">'s encrypt의 무료 SSL 서비스를 조합해 사용하면 CloudFlare없이도 동일하게 환경을 만들어 줄 수 있습니다. 하지만 웹서버 자체에 대한 이해가 필요하며 SSL을 붙이는 일도 상당히 귀찮기때문에 단순하게 CloudFlare에서 도에인 모드를 아래와 같이 '</span>Development Mode<span class="string">'로 설정해 주면 캐싱 하는 것을 방지할 수 있습니다.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">![](https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-08-27%2014.42.36.png?dl=1)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### 여담</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">django의 경우에는 `settings.py`파일의 `ALLOWED_HOSTS`에 우리가 지정한 도메인 (ex: shop.testi.kr)을 추가해줘야 합니다.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">```python</span></span><br><span class="line"><span class="string"># settings.py</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">ALLOWED_HOSTS = ['</span>*<span class="string">'] # 모든 Host에서의 접근을 허용</span></span><br><span class="line"><span class="string"># ALLOWED_HOSTS = ['</span>shop.testi.kr<span class="string">'] # shop.testi.kr 도메인 host를 통한 접근을 허용</span></span><br></pre></td></tr></table></figure>
+
+<p>webpack의 webpack-dev-server에서 위와같이 사용하려면 <code>webpack.config.js</code>파일을 아래와 같이 만들어주면 됩니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    entry: <span class="string">'./src/index.js'</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">        filename: <span class="string">'bundle.js'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        host: <span class="string">"0.0.0.0"</span>, <span class="comment">// 모든 host에서의 접근을 허용</span></span><br><span class="line">        disableHostCheck: <span class="literal">true</span> <span class="comment">// Host Check를 끕니다</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/09/28/HowToMakeWebCrawler-Headless-Chrome/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">나만의 웹 크롤러 만들기(7): 창없는 크롬으로 크롤링하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/08/25/DjangoCBV-queryset-vs-get_queryset/">
+                <span class="level-item">Django CBV: queryset vs get_queryset() 삽질기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

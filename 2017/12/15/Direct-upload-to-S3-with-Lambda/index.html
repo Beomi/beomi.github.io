@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Direct S3 Upload with Lambda - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/direct_s3_post_upload.png" alt="Direct S3 Upload with Lambda">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-12-14T15:00:00.000Z">2017-12-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/aws/">aws</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Direct S3 Upload with Lambda
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>이전 글인 <a href="/2017/12/07/Deploy-Tensorflow-Keras-on-AWS-Lambda/">AWS Lambda에 Tensorflow/Keras 배포하기</a>에서 Lambda 함수가 실행되는 트리거는 s3버킷에 파일이 <strong>생성</strong>되는 것이었습니다.</p>
+<p>물론 파일을 올릴 수 있는 방법은 여러가지가 있습니다. 아주 단순하게 POST 폼 전송 요청을 받고 <code>boto3</code>등을 이용해 서버에서 s3으로 파일을 전송할 수도 있고, 더 단순하게는 AWS s3 콘솔을 이용해 파일을 올리라고 할 수도 있습니다.</p>
+<p>하지만 이런 부분에는 약간의 단점이 함께 있습니다.</p>
+<p>첫 번째 방법처럼 파일을 수신해 다시 s3에 올린다면 그 과정에서 서버 한대가 상시로 켜져있어야 하고 전송되는 속도 역시 서버에 의해 제약을 받습니다. 한편 두 번째 방법은 가장 단순하지만 제3자에게서 파일을 받기 위해서 AWS 계정(비록 제한된 권한이 있다 하더라도)을 제공한다는 것 자체가 문제가 됩니다.</p>
+<p>따라서 이번 글에서는 사용자의 브라우저에서 바로 s3으로 POST 요청을 전송할 수 있도록 만드는 과정을 다룹니다.</p>
+<h2 id="시나리오"><a href="#시나리오" class="headerlink" title="시나리오"></a>시나리오</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-15%2018.15.38.png" alt=""></p>
+<p>사용자는 아주 일반적인 Form 하나를 보게 됩니다. 여기에서 드래그-드롭 혹은 파일 선택을 이용해 일반적으로 파일을 올리게 됩니다. 물론 이 때 올라가는 주소는 AWS S3의 주소가 됩니다.</p>
+<p>하지만 이게 바로 이뤄진다면 문제가 생길 소지가 많습니다. 아무나 s3 버킷에 파일을 올린다면 악의적인 파일이 올라올 수도 있고, 기존의 파일을 덮어쓰기하게 될 수도 있기 때문입니다.</p>
+<p>따라서 중간에 s3에 post 요청을 할 수 있도록 <strong>인증(signing)</strong>해주는 서버가 필요합니다. 다만 이 때 서버는 요청별로 응답을 해주면 되기 때문에 AWS Lambda를 이용해 제공할 수 있습니다.</p>
+<p>따라서 다음과 같은 형태로 진행이 됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/direct_s3_post_upload.png" alt="전체 처리 과정 모식도"></p>
+<p>S3에 POST 요청을 하기 전 Signing 서버에 업로드하는 파일 정보와 위치등을 보낸 뒤, Lambda에서 해당 POST 요청에 대한 인증 정보가 들어간 header를 반환하면 그 헤더 정보를 담아 실제 S3에 POST 요청을 하는 방식입니다.</p>
+<p>만약 Signing하는 과정 없이 업로드가 이뤄진다면 s3 버킷을 누구나 쓸 수 있는 Public Bucket으로 만들어야 하는 위험성이 있습니다. 하지만 이와 같이 제한적 권한을 가진 <code>iam</code> 계정을 생성하고 Signing하는 과정을 거친다면 조금 더 안전하게 사용할 수 있습니다.</p>
+<blockquote>
+<p><strong>Note:</strong> 이번 글에서는 API Gateway + Lambda 조합으로 Signing서버를 구성하기 때문에 만약 추가적인 인증 과정을 붙인다면 API Gateway단에서 이뤄지는 것이 좋습니다.</p>
+</blockquote>
+<h2 id="버킷-만들기-amp-권한-설정"><a href="#버킷-만들기-amp-권한-설정" class="headerlink" title="버킷 만들기 &amp; 권한 설정"></a>버킷 만들기 &amp; 권한 설정</h2><blockquote>
+<p>새로운 버킷은 <a href="https://s3.console.aws.amazon.com/s3/home">https://s3.console.aws.amazon.com/s3/home</a>에서 추가할 수 있습니다.</p>
+</blockquote>
+<p>새로운 버킷을 하나 만들어주세요. 이번 글에서는 <code>s3-signature-dev-py3</code>라는 이름으로 만들어 진행해 보았습니다.</p>
+<p>버킷에 GET/POST 요청을 하기 위해 CORS 설정을 해줘야 합니다.(<code>localhost:8000</code>와 같은 제 3의 URL에서 s3 버킷의 주소로 POST 요청을 날리기 위해서는 CORS 설정이 필수입니다.)</p>
+<p>아래 스크린샷과 같이 CORS 설정을 진행해 주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2020.55.31.png" alt=""></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">CORSConfiguration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">CORSRule</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">AllowedOrigin</span>&gt;</span>*<span class="tag">&lt;/<span class="name">AllowedOrigin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">AllowedMethod</span>&gt;</span>GET<span class="tag">&lt;/<span class="name">AllowedMethod</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">MaxAgeSeconds</span>&gt;</span>3000<span class="tag">&lt;/<span class="name">MaxAgeSeconds</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">AllowedHeader</span>&gt;</span>Authorization<span class="tag">&lt;/<span class="name">AllowedHeader</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">CORSRule</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">CORSRule</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">AllowedOrigin</span>&gt;</span>*<span class="tag">&lt;/<span class="name">AllowedOrigin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">AllowedMethod</span>&gt;</span>POST<span class="tag">&lt;/<span class="name">AllowedMethod</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">MaxAgeSeconds</span>&gt;</span>3000<span class="tag">&lt;/<span class="name">MaxAgeSeconds</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">AllowedHeader</span>&gt;</span>Authorization<span class="tag">&lt;/<span class="name">AllowedHeader</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">CORSRule</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">CORSConfiguration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>이처럼 구성해주면 모든 도메인(<code>*</code>)에서 요청한 GET/POST 요청을 정상적인 크로스-도메인 요청으로 받아들입니다.</p>
+<blockquote>
+<p><strong>Note:</strong> 만약 여러분이 여러분의 프론트 서비스에서만 이 요청을 허용하려면 <code>AllowedOrigin</code>부분을 여러분이 사용하는 프론트 서비스의 도메인으로 변경해주세요.</p>
+</blockquote>
+<p>이제 s3을 사용할 준비는 마쳤습니다.</p>
+<h2 id="버킷-액세스-iam-계정-만들기"><a href="#버킷-액세스-iam-계정-만들기" class="headerlink" title="버킷 액세스 iam 계정 만들기"></a>버킷 액세스 iam 계정 만들기</h2><blockquote>
+<p>새로운 iam 계정은 <a href="https://console.aws.amazon.com/iam/home?region=ap-northeast-2#/users$new?step=details">https://console.aws.amazon.com/iam/home?region=ap-northeast-2#/users$new?step=details</a>에서 만들 수 있습니다.</p>
+</blockquote>
+<p>다음으로는 앞서 만들어준 버킷에 액세스를 할 수 있는 <code>iam</code> 계정을 만들어야 합니다. 이번에 사용할 유저 이름도 <code>s3-signature-dev-py3</code>로 만들어 줍시다. 아래 스크린샷처럼 <code>Programmatic access</code>를 위한 사용자를 만들어 줍시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.03.31.png" alt=""></p>
+<p>우리는 버킷내 <code>uploads</code>폴더에 파일을 ‘업로드만 가능’한, <code>PutObject</code>와 <code>PutObjectAcl</code>이라는 아주 제한적인 권한을 가진 계정을 만들어 줄 것이기 때문에 다음과 같이 Create Policy를 눌러 json 기반으로 계정 정책을 새로 생성해 줍시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.05.01.png" alt=""></p>
+<p>새 창이 뜨면 아래와 같이 <code>arn:aws:s3:::s3-signature-dev-py3/uploads/*</code> 리소스에 대해 <code>PutObject</code>와 <code>PutObjectAcl</code>에 대해 Allow를 해 주는 json을 입력하고 저장해줍시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.16.41.png" alt=""></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"Version"</span>: <span class="string">"2012-10-17"</span>,</span><br><span class="line">    <span class="attr">"Statement"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"Sid"</span>: <span class="string">"s3UploadsGrant"</span>,</span><br><span class="line">            <span class="attr">"Effect"</span>: <span class="string">"Allow"</span>,</span><br><span class="line">            <span class="attr">"Action"</span>: [</span><br><span class="line">                <span class="string">"s3:PutObject"</span>,</span><br><span class="line">                <span class="string">"s3:PutObjectAcl"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"Resource"</span>: [</span><br><span class="line">                <span class="string">"arn:aws:s3:::s3-signature-dev-py3/uploads/*"</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이제 policy의 name을 입력하고 저장해줍시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.18.22.png" alt=""></p>
+<p>저장해주고 창을 끈 뒤 이전 페이지로 돌아와 Refresh를 누르면 다음과 같이 앞서 만들어준 Policy가 나오는 것을 볼 수 있습니다. 체크박스에 체크를 누른 뒤 다음을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.20.29.png" alt=""></p>
+<p>이제 마지막 확인을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.21.35.png" alt=""></p>
+<p>확인을 누르면 다음과 같이 Access key ID와 Secret access key가 나옵니다. 이 키는 지금만 볼 수 있으니 csv로 받아두거나 따로 기록해 두세요. 그리고 글 아래부분에서 이 키를 사용하게 됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2021.22.05.png" alt=""></p>
+<h2 id="Signing-Lambda-함수-만들기"><a href="#Signing-Lambda-함수-만들기" class="headerlink" title="Signing Lambda 함수 만들기"></a>Signing Lambda 함수 만들기</h2><p>이제 POST 요청을 받아 인증을 해줄 AWS Lambda함수를 만들어 줍시다.</p>
+<p>아래 코드를 받아 AWS Lambda 새 함수를 만들어주세요. (역시 <code>s3-signature-dev-py3</code>라는 이름으로 만들었습니다.)</p>
+<p><a href="https://gist.github.com/Beomi/ac9d34dbfa9a6bdaf4a0426e8b83b4e3">Github Gist: index.py</a></p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2020.22.26.png" alt=""></p>
+<p>이번 함수는 python3의 내장함수만을 이용하기 때문에 따로 zip으로 만들 필요없이 AWS 콘솔 상에서 인라인 코드 편집으로 함수를 생성하는 것이 가능합니다.</p>
+<p>아래 스크린샷처럼 <code>lambda_function.py</code> 파일을 위의 gist 코드로 덮어씌워주세요. 그리고 <code>Handler</code>부분을 <code>lambda_function.index</code>로 바꿔 <code>index</code>함수를 실행하도록 만들어 주세요. 그리고 저장을 눌러야 입력한 코드가 저장됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2020.25.34.png" alt=""></p>
+<p>코드를 조금 뜯어보면 아래와 같이 <code>ACCESS_KEY</code>와 <code>SECRET_KEY</code>를 저장하는 부분이 있습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ACCESS_KEY = os.environ.get(<span class="string">'ACCESS_KEY'</span>)</span><br><span class="line">SECRET_KEY = os.environ.get(<span class="string">'SECRET_KEY'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>AWS Lambda에서 함수를 실행할 때 아래 환경변수를 가져와 s3 버킷에 액세스하기 때문에 위 두개 값을 아래 스크린샷처럼 채워줍시다. 입력을 마치고 저장을 눌러주면 환경변수가 저장됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2020.32.57.png" alt=""></p>
+<blockquote>
+<p><strong>Note:</strong> 각 키의 값은 앞서 iam 계정 생성시 만든 값을 넣어주세요!</p>
+</blockquote>
+<h2 id="API-Gateway-연결하기"><a href="#API-Gateway-연결하기" class="headerlink" title="API Gateway 연결하기"></a>API Gateway 연결하기</h2><blockquote>
+<p>API Gateway는 <a href="https://ap-northeast-2.console.aws.amazon.com/apigateway/home?region=ap-northeast-2#/apis/create">https://ap-northeast-2.console.aws.amazon.com/apigateway/home?region=ap-northeast-2#/apis/create</a>에서 만들 수 있습니다.</p>
+</blockquote>
+<p>이렇게 만들어 준 AWS Lambda 함수는 각각은 아직 외부에서 결과값을 받아올 수 있는 형태가 아닙니다. 람다 함수를 트리거해주고 결과값을 받아오기 위해서는 AWS API Gateway를 통해 웹 URL로 오는 요청에 따라서 람다 함수가 실행되도록 구성해야 합니다. 또한, CORS역시 활성화 해줘야 합니다.</p>
+<h3 id="API-Gateway-만들고-Lambda와-연결하기"><a href="#API-Gateway-만들고-Lambda와-연결하기" class="headerlink" title="API Gateway 만들고 Lambda와 연결하기"></a>API Gateway 만들고 Lambda와 연결하기</h3><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2022.01.23.png" alt=""></p>
+<p>Resources에서는 Api URL의 하위 URL와 root URL에 대해 각각 메소드들을 정의해 사용할 수 있습니다. 우리는 요청을 받을 때 <code>POST</code> 방식으로 요청을 받아 처리해줄 것이랍니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2022.15.35.png" alt=""></p>
+<p>여기서 새 메소드 중 <code>POST</code>를 선택해 줍시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-18%2022.16.38.png" alt=""></p>
+<p>메소드에 Lambda 함수를 연결해 주기 위해 다음과 같이 <code>Lambda Function</code>을 선택하고 <code>Proxy</code>는 체크 해제한 뒤, <code>Region</code>은 <code>ap-northeast-2</code>(서울)리전을 선택하고, 아까 만들어준 함수 이름을 입력한 뒤 <code>Save</code>를 눌러줍시다.</p>
+<blockquote>
+<p><strong>Tip:</strong> Lambda Proxy를 활성화 시킬 경우 HTTP 요청이 그대로 들어오는 대신, AWS에서 제공하는 event 객체가 대신 Lambda함수로 넘어가게 됩니다. 우리는 HTTP 요청을 받아 Signing해주는 과정에서 Header와 Body를 유지해야하기 때문에 Proxy를 사용하지 않습니다.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2013.24.50.png" alt=""></p>
+<p><code>Save</code>를 누르면 다음과 같이 API Gateway에 Lambda함수를 실행할 권한을 연결할지 묻는 창이 뜹니다. 가볍게 OK를 눌러줍시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2013.28.28.png" alt=""></p>
+<p>연결이 완료되면 API Gateway가 아래 사진처럼 Lambda 함수와 연결 된 것을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2013.33.11.png" alt=""></p>
+<h3 id="CORS-활성화하기"><a href="#CORS-활성화하기" class="headerlink" title="CORS 활성화하기"></a>CORS 활성화하기</h3><p>조금만 더 설정을 해주면 API Gateway를 배포할 수 있게 됩니다. 지금 해줘야 하는 작업이 바로 <code>CORS</code> 설정인데요, 우리가 나중에 만들 프론트 페이지의 URL와 s3의 URL이 다르기 때문에 브라우저에서는 보안의 이유로 <code>origin</code>이 다른 리소스들에 대해 접근을 제한합니다. 따라서 <code>CORS</code>를 활성화 해 타 URL(프론트 URL)에서도 요청을 할 수 있도록 설정해줘야 합니다.</p>
+<p><code>Actions</code>에서 <code>Enable CORS</code>를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2013.34.06.png" alt=""></p>
+<p>다음과 같이 <code>Access-Control-Allow-Headers</code>의 값을 <code>&#39;*&#39;</code>로 설정한 뒤 Enable CORS 버튼을 눌러 저장해주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2015.30.42.png" alt=""></p>
+<p>다시한번 Confirm을 눌러주시면…</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2015.33.45.png" alt=""></p>
+<p>CORS가 활성화되고 Options 메소드가 새로 생기게 됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2015.35.30.png" alt=""></p>
+<p>이제 API Gateway를 ‘배포’해야 실제로 사용할 수 있습니다.</p>
+<h3 id="API-Gateway-배포하기"><a href="#API-Gateway-배포하기" class="headerlink" title="API Gateway 배포하기"></a>API Gateway 배포하기</h3><p>API Gateway의 설정을 모두 마치고나서는 배포를 진행해야 합니다. 아래와 같이 <code>Actions</code>에서 <code>Deploy API</code>를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2015.39.46.png" alt=""></p>
+<p>API Gateway는 <code>Deployment Stage</code>를 필요로 합니다. <code>Stage name</code>을 <code>live</code>로 설정하고 <code>Deploy</code>를 눌러줍시다.</p>
+<blockquote>
+<p><strong>Tip:</strong> <code>Deployment Stage</code>는 API Gateway의 URL 뒤 <code>/stagename</code>의 형식으로 추가 URL을 지정해줍니다. 이를 통해 API를 개발 버전과 실 서비스 버전을 분리해 제공할 수 있습니다.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2015.43.03.png" alt=""></p>
+<p>배포가 완료되면 아래와 같이 API Gateway를 사용할 수 있는 URL을 받을 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2015.48.42.png" alt=""></p>
+<p>이번에는 <code>https://9n2qae2nak.execute-api.ap-northeast-2.amazonaws.com/live</code>가 Signing Lambda 함수를 실행할 수 있는 API Gateway URL이 됩니다.</p>
+<h2 id="파일-업로드-프론트-만들기"><a href="#파일-업로드-프론트-만들기" class="headerlink" title="파일 업로드 프론트 만들기"></a>파일 업로드 프론트 만들기</h2><p>이제 파일을 업로드할 form이 있는 Static 웹 사이트를 만들어봅시다.</p>
+<p>이번 글에서는 이미 만들어진 파일 업로더인 VanillaJS용 <a href="https://github.com/FineUploader/fine-uploader">Fine Uploader</a>를 이용해 최소한의 업로드만 구현합니다.</p>
+<blockquote>
+<p>React용 <a href="https://github.com/FineUploader/react-fine-uploader">React Fine Uploader</a>와 Vue용 <a href="https://github.com/FineUploader/vue-fineuploader">Vue Fine Uploader</a>도 있습니다.</p>
+</blockquote>
+<p><a href="https://github.com/Beomi/s3-direct-uploader-demo">https://github.com/Beomi/s3-direct-uploader-demo</a> 깃헙 레포를 clone받아 <code>app.js</code>를 열어 아래 목록을 수정해주세요.</p>
+<ul>
+<li>request/endpoint: 여러분이 사용할 s3 버킷 이름 + .s3.amazonaws.com</li>
+<li>request/accessKey: 앞서 만든 iam 계정의 Access Key</li>
+<li>objectProperties/region: s3 버킷의 리전</li>
+<li>objectProperties/key/prefixPath: s3 버킷 내 올릴 폴더 이름(putObject 권한을 부여한 폴더)</li>
+<li>signature/endpoint: 앞서 만든 AWS Lambda의 API Gateway URL</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uploader = <span class="keyword">new</span> qq.s3.FineUploader(&#123;</span><br><span class="line">    debug: <span class="literal">false</span>, <span class="comment">// defaults to false</span></span><br><span class="line">    element: <span class="built_in">document</span>.getElementById(<span class="string">'fine-uploader'</span>),</span><br><span class="line">    request: &#123;</span><br><span class="line">        <span class="comment">// S3 Bucket URL</span></span><br><span class="line">        endpoint: <span class="string">'https://s3-signature-dev-py3.s3.amazonaws.com'</span>, </span><br><span class="line">        <span class="comment">// iam ACCESS KEY</span></span><br><span class="line">        accessKey: <span class="string">'AKIAIHUAMKBO27EZQ6RA'</span> </span><br><span class="line">    &#125;,</span><br><span class="line">    objectProperties: &#123;</span><br><span class="line">        region: <span class="string">'ap-northeast-2'</span>,</span><br><span class="line">        key(fileId) &#123;</span><br><span class="line">            <span class="keyword">var</span> prefixPath = <span class="string">'uploads'</span></span><br><span class="line">            <span class="keyword">var</span> filename = <span class="keyword">this</span>.getName(fileId)</span><br><span class="line">            <span class="keyword">return</span> prefixPath + <span class="string">'/'</span> + filename</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    signature: &#123;</span><br><span class="line">        <span class="comment">// version</span></span><br><span class="line">        version: <span class="number">4</span>,</span><br><span class="line">        <span class="comment">// AWS API Gate URL</span></span><br><span class="line">        endpoint: <span class="string">'https://9n2qae2nak.execute-api.ap-northeast-2.amazonaws.com/live'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    retry: &#123;</span><br><span class="line">        enableAuto: <span class="literal">true</span> <span class="comment">// defaults to false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>그리고나서 <code>index.html</code> 파일을 열어보시면 아래 사진과 같은 업로더가 나오게 됩니다.</p>
+<blockquote>
+<p><strong>DEMO:</strong> <a href="https://beomi.github.io/s3-direct-uploader-demo/">https://beomi.github.io/s3-direct-uploader-demo/</a></p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-12-28%2017.59.46.png" alt=""></p>
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><p>이제 여러분은 Serverless하게 파일을 s3에 업로드 할 수 있게 됩니다. 권한 관리와 같은 부분은 API Gateway에 접근 가능한 부분에 제약을 걸어 업로드에 제한을 걸어 줄 수도 있습니다.</p>
+<p>ec2등을 사용하지 않고도 간단한 signing만 갖춰 s3에 파일을 안전하게 업로드 하는 방식으로 전체 프로세스를 조금씩 Serverless한 구조로 바꾸는 예시였습니다.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><p><a href="http://docs.aws.amazon.com/ko_kr/AmazonS3/latest/API/sigv4-post-example.html">Browser-Based Upload using HTTP POST (Using AWS Signature Version 4)</a></p>
+</li>
+<li><p><a href="https://kennbrodhagen.net/2015/12/02/how-to-access-http-headers-using-aws-api-gateway-and-lambda/">How to access HTTP headers using AWS API Gateway and Lambda</a></p>
+</li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/12/30/Blog-1Year-2017/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">2017년 회고 &amp; 블로그 연말정산</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/12/07/Deploy-Tensorflow-Keras-on-AWS-Lambda/">
+                <span class="level-item">AWS Lambda에 Tensorflow/Keras 배포하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

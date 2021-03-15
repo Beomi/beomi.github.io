@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>DLCAT#2 참석 후기 &amp; 정리 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-04-161424.png" alt="DLCAT#2 참석 후기 &amp; 정리">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-03T15:00:00.000Z">2019-07-04</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/machinelearning/">machinelearning</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/machinelearning/seminar/">seminar</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                DLCAT#2 참석 후기 &amp; 정리
+            
+        </h1>
+        <div class="content">
+            <h2 id="DLCAT-2를-다녀오다"><a href="#DLCAT-2를-다녀오다" class="headerlink" title="DLCAT#2를 다녀오다."></a>DLCAT#2를 다녀오다.</h2><p>대전 UST와 ETRI에서 열린 DLCAT행사를 다녀왔다.</p>
+<p>모두 ML/DL에 관련한 이야기로 한가득…(굉장히 듣는 즐거움이 있었다.)</p>
+<p>(아래 이미지는 DLCAT에서 들은 세션들)</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-04-161222.jpg" alt="IMG_0042"></p>
+<p>제목만 보고 잘못 들어갔지만 새로운 인사이트를 얻은 세션도 있었고, 현실적인 이야기를 하는 경우와 사업적인 이야기를 하는 경우, 그리고 논문을 수십편을 40분만에 살펴보는 어마무시한 세션도 있었다. 하지만 어느쪽이든 대부분 굉장히 재미있었던 편. </p>
+<a id="more"></a>
+
+<h2 id="Session-01-딥러닝과-최적설계"><a href="#Session-01-딥러닝과-최적설계" class="headerlink" title="Session 01. 딥러닝과 최적설계"></a>Session 01. 딥러닝과 최적설계</h2><p>첫번째 세션이 사실 ‘딥러닝을 최적화하는 것’으로 오해해 들어갔던 세션이다. 실제로는 최적 설계(Topology Optization)을 하는 딥러닝을 이용해 만들어내는 과정을 담은 세션이었다. </p>
+<p>차체 설계 등 기계를 어떻게 해야 최적으로, 즉 적은 양의 자원을 사용해 최고의 효율을 뽑아내는 가에 대한 연구. 그리고 이러한 연구는 수식을 통한 최적화가 있고 Global Optima값이 존재하기 때문에 <strong>컴퓨팅 리소스와 시간만 충분하다면</strong> 최적해를 찾을 수 있는 문제라고 한다. (정답이 있는 문제)</p>
+<p>하지만 여러가지 문제가…</p>
+<ol>
+<li>시간이 오래걸린다. (2D는 빠르게 되지만, 3D는 정말 느리다고 함)</li>
+<li>최적화를 하려면 일단 수식을 만들어야 하는데 수식 formulation자체가 어려움</li>
+<li>10년전에는 최적 설계가 나와도 만들수가 없었음(CNC로 깎는 것도 한계가 있음)</li>
+<li>사람이 보기에 안예쁨</li>
+</ol>
+<p>이와 같이 굉장히 다양한 문제가 있었지만, 최근의 발전으로는 여러가지를 해결할 수가 있다고 한다. 특히 3번의 경우에는 3DPrint등을 통해 웬만큼 이상한 모양은 구현이 가능해졌다고 한다.</p>
+<blockquote>
+<p>최적 설계 = Input -&gt; f(x) -&gt; output<br>이곳에서 f(x)를 수식Iteration이 아니라 DeepLearning을 써보자!</p>
+</blockquote>
+<p>처음으로 꺼내본 방법은 AutoEncoder 방식을 이용한 Feature 탐색.</p>
+<p>설계의 요소 여러가지를 이미지로 변환한 뒤 CNN &amp; GAN등의 기법을 이용해 모델링.</p>
+<p>결론은 <strong>“잘 된다!”</strong></p>
+<p>하지만 잘 되기는 하지만… DeepLearning으로 하는 모델링의 단점도 있다.</p>
+<ol>
+<li>Near Solution을 찾기는 하지만 Global Optimal solution은 아님.</li>
+<li>Domain specific issue</li>
+</ol>
+<p>1.을 해결하는 방법은 하이브리드식 접근법(혹은 GreyBox)을 통해 DL Model로 근접해를 찾고 이후에 기존의 수식 iter 방식을 통해 최적해를 찾는 방법. 실제로 Convergence까지 속도가 4배 빨라진다고 한다. (DL결과 후 수식 iter이고 수식은 언제나 최적해를 찾기 때문에 Optimal solution이라는 것이 보장됨)</p>
+<p>그리고 Video 등에서 다음 frame을 예측하는 방법을 수식의 next iteration을 예측하는 것처럼 응용할 수도 있다고 한다. 결국 DL모델링은 Topology Optimization을 가속해주는 역할.</p>
+<p>한편 이런 방식은 AutoDesk와 같은 모델링 프로그램에서 이미 지원하고 있다고 한다. 오토데스크에서 작업을 해나가면 그걸 기반으로 학습을 한다고 한다. (정확히 어떤 것인지 모르겠지만 일종의 FineTuning일까?)</p>
+<p>그리고 위의 방법 외에도 RL등을 이용해 해를 찾는 방법도 기획중이라고 한다.(아직까지는 아름다운 결과로 나오지는 않았다고 함) 이것은 ‘과연 수학회가 Real Optima인가? 혹은 다른 새로운 방법은 없을까?’하는 의문에서 시작했다고 한다.</p>
+<p>한편 이런 DL 방법들에서 나오는 결과물들은 고객들을 취향과 갬성적 측면을 고려하지 않고 있기 때문에 문제가 있다고 한다. (이것도 모 랩에서 연구중이라고..)</p>
+<p>그리고 최적화 외에 다른 것에서 2D 모델링에서 유의미한 결과가 나온 것이 Super-Res등의 방법과 같이 X선 피폭량 제한때문에 Low-res로 나오지만 실제로는 더 높은 해상도가 필요한 골다공증 등에 해당 기법을 도입했다고 함(뼈는 최적설계로 생성되기 때문에, 단순한 Weifu같은 해상도 증폭이 아니라 해당 최적 설계를 예측하는 방식으로 진행할 수 있는 분야라고 한다.</p>
+<p>이 외에 여러가지 분야에서 사용한다고 한다.</p>
+<p>결론: ML은 귀납적 방법론 중 하나. || 기존의 Formula vs 사람의 직관 vs DataDriven 의 문제다.</p>
+<h2 id="Session-02-나도너도-모르는-GraphNN의-힘"><a href="#Session-02-나도너도-모르는-GraphNN의-힘" class="headerlink" title="Session 02. 나도너도 모르는 GraphNN의 힘"></a>Session 02. 나도너도 모르는 GraphNN의 힘</h2><p>최신 SoTA를 경신해대는 Transformer등등이 있지만, 2019CVPR을 살펴보면 ‘Graph’라는 키워드의 비중이 커지고 있는 것을 볼 수 있다.</p>
+<blockquote>
+<p>“Attention, Transformer 같은거로 최고의 결과들을 다 보고 나니까 다른 분야로 살펴보기 시작하는거에요.”</p>
+<p>“졸업하기 위해서는 블루오션인 GraphNN을 팝시다!!”</p>
+<p>– 모 세션을 진행한 모 발표자님</p>
+</blockquote>
+<h3 id="GraphNN은-뭐지-왜쓰지"><a href="#GraphNN은-뭐지-왜쓰지" class="headerlink" title="GraphNN은 뭐지? 왜쓰지?"></a>GraphNN은 뭐지? 왜쓰지?</h3><p>Node Feature들을 통해 뉴럴넷을 학습시키는 방법. Graph형태 데이터를 classification하는 것에 사용할 수 있다고 한다. (그래서 Social Network Anslysis등에 많이 사용한다고 함)</p>
+<p>해당 뉴럴넷에서 사용하는 행렬은 두개:</p>
+<ul>
+<li>Node Feature Matrix: 각 Vertex에 지정된 feature set의 vector들을 모은 행렬</li>
+<li>Adjacency Matrix: Vertex간 연결을 보여주는 행렬</li>
+</ul>
+<p>그래서 만들어지는 두 행렬을 이용해서 연산을 진행한다.</p>
+<p>GraphNN에서 사용하는 연산의 진행은 아래 세 가지 방법.</p>
+<ol>
+<li>Aggregate: 중심 Node로 인접 node들의 feature vector를 모으기</li>
+<li>Combine: 가져온 벡터들을 가져와 중앙 node의 feature vector를 업데이트</li>
+<li>ReadOut: Graph를 하나의 벡터로 뽑는 것 (Representative vector를 뽑는 것일까?)</li>
+</ol>
+<p>한편 1. Aggregate와 2. Combine은 논문마다 진행하는 방법이 다른 상태라고 한다.</p>
+<p>GraphNN에서의 <code>layer</code>는 중심 Node에서 얼마나 많이 떨어진 node들에서까지 정보를 가져와 업데이트 하냐는 의미. 아래와 같이 바로 옆 Node들에서만 가져온다고 하면 <code>layer = 1</code> 이 된다. (이건 Agg/Combine 단계에 영향)</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-05-010154.png" alt="image-20190705100154157"></p>
+<p>한편 가장 중앙인 Node 외 다른 Node들도 1 layer(바로 옆 노드)를 통해 자기자신의 Feature Vector를 업데이트하기 때문에, Iteration이 반복됨에 따라 가장 외부의 정보도 서로서로 멀리까지 퍼져나가게 된다고 한다.</p>
+<p>이런 Iter가 끝나고 나서 Vector Mean Pooling을 통해 Conv Vector를 추출해 낼 수 있다고 한다. (이게 결국 해당 network의 representative vector가 되는 것이겠지?)</p>
+<p>Graph에서의 Convolution은 CNN의 이미지에서의 Convolution와는 다르게, <strong>로컬한 정보를 본다</strong> 라는 컨셉과 <strong>weight를 공유한다</strong> 라는 컨셉에서의 conv라고 한다. (앞의 Conv vector가 이런 의미)</p>
+<p>만약 node adjacency matrix에 0,1이 아니라 weight가 있다면 Attention coefficient 통해 각각 곱해 Linear projection을 하는 셈이 된다고 함.</p>
+<p>이러한 GNN을 적용하는 분야중 하나가 VQA로 image classification + QA modeling을 하는 분야이고 이미지에 나와있는 Relation을 측정하는 방법에서 GNN을 사용한다고 한다. (<a href="https://arxiv.org/abs/1903.12314">ReGAT paper</a>)</p>
+<h2 id="Session-03-딥러닝-모델-엑기스-추출-Knowledge-Distillation"><a href="#Session-03-딥러닝-모델-엑기스-추출-Knowledge-Distillation" class="headerlink" title="Session 03. 딥러닝 모델 엑기스 추출 (Knowledge Distillation)"></a>Session 03. 딥러닝 모델 엑기스 추출 (Knowledge Distillation)</h2><blockquote>
+<p>모델이 커지면 커질수록 성능이 좋아진다. 그래서 Big Model로 가고 Ensenble도 한다.</p>
+<p>하지만 실제 Edge device 혹은 Realtime service에서는 latency도 훨씬 중요하다. 그렇다면 큰 모델을 어떻게 작고 빠르게 만들 수 있을까?</p>
+</blockquote>
+<p>딥러닝 모델을 압축하는 방법에는 여러가지 방법이 있지만(사실 이후 EfficientNet세선에서 이부분을 좀 더 다뤘다.) 크게 두 가지를 사용한다.</p>
+<ul>
+<li>Pruning: 중요하지 않은 node들을 제거하기</li>
+<li>Quantization: fp32 -&gt; fp16등으로 줄이기</li>
+<li>bigLITTLE Net: 2개의 뉴럴넷을 이용하기</li>
+</ul>
+<p>하지만 이 외에도 Knowledge Distillation이라는 방법도 있다.</p>
+<p>이때 Distillation은 <strong>Teacher - Student</strong> 방식을 이용해 BigNN -&gt; SmallNN으로 학습한 것을 전달해주는 것이 SmallNN 혼자 (원천 데이터에서) 학습하는 것보다 더 높은 성능(더 높은 Generalization)을 갖게 된다.</p>
+<h3 id="이와-관련된-수많은-Papers"><a href="#이와-관련된-수많은-Papers" class="headerlink" title="이와 관련된 수많은 Papers"></a>이와 관련된 수많은 Papers</h3><p>논문의 제목에 논문 아카이브 혹은 PDF 링크를 붙여둠. 쿠팡 기사가 전화가 와서 중간에 일부 못들은 논문이 있다. 아쉽다 ㅠㅠ </p>
+<h4 id="Do-Deep-Nets-Really-Need-to-be-Deep-NIPS-2014"><a href="#Do-Deep-Nets-Really-Need-to-be-Deep-NIPS-2014" class="headerlink" title="Do Deep Nets Really Need to be Deep? (NIPS 2014)"></a><a href="https://arxiv.org/abs/1312.6184">Do Deep Nets Really Need to be Deep?</a> (NIPS 2014)</h4><p>TeacherNN인 거대한 BigNN을 학습한 뒤 Freezing을 거치고 나오는 logits(softmax취한 결과 아님. Logits 숫자임.)을 이용해 StudentNN인 smallNN을 학습시켜 해당 logits와의 L2 Loss를 줄이는 방식으로 학습을 진행.</p>
+<blockquote>
+<p>Softmax 대신 Logits 쓰는 이유:</p>
+<p>softmax는 Model의 과도한 확신이 들어가 BigNN의 Generalization을 학습하지 못함.</p>
+<p>따라서 logits를 이용해 다른 것일 ‘가능성’, 즉 BigNN의 Generalize를 배우도록 만든다.</p>
+</blockquote>
+<h4 id="Distilling-the-Knowledge-in-a-Neural-Network-NIPS-2014"><a href="#Distilling-the-Knowledge-in-a-Neural-Network-NIPS-2014" class="headerlink" title="Distilling the Knowledge in a Neural Network (NIPS 2014)"></a><a href="https://arxiv.org/abs/1503.02531">Distilling the Knowledge in a Neural Network</a> (NIPS 2014)</h4><blockquote>
+<p>최초로 Knowledge Distillation이라는 용어를 다룬 논문 (Jeff Dean이 쓴 논문!)</p>
+</blockquote>
+<p>Softmax target function과 Soft target을 만들어서 기존의 softmax가 한 label에 peak를 치는 대신 아래 핑크색 그래프처럼 조금 Generalize된 그래프를 그리도록 완화한 것.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-05-015725.png" alt="image-20190705105724888"></p>
+<p>비슷한 방식으로 StudentNN이 TeacherNN을 배우도록 하지만 Loss로는 KL Divergence를 이용함.</p>
+<h4 id="FitNets-Hints-for-Thin-Deep-Nets-ICLR-2015"><a href="#FitNets-Hints-for-Thin-Deep-Nets-ICLR-2015" class="headerlink" title="FitNets: Hints for Thin Deep Nets (ICLR 2015)"></a><a href="https://arxiv.org/abs/1412.6550">FitNets: Hints for Thin Deep Nets</a> (ICLR 2015)</h4><p>모델의 결과값인 logits/softmax value만 사용하는 대신 중간 layer들의 값도 사용하자는 이야기.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-05-020418.png" alt="image-20190705110418052"></p>
+<p>TeacherNN이 큰 filter를 가지고 있는 반면 StudentNN은 작은 filter를 가지고 있지만 더 깊은 뉴럴넷.</p>
+<p>Layer마다 output을 hint로 사용해 Teacher/Student NN을 비교하고, 이때 StudnetNN이 더 필터가 작으므로 TeacherNN의 필터 사이즈에 맞추기 위해 Regresser를 사용함</p>
+<h4 id="A-Gift-from-Knowledge-Distillation-CVPR-2017"><a href="#A-Gift-from-Knowledge-Distillation-CVPR-2017" class="headerlink" title="A Gift from Knowledge Distillation (CVPR 2017)"></a><a href="http://openaccess.thecvf.com/content_cvpr_2017/papers/Yim_A_Gift_From_CVPR_2017_paper.pdf">A Gift from Knowledge Distillation</a> (CVPR 2017)</h4><h4 id="Paying-More-Attention-to-Attention"><a href="#Paying-More-Attention-to-Attention" class="headerlink" title="Paying More Attention to Attention"></a><a href="https://arxiv.org/abs/1612.03928">Paying More Attention to Attention</a></h4><p>Teacher-Student 학습을 AttentionMap을 전달해주는 방법으로 진행.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-05-021142.png" alt="image-20190705111142052"></p>
+<p>Distillation loss를 같이 쓰면 더 성능이 높게 나온다고 한다.</p>
+<blockquote>
+<p>이때부터 ImageNet을 이용한 Validation이 시작되었다고 함</p>
+</blockquote>
+<h4 id="Paraphrasing-Complex-Network-NIPS-2018"><a href="#Paraphrasing-Complex-Network-NIPS-2018" class="headerlink" title="Paraphrasing Complex Network (NIPS 2018)"></a><a href="https://arxiv.org/abs/1802.04977">Paraphrasing Complex Network</a> (NIPS 2018)</h4><h4 id="Born-Again-Neural-Networks-ICML-2018"><a href="#Born-Again-Neural-Networks-ICML-2018" class="headerlink" title="Born Again Neural Networks (ICML 2018)"></a><a href="https://arxiv.org/abs/1805.04770">Born Again Neural Networks</a> (ICML 2018)</h4><p>원천데이터 X에서 가져오는 것 뿐만 아니라 Teacher로 가르친 S1, 그리고 S1에서 배우는 S2, ….이런 방식으로 k번 반복해 Student model들을 ensenble해서 최종 모델로 만드는 방법. Teacher보다 Student Ensenble이 더 성능이 좋게 나온다고 한다.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-05-021439.png" alt="image-20190705111439537"></p>
+<h4 id="Network-Recasting-AAAI-2019"><a href="#Network-Recasting-AAAI-2019" class="headerlink" title="Network Recasting (AAAI 2019)"></a><a href="https://arxiv.org/abs/1809.05262">Network Recasting</a> (AAAI 2019)</h4><p>TeacherNN와 StudnetNN의 Layer 별 MSE Loss를 통해 트레이닝</p>
+<h4 id="Relational-Knowledge-Distillation-CVPR-2019"><a href="#Relational-Knowledge-Distillation-CVPR-2019" class="headerlink" title="Relational Knowledge Distillation (CVPR 2019)"></a><a href="https://arxiv.org/abs/1904.05068">Relational Knowledge Distillation</a> (CVPR 2019)</h4><p>단순히 distance만 계산하는 것 뿐만 아니라 Cosine값을 이용해 angle의 차이도 이용함</p>
+<h3 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h3><p>Teacher -&gt; Student NN 방식 학습은 강력한 Regularizer로서의 역할을 담당한다.</p>
+<p>Few Shot Learning, Meta Leraning등의 여러가지 방법이 있지만 Knowledge Distillation은 충분히 유의미한 성능을 뽑아내는 중.</p>
+<h3 id="QnA"><a href="#QnA" class="headerlink" title="QnA"></a>QnA</h3><p>Q1. 이러한 Knowledge Distillation 방법론이 성능 향상을 위한 것인지 아니면 모델 압축을 위한 것인지?</p>
+<p>A1. Use case마다 다를 듯</p>
+<p>Q2. FitNets는 TeacherNN &lt; StudentNN으로 성능이 더 좋음. 검증이 되나?</p>
+<p>A2. 이때까지는 테스트데이터가 CIFAR100이라 ImageNet으로 한 후속논문과 비교는 어려움</p>
+<p>Q3. Relational Knowldege Distillation논문에서 Feature를 128차원으로 하고 Distance는 euclidian distance를 이용했는데 차원의 저주 이슈는 없나?</p>
+<p>A3. 아마 TradeOff일 듯.</p>
+<p>Q4. paper들이 CV만 다루는데, Sequential Data(ex: NLP)등에서는 안쓰나?</p>
+<p>A4. 있는것으로 알지만 정확한 논문 이름은 바로 알지는 못함</p>
+<p>Q5. StudentNN같이 Knowledge Distillation을 통해 학습하면 학습 속도(아마도 Convergence속도?)가 더 빠른가?</p>
+<p>A5. 당연히 더 느리지만 Knowledge Distillation에서 학습 속도는 코어 이슈가 아님.</p>
+<h2 id="Session-04-딥레마-딥러닝을-서비스로-할때의-딜레마"><a href="#Session-04-딥레마-딥러닝을-서비스로-할때의-딜레마" class="headerlink" title="Session 04. 딥레마, 딥러닝을 서비스로 할때의 딜레마"></a>Session 04. 딥레마, 딥러닝을 서비스로 할때의 딜레마</h2><p>사실 이 세션은 점심 직후라 피로가 쌓여 완전 집중해서 듣지는 못했다 ㅠㅠ</p>
+<p>대체로 DevGround에서 들었던 이야기과 비슷한 내용을 좀 더 ‘일반인’ 대상으로 이야기 하던 세션.</p>
+<h2 id="Session-05-EfficientNet-톺아보기-라고-쓰고-논문읽기"><a href="#Session-05-EfficientNet-톺아보기-라고-쓰고-논문읽기" class="headerlink" title="Session 05. EfficientNet 톺아보기(라고 쓰고 논문읽기)"></a>Session 05. EfficientNet 톺아보기(라고 쓰고 논문읽기)</h2><blockquote>
+<p>“핵심만 보자!”</p>
+</blockquote>
+<p>CNN은 이제 성능 올리기보다는 <strong>효율</strong>을 높이는 방향으로 나아가고 있는 중.</p>
+<p>최근에 나온 BERT와 XLNet의 경우 340million의 파라미터를 학습, 512개의 TPUv3 x 500k steps로 학습해 2.5일 걸려서 대충 2억정도 걸려서 학습했다고 한다. (진짜로 ‘억’소리나는 금액)</p>
+<p>NAS의 초기모델도 800GPU x 1month 걸렸다고 하는 등 ‘요즘 모델’들은 너무 크고 무거워지는 중.</p>
+<p>그래서 최신의 이슈는 OnDevice &amp; Offline등 Edge에서 이뤄지는 딥러닝 학습/추론의 이슈가 커지고 있다고 한다.</p>
+<p>물론 작은 모델을 만들기 위해 Pruning을 하거나 Knowledge Distillation을 할수도 있지만, 모델 자체를 최적화된 설계로 하는 것도 중요하다는 이야기.</p>
+<p>CNN 등 딥러닝 모델에서 속도의 이슈는 크게 3가지.</p>
+<ul>
+<li>Memory Access Cost</li>
+<li>Parameters</li>
+<li>Computing Cost</li>
+</ul>
+<p>이렇게 나눌 수 있는데, 각각을 줄여나가는 것이 이슈라는 것.</p>
+<h3 id="속도를-높이고-amp-가볍게-만드는-방법"><a href="#속도를-높이고-amp-가볍게-만드는-방법" class="headerlink" title="속도를 높이고 &amp; 가볍게 만드는 방법"></a>속도를 높이고 &amp; 가볍게 만드는 방법</h3><h4 id="BottleNeck-Layer-amp-Global-Avg-Pooling"><a href="#BottleNeck-Layer-amp-Global-Avg-Pooling" class="headerlink" title="BottleNeck Layer &amp; Global Avg Pooling"></a>BottleNeck Layer &amp; Global Avg Pooling</h4><p>BottleNeck Layer는 1x1 conv layer로 GoogleNet에서 사용했던 방식.</p>
+<p>그리고 Global Avg Pooling은 FC Layer의 연산을 줄여주는 방식.</p>
+<h4 id="Filter-factorization"><a href="#Filter-factorization" class="headerlink" title="Filter factorization"></a>Filter factorization</h4><p>거대한 5x5 필터 1개를 -&gt; 3x3 필터 2개로 쪼개기 (행렬을 작게 쪼개기)</p>
+<h4 id="Depthwise-Seperable-Convolution"><a href="#Depthwise-Seperable-Convolution" class="headerlink" title="Depthwise Seperable Convolution"></a>Depthwise Seperable Convolution</h4><p>Axis따라 가로 계산 세로 계산을 따로 filter해서 계산하는 방식.</p>
+<ul>
+<li>MobileNet(v1-v3)에서는 inverted residual network를 이용한다.<br>(ResNet에서는 뚱뚱하고 거대한 Layer간 Skip connection을 연결하지만, MobileNet에서는 압축한 layer를 Skip connection으로 연결해 이걸 ‘inverted’ residual이라고 부른다.)</li>
+<li>SENet에서는 중간에 Global Avg Pooling처리릍 통해 FeatureMap에 곱해주는 방식으로 Channel Attention을 통해 채널 중요도를 계산했다.</li>
+</ul>
+<h4 id="Group-Conv"><a href="#Group-Conv" class="headerlink" title="Group Conv"></a>Group Conv</h4><p>Convolution 연산의 핵심은 Local을 본다는 점이지만, 실제 Convolution연산시 모든 채널을 다 보고 있기 때문에 “왜 모든 채널을 봐야해?” 라는 질문. 따라서 Channel을 여러개로 쪼개서 Conv계산을 따로 한 뒤 합치는 방식으로 사용.</p>
+<ul>
+<li>ShuffleNet: 1x1 G Conv로 변경 + Channel Shuffle을 통해 학습량 감소</li>
+<li>ResNext &amp; AlexNet에서도 사용</li>
+<li>CondenseNet: GConv할때 어떤 채널을 가져올지 자체도 학습</li>
+<li>FLGC: 업그레이드 된 버전</li>
+</ul>
+<h4 id="Shift"><a href="#Shift" class="headerlink" title="Shift"></a>Shift</h4><p>Filter 할 때, “왜 모두 ‘같은 채널’에서만 데이터를 가져와야 하나?”</p>
+<p>채널을 상하좌우 등 1칸씩 밀고 + 채널을  1x1 conv를 통해 합친다.</p>
+<blockquote>
+<p>“사실은 Shift는 1x1로 밀고 합치는 대신 메모리 액세스 주소만 잘 바꿔주면 연산 없이 쓸수 있어요”</p>
+</blockquote>
+<ul>
+<li><p>ShiftNet</p>
+</li>
+<li><p>All you need is a few shift (CVPR 2019)<br>-&gt; 모든 filter 아니라 일부만 shift해도 성능 오른다</p>
+</li>
+</ul>
+<h4 id="Use-Direct-Metric"><a href="#Use-Direct-Metric" class="headerlink" title="Use Direct Metric"></a>Use Direct Metric</h4><blockquote>
+<p>“Parameter 개수가 작아진다고 정말 속도가 빨라질까요?”</p>
+</blockquote>
+<p>연산량이 작아진다고 해서 실제 속도가 빨라지는 것은 아니다. 물론 당연히 영향을 주지만, 실제로는 연산 자체 외에 다른 부분도 영향을 끼친다고 보아야 한다.</p>
+<ul>
+<li>M-Nas Net(?? 이름이 맞나..?)<br>-&gt; 모델의 Latency를 Reward에 추가해 속도도 빠르게 하는 것</li>
+</ul>
+<p>한편 앞서 말한 것과 같이 Conv를 줄인다고 속도가 무작정 빨라지지는 않는다. 오히려 Memory Access Cost가 정말 비싼 경우가 있다.</p>
+<ul>
+<li>ShuffleNet v2<ul>
+<li>Balanced Conv를 쓰자!</li>
+<li>G conv가 정말 답인것 같니…?</li>
+<li>Fragmentation 하지마…</li>
+<li>Element-wise 연산(덧셈 등) 하지마…</li>
+</ul>
+</li>
+</ul>
+<p>이까지가 CNN 속도 이야기!</p>
+<h3 id="에너지를-신경쓰는-NeuralNet"><a href="#에너지를-신경쓰는-NeuralNet" class="headerlink" title="에너지를 신경쓰는 NeuralNet"></a>에너지를 신경쓰는 NeuralNet</h3><p>AlexNet의 Parameter 수는 SqueezeNet의 <strong>50배!!</strong></p>
+<p>하지만 실제로 SqaueezeNet이 AlexNet보다 에너지 소모 1.2배 이상 많이 먹는다.</p>
+<p>이유: Layer가 깊어서 Memory Access Cost가 높아서 전력 소모가 매우 높음</p>
+<p>메모리 이동 1번 = 1000번의 곱하기더하기 연산 비용 = 엄청 비싸다!</p>
+<h3 id="EfficientNet"><a href="#EfficientNet" class="headerlink" title="EfficientNet"></a>EfficientNet</h3><p>최신의 XLNet등 트렌드는 ‘너무 커지는’ 중.</p>
+<p>작고 성능 좋은 NAS로 찾은 Net에서 시작해 효율적으로 성능을 높이는 좀더 큰 모델을 만드는 방법.</p>
+<blockquote>
+<p>실제로 내가 ResNet50 -&gt; EfficientNet으로만 바꾸었는데도 성능 훨씬 좋아짐. (Convergence도 빠르다!)</p>
+</blockquote>
+<h2 id="Session-06-하스스톤-with-강화학습"><a href="#Session-06-하스스톤-with-강화학습" class="headerlink" title="Session 06. 하스스톤 with 강화학습"></a>Session 06. 하스스톤 with 강화학습</h2><p>NDC에서 발표해주셨던 것과 유사한 내용!</p>
+<p>아래 링크에서 기여를 하도록 하자!</p>
+<p><a href="https://github.com/utilForever/RosettaStone">https://github.com/utilForever/RosettaStone</a></p>
+<h2 id="Session-07-이제-발표도-딥러닝이-알아서-할거에요"><a href="#Session-07-이제-발표도-딥러닝이-알아서-할거에요" class="headerlink" title="Session 07. 이제-발표도-딥러닝이-알아서-할거에요"></a>Session 07. 이제-발표도-딥러닝이-알아서-할거에요</h2><p>분명 제목은 하이퍼파라미터 튜닝을 케라스 튜너로 하는거지만 부제와 제목이 뒤바뀐 것은 기분탓입니다.</p>
+<p>아쉽게도 책 당첨은 안되었지만 그래도 ㅎ.ㅎ</p>
+<p>(혹시 케라스튜너로 PyTorch도 쓸 수 있는지 확인해 봐야겠다.)</p>
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><p>여러 세션들이 모두 재미있었다!</p>
+<p>비록 시간이 짧아 막 파고들지는 못했지만 이렇게 약간 메타적인 느낌으로 훑으면 나중에 논문들 챙겨보면 되는거니까.</p>
+<p>세미나에서 들었던 논문만 읽어도 한달은 훅 지나갈 거서 같은 기분이다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/07/08/Papago-API-with-Python/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">pypapago 개발기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/27/DevGround/">
+                <span class="level-item">DevGround 2019, 뭣이 중헌디? and 데이터야 흘러라</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#DLCAT-2를-다녀오다">
+        <span class="has-mr-6">1</span>
+        <span>DLCAT#2를 다녀오다.</span>
+        </a></li><li>
+        <a class="is-flex" href="#Session-01-딥러닝과-최적설계">
+        <span class="has-mr-6">2</span>
+        <span>Session 01. 딥러닝과 최적설계</span>
+        </a></li><li>
+        <a class="is-flex" href="#Session-02-나도너도-모르는-GraphNN의-힘">
+        <span class="has-mr-6">3</span>
+        <span>Session 02. 나도너도 모르는 GraphNN의 힘</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#GraphNN은-뭐지-왜쓰지">
+        <span class="has-mr-6">3.1</span>
+        <span>GraphNN은 뭐지? 왜쓰지?</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Session-03-딥러닝-모델-엑기스-추출-Knowledge-Distillation">
+        <span class="has-mr-6">4</span>
+        <span>Session 03. 딥러닝 모델 엑기스 추출 (Knowledge Distillation)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#이와-관련된-수많은-Papers">
+        <span class="has-mr-6">4.1</span>
+        <span>이와 관련된 수많은 Papers</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Do-Deep-Nets-Really-Need-to-be-Deep-NIPS-2014">
+        <span class="has-mr-6">4.1.1</span>
+        <span>Do Deep Nets Really Need to be Deep? (NIPS 2014)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Distilling-the-Knowledge-in-a-Neural-Network-NIPS-2014">
+        <span class="has-mr-6">4.1.2</span>
+        <span>Distilling the Knowledge in a Neural Network (NIPS 2014)</span>
+        </a></li><li>
+        <a class="is-flex" href="#FitNets-Hints-for-Thin-Deep-Nets-ICLR-2015">
+        <span class="has-mr-6">4.1.3</span>
+        <span>FitNets: Hints for Thin Deep Nets (ICLR 2015)</span>
+        </a></li><li>
+        <a class="is-flex" href="#A-Gift-from-Knowledge-Distillation-CVPR-2017">
+        <span class="has-mr-6">4.1.4</span>
+        <span>A Gift from Knowledge Distillation (CVPR 2017)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Paying-More-Attention-to-Attention">
+        <span class="has-mr-6">4.1.5</span>
+        <span>Paying More Attention to Attention</span>
+        </a></li><li>
+        <a class="is-flex" href="#Paraphrasing-Complex-Network-NIPS-2018">
+        <span class="has-mr-6">4.1.6</span>
+        <span>Paraphrasing Complex Network (NIPS 2018)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Born-Again-Neural-Networks-ICML-2018">
+        <span class="has-mr-6">4.1.7</span>
+        <span>Born Again Neural Networks (ICML 2018)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Network-Recasting-AAAI-2019">
+        <span class="has-mr-6">4.1.8</span>
+        <span>Network Recasting (AAAI 2019)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Relational-Knowledge-Distillation-CVPR-2019">
+        <span class="has-mr-6">4.1.9</span>
+        <span>Relational Knowledge Distillation (CVPR 2019)</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#결론">
+        <span class="has-mr-6">4.2</span>
+        <span>결론</span>
+        </a></li><li>
+        <a class="is-flex" href="#QnA">
+        <span class="has-mr-6">4.3</span>
+        <span>QnA</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Session-04-딥레마-딥러닝을-서비스로-할때의-딜레마">
+        <span class="has-mr-6">5</span>
+        <span>Session 04. 딥레마, 딥러닝을 서비스로 할때의 딜레마</span>
+        </a></li><li>
+        <a class="is-flex" href="#Session-05-EfficientNet-톺아보기-라고-쓰고-논문읽기">
+        <span class="has-mr-6">6</span>
+        <span>Session 05. EfficientNet 톺아보기(라고 쓰고 논문읽기)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#속도를-높이고-amp-가볍게-만드는-방법">
+        <span class="has-mr-6">6.1</span>
+        <span>속도를 높이고 & 가볍게 만드는 방법</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#BottleNeck-Layer-amp-Global-Avg-Pooling">
+        <span class="has-mr-6">6.1.1</span>
+        <span>BottleNeck Layer & Global Avg Pooling</span>
+        </a></li><li>
+        <a class="is-flex" href="#Filter-factorization">
+        <span class="has-mr-6">6.1.2</span>
+        <span>Filter factorization</span>
+        </a></li><li>
+        <a class="is-flex" href="#Depthwise-Seperable-Convolution">
+        <span class="has-mr-6">6.1.3</span>
+        <span>Depthwise Seperable Convolution</span>
+        </a></li><li>
+        <a class="is-flex" href="#Group-Conv">
+        <span class="has-mr-6">6.1.4</span>
+        <span>Group Conv</span>
+        </a></li><li>
+        <a class="is-flex" href="#Shift">
+        <span class="has-mr-6">6.1.5</span>
+        <span>Shift</span>
+        </a></li><li>
+        <a class="is-flex" href="#Use-Direct-Metric">
+        <span class="has-mr-6">6.1.6</span>
+        <span>Use Direct Metric</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#에너지를-신경쓰는-NeuralNet">
+        <span class="has-mr-6">6.2</span>
+        <span>에너지를 신경쓰는 NeuralNet</span>
+        </a></li><li>
+        <a class="is-flex" href="#EfficientNet">
+        <span class="has-mr-6">6.3</span>
+        <span>EfficientNet</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Session-06-하스스톤-with-강화학습">
+        <span class="has-mr-6">7</span>
+        <span>Session 06. 하스스톤 with 강화학습</span>
+        </a></li><li>
+        <a class="is-flex" href="#Session-07-이제-발표도-딥러닝이-알아서-할거에요">
+        <span class="has-mr-6">8</span>
+        <span>Session 07. 이제-발표도-딥러닝이-알아서-할거에요</span>
+        </a></li><li>
+        <a class="is-flex" href="#맺으며">
+        <span class="has-mr-6">9</span>
+        <span>맺으며</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Celery로 TelegramBot 알림 보내기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/old_post/celery_512.png" alt="Celery로 TelegramBot 알림 보내기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-12-27T15:00:00.000Z">2016-12-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Python/">Python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Python/Celery/">Celery</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Celery로 TelegramBot 알림 보내기
+            
+        </h1>
+        <div class="content">
+            <h1 id="Celery는-비동기-큐이지만-주기적-Task도-잘한다"><a href="#Celery는-비동기-큐이지만-주기적-Task도-잘한다" class="headerlink" title="Celery는 비동기 큐이지만 주기적 Task도 잘한다"></a>Celery는 비동기 큐이지만 주기적 Task도 잘한다</h1><p>Celery는 async/비동기적으로 특정한 작업을 돌리기 위해 자주 사용한다. 특히, django와는 찰떡궁합이라고 알려져있다.<br>하지만 이 celery는 설정이 어렵다면 어렵고, 쉽다면 쉬운편이다.</p>
+<p>먼저 Celery를 “쓰려면” 어떤 것들이 필요한지 체크해보자.</p>
+<h2 id="Celery-준비물"><a href="#Celery-준비물" class="headerlink" title="Celery 준비물"></a>Celery 준비물</h2><ul>
+<li>pip를 통해 설치된 Celery가 필요하다.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install celery</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>RabbitMQ나 Redis등의 큐 중간 저장소가 필요하다. RabbitMQ를 설치해보자.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install rabbitmq</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>이후 <code>.bashrc</code>나 <code>.zshrc</code>의 마지막 줄에 아래 코드를 추가해준다.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;sbin</span><br></pre></td></tr></table></figure>
+
+<p>이로서 rabbitmq-server라는 명령어로 rabbitmq를 실행할 수 있다.</p>
+<h2 id="셀러리가-돌아갈-파이썬-파일-만들기"><a href="#셀러리가-돌아갈-파이썬-파일-만들기" class="headerlink" title="셀러리가 돌아갈 파이썬 파일 만들기"></a>셀러리가 돌아갈 파이썬 파일 만들기</h2><p>아래와 같이 코드를 작성해 보자. (celery_parser.py)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># celery_parser.py</span></span><br><span class="line"><span class="keyword">from</span> celery <span class="keyword">import</span> Celery</span><br><span class="line"></span><br><span class="line"><span class="comment"># Celery Setup</span></span><br><span class="line">app = Celery()</span><br><span class="line">app.conf.timezone = <span class="string">'Asia/Seoul'</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.on_after_configure.connect</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">periodic_parser</span><span class="params">(sender, **kwargs)</span>:</span></span><br><span class="line">    sender.add_periodic_task(<span class="number">5.0</span>, hello(), name=<span class="string">'hello?'</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'hello!'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 작성한 후, 쉘을 두 창을 켠 후 각각 아래 코드를 입력해 준다. (celery_parser.py와 같은 폴더에서)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">celery worker -A celery_parser --loglevel&#x3D;info</span><br><span class="line"></span><br><span class="line">&lt;이용법&gt;</span><br><span class="line">celery worker -A 파이썬파일이름 --loglevel&#x3D;info</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 Celery의 get_url함수, 즉 app의 Task함수가 실제로 구동될 <code>worker</code>이며,<br>아래 코드는 periodic_parser함수 안에서 정의된 sender.add_periodic_task에 의해 첫번째 인자로 전달된 5.0초, 두번째 인자로 전달된 hello 함수를 실행하게 하는 Celery의 <code>beat</code>이다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">celery beat -A celery_parser  --loglevel&#x3D;info</span><br><span class="line"></span><br><span class="line">&lt;이용법&gt;</span><br><span class="line">celery beat -A 파이썬파일이름 --loglevel&#x3D;info</span><br></pre></td></tr></table></figure>
+
+<h1 id="TelegramBot-설정하기"><a href="#TelegramBot-설정하기" class="headerlink" title="TelegramBot 설정하기"></a>TelegramBot 설정하기</h1><h2 id="python에서-telegram-bot-사용-가이드"><a href="#python에서-telegram-bot-사용-가이드" class="headerlink" title="python에서 telegram bot 사용 가이드"></a>python에서 telegram bot 사용 가이드</h2><p>텔레그램 봇을 Python에서 이용하는 좋은 가이드가 있다. </p>
+<p><a href="https://blog.psangwoo.com/2016/12/08/python%EC%97%90%EC%84%9C-telegram-bot-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/">python에서 telegram bot 사용하기</a></p>
+<p>위 링크를 참고해서 pip로 <code>python-telegram-bot</code>을 설치하고, 새 봇을 만든 후 token과 id값을 받아오자.</p>
+<h2 id="requests를-이용해-site의-변화-유무-체크하기"><a href="#requests를-이용해-site의-변화-유무-체크하기" class="headerlink" title="requests를 이용해 site의 변화 유무 체크하기"></a>requests를 이용해 site의 변화 유무 체크하기</h2><p>우선 파이썬 파일을 수정하기 전에 <code>target.json</code>라는 환경변수용 json파일을 아래와 같이 만들어 주자.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"BOT_TOKEN"</span>:<span class="string">"위에서 받은 숫자9자리:영문+숫자+특수문자 긴것"</span>,</span><br><span class="line">  <span class="attr">"URL"</span>:<span class="string">"변화유무를 체크할 URL"</span>,</span><br><span class="line">  <span class="attr">"CHAT_ID"</span>:<span class="string">"위에서 받은 id"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>celery_parser.py</code>에서 <code>target.json</code>파일을 불러온 후, 변수로 등록해주고, telegram bot 객체를 만들어 준 후 sendMessage를 이용해 보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># celery_parser.py</span></span><br><span class="line"><span class="keyword">from</span> celery <span class="keyword">import</span> Celery</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> telegram</span><br><span class="line"></span><br><span class="line"><span class="comment"># Celery Setup</span></span><br><span class="line">app = Celery()</span><br><span class="line">app.conf.timezone = <span class="string">'Asia/Seoul'</span></span><br><span class="line"></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Parsing/Telegram Environ loads</span></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">"target.json"</span>)) <span class="keyword">as</span> f:</span><br><span class="line">    env = json.loads(f.read())</span><br><span class="line">    BOT_TOKEN = env[<span class="string">'BOT_TOKEN'</span>]</span><br><span class="line">    URL = env[<span class="string">'URL'</span>]</span><br><span class="line">    CHAT_ID = env[<span class="string">'CHAT_ID'</span>]</span><br><span class="line"></span><br><span class="line">bot = telegram.Bot(token=BOT_TOKEN)</span><br><span class="line"></span><br><span class="line">bot.sendMessage(chat_id=CHAT_ID, text=<span class="string">'Started!'</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.on_after_configure.connect</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">periodic_parser</span><span class="params">(sender, **kwargs)</span>:</span></span><br><span class="line">    sender.add_periodic_task(<span class="number">5.0</span>, get_url.s(URL), name=<span class="string">'send working time'</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_url</span><span class="params">(url)</span>:</span></span><br><span class="line">    req = requests.get(url)</span><br><span class="line">    f = open(<span class="string">'temp/req.txt'</span>, <span class="string">'w+'</span>)</span><br><span class="line">    previous_html = f.read()</span><br><span class="line">    new_html = req.text</span><br><span class="line">    bot.sendMessage(chat_id=CHAT_ID, text=<span class="string">'Working/&#123;&#125;'</span>.format(datetime.datetime.now()))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> previous_html == new_html:</span><br><span class="line">        bot.sendMessage(chat_id=CHAT_ID, text=<span class="string">'working...'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment">#<span class="doctag">TODO:</span> BOT NOTICE</span></span><br><span class="line">        bot.sendMessage(chat_id=CHAT_ID, text=<span class="string">'&#123;&#125; 에 변경이 있습니다.'</span>.format(url))</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 URL에 접속해 html로 저장 후 5초 후 다음 접속 시 사이트에 변동사항이 있으면 변동이 있다는 Telegram 알림을 보내준다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Virtualenv/VirtualenvWrapper OS별 설치&amp;이용법</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/27/Django-TDD-Study-01-Setting-DevEnviron/">
+                <span class="level-item">[DjangoTDDStudy] #01: 개발환경 세팅하기(Selenium / ChromeDriver)</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

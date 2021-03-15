@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>나만의 웹 크롤러 만들기(7): 창없는 크롬으로 크롤링하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Crawling-with-HeadlessChrome.png" alt="나만의 웹 크롤러 만들기(7): 창없는 크롬으로 크롤링하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-09-27T15:00:00.000Z">2017-09-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                나만의 웹 크롤러 만들기(7): 창없는 크롬으로 크롤링하기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>이번 가이드는 가이드 3편(<a href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">Selenium으로 무적 크롤러 만들기</a>)의 확장편입니다. 아직 <code>selenium</code>을 이용해보지 않은 분이라면 먼저 저 가이드를 보고 오시는걸 추천합니다.</p>
+</blockquote>
+<h2 id="HeadLess-Chrome-머리없는-크롬"><a href="#HeadLess-Chrome-머리없는-크롬" class="headerlink" title="HeadLess Chrome? 머리없는 크롬?"></a>HeadLess Chrome? 머리없는 크롬?</h2><h3 id="HeadLess란"><a href="#HeadLess란" class="headerlink" title="HeadLess란?"></a>HeadLess란?</h3><p>Headless라는 용어는 ‘창이 없는’과 같다고 이해하시면 됩니다. 여러분이 브라우저(크롬 등)을 이용해 인터넷을 브라우징 할 때 기본적으로 창이 뜨고 HTML파일을 불러오고, CSS파일을 불러와 어떤 내용을 화면에 그러야 할지 계산을 하는 작업을 브라우저가 자동으로 진행해줍니다. </p>
+<p>하지만 이와같은 방식을 사용할 경우 사용하는 운영체제에 따라 크롬이 실행이 될 수도, 실행이 되지 않을 수도 있습니다. 예를들어 우분투 서버와 같은 OS에서는 ‘화면’ 자체가 존재하지 않기 때문에 일반적인 방식으로는 크롬을 사용할 수 없습니다. 이를 해결해 주는 방식이 바로 Headless 모드입니다. 브라우저 창을 실제로 운영체제의 ‘창’으로 띄우지 않고 대신 화면을 그려주는 작업(렌더링)을 가상으로 진행해주는 방법으로 실제 브라우저와 동일하게 동작하지만 창은 뜨지 않는 방식으로 동작할 수 있습니다.</p>
+<h3 id="그러면-왜-크롬"><a href="#그러면-왜-크롬" class="headerlink" title="그러면 왜 크롬?"></a>그러면 왜 크롬?</h3><p>일전 가이드에서 <code>PhantomJS</code>(팬텀)라는 브라우저를 이용하는 방법에 대해 다룬적이 있습니다. 팬텀은 브라우저와 유사하게 동작하고 Javascript를 동작시켜주지만 성능상의 문제점과 크롬과 완전히 동일하게 동작하지는 않는다는 문제점이 있습니다. 우리가 크롤러를 만드는 상황이 대부분 크롬에서 진행하고, 크롬의 결과물 그대로 가져오기 위해서는 브라우저도 크롬을 사용하는 것이 좋습니다.</p>
+<blockquote>
+<p>하지만 여전히 팬텀이 가지는 장점이 있습니다. WebDriver Binary만으로 추가적인 설치 없이 환경을 만들 수 있다는 장점이 있습니다.</p>
+</blockquote>
+<p>윈도우 기준 크롬 59, 맥/리눅스 기준 크롬 60버전부터 크롬에 <code>Headless Mode</code>가 정식으로 추가되어서 만약 여러분의 브라우저가 최신이라면 크롬의 Headless모드를 쉽게 이용할 수 있습니다.</p>
+<h2 id="크롬-버전-확인하기"><a href="#크롬-버전-확인하기" class="headerlink" title="크롬 버전 확인하기"></a>크롬 버전 확인하기</h2><p>크롬 버전 확인은 크롬 브라우저에서 <a href="chrome://version/">chrome://version/</a>로 들어가 확인할 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/ScreenShot2017-08-0112.47.57.png" alt=""></p>
+<p>이와 같이 크롬 버전이 60버전 이상인 크롬에서는 ‘Headless’모드를 사용할 수 있습니다.</p>
+<h2 id="크롬드라이버-chromedriver-업데이트"><a href="#크롬드라이버-chromedriver-업데이트" class="headerlink" title="크롬드라이버(chromedriver) 업데이트"></a>크롬드라이버(chromedriver) 업데이트</h2><p>크롬 버전이 올라감에 따라 크롬을 조작하도록 도와주는 <code>chromedriver</code> 역시 함께 업데이트를 진행해야 합니다.</p>
+<p><a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">https://sites.google.com/a/chromium.org/chromedriver/downloads</a></p>
+<p>위 링크에서 Latest Release 옆 크롬드라이버를 선택해 OS별로 알맞은 zip파일을 받아 압축을 풀어줍시다.</p>
+<h2 id="기존-코드-수정하기"><a href="#기존-코드-수정하기" class="headerlink" title="기존 코드 수정하기"></a>기존 코드 수정하기</h2><p>크롬의 헤드리스 모드를 사용하는 방식은 기존 selenium을 이용한 코드와 거의 동일합니다만, 몇가지 옵션을 추가해줘야합니다.</p>
+<p>기존에 webdriver를 사용해 크롬을 동작한 경우 아래와 같은 코드를 사용할 수 있었습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 유의: chromedriver를 위에서 받아준 </span></span><br><span class="line"><span class="comment"># chromdriver(windows는 chromedriver.exe)의 절대경로로 바꿔주세요!</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>)</span><br><span class="line"></span><br><span class="line">driver.get(<span class="string">'http://naver.com'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get_screenshot_as_file(<span class="string">'naver_main.png'</span>)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 동작시키면 크롬이 켜지고 파이썬 파일 옆에 <code>naver_main.png</code>라는 스크린샷 하나가 생기게 됩니다.<br>이 코드는 지금까지 우리가 만들었던 코드와 큰 차이가 없는걸 확인해 보세요.</p>
+<p>하지만 이 코드를 몇가지 옵션만 추가해주면 바로 Headless모드로 동작하게 만들어줄 수 있습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(<span class="string">'headless'</span>)</span><br><span class="line">options.add_argument(<span class="string">'window-size=1920x1080'</span>)</span><br><span class="line">options.add_argument(<span class="string">"disable-gpu"</span>)</span><br><span class="line"><span class="comment"># 혹은 options.add_argument("--disable-gpu")</span></span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>, chrome_options=options)</span><br><span class="line"></span><br><span class="line">driver.get(<span class="string">'http://naver.com'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get_screenshot_as_file(<span class="string">'naver_main_headless.png'</span>)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 보시면 <code>ChromeOptions()</code>를 만들어 <code>add_argument</code>를 통해 Headless모드인 것과, 크롬 창의 크기, 그리고 gpu(그래픽카드 가속)를 사용하지 않는 옵션을 넣어준 것을 볼 수 있습니다.</p>
+<p>제일 중요한 부분은 바로 <code>options.add_argument(&#39;headless&#39;)</code>라는 부분입니다. 크롬이 Headless모드로 동작하도록 만들어주는 키워드에요. 그리고 크롬 창의 크기를 직접 지정해 준 이유는, 여러분이 일반적으로 노트북이나 데스크탑에서 사용하는 모니터의 해상도가 1920x1080이기 때문입니다. 즉, 여러분이 일상적으로 보는 것 그대로 크롬이 동작할거라는 기대를 해볼수 있습니다!</p>
+<p>마지막으로는 <code>disable-gpu</code>인데요, 만약 위 코드를 실행했을때 GPU에러~가 난다면 <code>--disable-gpu</code>로 앞에 dash(-)를 두개 더 붙여보세요. 이 버그는 크롬 자체에 있는 문제점입니다. 브라우저들은 CPU의 부담을 줄이고 좀더 빠른 화면 렌더링을 위해 GPU를 통해 그래픽 가속을 사용하는데, 이 부분이 크롬에서 버그를 일으키는 현상을 보이고 있습니다. (윈도우 크롬 61버전까지는 아직 업데이트 되지 않았습니다. 맥 61버전에는 해결된 이슈입니다.)</p>
+<p>그리고 <code>driver</code> 변수를 만들 때 단순하게 chromedriver의 위치만 적어주는 것이 아니라 <code>chrome_options</code>라는 이름의 인자를 함께 넘겨줘야 합니다.</p>
+<p>이 <code>chrome_options</code>는 Chrome을 이용할때만 사용하는 인자인데요, 이 인자값을 통해 headless등의 추가적인 인자를 넘겨준답니다.</p>
+<p>자, 이제 그러면 한번 실행해 보세요. 크롬 창이 뜨지 않았는데도 <code>naver_main_headless.png</code>파일이 생겼다면 여러분 컴퓨터에서 크롬이 Headless모드로 성공적으로 실행된 것이랍니다!</p>
+<h2 id="Headless브라우저임을-숨기기"><a href="#Headless브라우저임을-숨기기" class="headerlink" title="Headless브라우저임을 숨기기"></a>Headless브라우저임을 숨기기</h2><p>Headless모드는 CLI기반의 서버 OS에서도 Selenium을 통한 크롤링/테스트를 가능하게 만드는 멋진 모드지만, 어떤 서버들에서는 이런 Headless모드를 감지하는 여러가지 방법을 쓸 수 있습니다.</p>
+<p>아래 글에서는 Headless모드를 탐지하는 방법과 탐지를 ‘막는’방법을 다룹니다.(창과 방패, 또 새로운 창!)</p>
+<p>아래 코드의 TEST_URL은 <a href="https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html">https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html</a> 인데요, 이곳에서 Headless모드가 감춰졌는지 아닌지 확인해 볼 수 있습니다.</p>
+<h3 id="User-Agent-확인하기"><a href="#User-Agent-확인하기" class="headerlink" title="User Agent 확인하기"></a>User Agent 확인하기</h3><h4 id="Headless-탐지하기"><a href="#Headless-탐지하기" class="headerlink" title="Headless 탐지하기"></a>Headless 탐지하기</h4><p>가장 쉬운 방법은 <code>User-Agent</code>값을 확인하는 방법입니다.</p>
+<p>일반적인 크롬 브라우저는 아래와 같은 <code>User-Agent</code>값을 가지고 있습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;61.0.3163.100 Safari&#x2F;537.36</span><br></pre></td></tr></table></figure>
+
+<p>하지만 Headless브라우저는 아래와 같은 <code>User-Agent</code>값을 가지고 있습니다.</p>
+<p>잘 보시면 ‘HeadlessChrome/~~’와 같이 ‘Headless’라는 단어가 들어가있는걸 확인할 수 있습니다!</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla&#x2F;5.0 (X11; Linux x86_64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) HeadlessChrome&#x2F;60.0.3112.50 Safari&#x2F;537.36</span><br></pre></td></tr></table></figure>
+
+<h4 id="Headless-탐지-막기"><a href="#Headless-탐지-막기" class="headerlink" title="Headless 탐지 막기"></a>Headless 탐지 막기</h4><p>따라서 기본적으로 갖고있는 <code>User-Agent</code>값을 변경해줘야합니다.</p>
+<p>이것도 위에서 사용한 <code>chrome_options</code>에 추가적으로 인자를 전달해주면 됩니다. 위코드를 약간 바꿔 아래와 같이 만들어보세요.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">TEST_URL = <span class="string">'https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html'</span></span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(<span class="string">'headless'</span>)</span><br><span class="line">options.add_argument(<span class="string">'window-size=1920x1080'</span>)</span><br><span class="line">options.add_argument(<span class="string">"disable-gpu"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># UserAgent값을 바꿔줍시다!</span></span><br><span class="line">options.add_argument(<span class="string">"user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"</span>)</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>, chrome_options=options)</span><br><span class="line"></span><br><span class="line">driver.get(TEST_URL)</span><br><span class="line"></span><br><span class="line">user_agent = driver.find_element_by_css_selector(<span class="string">'#user-agent'</span>).text</span><br><span class="line"></span><br><span class="line">print(<span class="string">'User-Agent: '</span>, user_agent)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>이제 여러분의 Headless크롬은 일반적인 크롬으로 보일거랍니다.</p>
+<h3 id="플러그인-개수-확인하기"><a href="#플러그인-개수-확인하기" class="headerlink" title="플러그인 개수 확인하기"></a>플러그인 개수 확인하기</h3><h4 id="Headless-탐지하기-1"><a href="#Headless-탐지하기-1" class="headerlink" title="Headless 탐지하기"></a>Headless 탐지하기</h4><p>크롬에는 여러분이 따로 설치하지 않아도 추가적으로 플러그인 몇개가 설치되어있답니다. PDF 내장 리더기같은 것들이죠.</p>
+<p>하지만 Headless모드에서는 플러그인이 하나도 로딩되지 않아 개수가 0개가 됩니다. 이를 통해 Headless모드라고 추측할 수 있답니다.</p>
+<p>아래 자바스크립트 코드를 통해 플러그인의 개수를 알아낼 수 있습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(navigator.plugins.length === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Headless 크롬이 아닐까??"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Headless-탐지-막기-1"><a href="#Headless-탐지-막기-1" class="headerlink" title="Headless 탐지 막기"></a>Headless 탐지 막기</h4><p>물론 이 탐지를 막는 방법도 있습니다. 바로 브라우저에 ‘가짜 플러그인’ 리스트를 넣어주는 것이죠!</p>
+<p>아래 코드와 같이 JavaScript를 실행해 플러그인 리스트를 가짜로 만들어 넣어줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">TEST_URL = <span class="string">'https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html'</span></span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(<span class="string">'headless'</span>)</span><br><span class="line">options.add_argument(<span class="string">'window-size=1920x1080'</span>)</span><br><span class="line">options.add_argument(<span class="string">"disable-gpu"</span>)</span><br><span class="line">options.add_argument(<span class="string">"user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"</span>)</span><br><span class="line">options.add_argument(<span class="string">"lang=ko_KR"</span>) <span class="comment"># 한국어!</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>, chrome_options=options)</span><br><span class="line"></span><br><span class="line">driver.get(<span class="string">'about:blank'</span>)</span><br><span class="line">driver.execute_script(<span class="string">"Object.defineProperty(navigator, 'plugins', &#123;get: function() &#123;return[1, 2, 3, 4, 5];&#125;,&#125;);"</span>)</span><br><span class="line">driver.get(TEST_URL)</span><br><span class="line"></span><br><span class="line">user_agent = driver.find_element_by_css_selector(<span class="string">'#user-agent'</span>).text</span><br><span class="line">plugins_length = driver.find_element_by_css_selector(<span class="string">'#plugins-length'</span>).text</span><br><span class="line"></span><br><span class="line">print(<span class="string">'User-Agent: '</span>, user_agent)</span><br><span class="line">print(<span class="string">'Plugin length: '</span>, plugins_length)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 JS로 navigator 객체의 <code>plugins</code>속성 자체를 오버라이딩 해 임의의 배열을 반환하도록 만들어주면 개수를 속일 수 있습니다.</p>
+<blockquote>
+<p>단, 출력물에서는 Plugin length가 여전히 0으로 나올거에요. 왜냐하면 사이트가 로딩 될때 이미 저 속성이 들어가있기 때문이죠 :’( 그래서 우리는 좀 더 다른방법을 뒤에서 써볼거에요.</p>
+</blockquote>
+<h3 id="언어-설정"><a href="#언어-설정" class="headerlink" title="언어 설정"></a>언어 설정</h3><h4 id="Headless-탐지하기-2"><a href="#Headless-탐지하기-2" class="headerlink" title="Headless 탐지하기"></a>Headless 탐지하기</h4><p>여러분이 인터넷을 사용할때 어떤 사이트를 들어가면 다국어 사이트인데도 여러분의 언어에 맞게 화면에 나오는 경우를 종종 보고, 구글 크롬을 써서 외국 사이트를 돌아다니면 ‘번역해줄까?’ 하는 친절한 질문을 종종 봅니다.</p>
+<p>이 설정이 바로 브라우저의 언어 설정이랍니다. 즉, 여러분이 선호하는 언어가 이미 등록되어있는 것이죠.</p>
+<p>Headless모드에는 이런 언어 설정이 되어있지 않아서 이를 통해 Headless모드가 아닐까 ‘추측’할 수 있습니다.</p>
+<h4 id="Headless-탐지-막기-2"><a href="#Headless-탐지-막기-2" class="headerlink" title="Headless 탐지 막기"></a>Headless 탐지 막기</h4><p>Headless모드인 것을 감추기 위해 언어 설정을 넣어줍시다. 바로 <code>add_argument</code>를 통해 크롬에 전달해 줄 수 있답니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">TEST_URL = <span class="string">'https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html'</span></span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(<span class="string">'headless'</span>)</span><br><span class="line">options.add_argument(<span class="string">'window-size=1920x1080'</span>)</span><br><span class="line">options.add_argument(<span class="string">"disable-gpu"</span>)</span><br><span class="line">options.add_argument(<span class="string">"user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"</span>)</span><br><span class="line">options.add_argument(<span class="string">"lang=ko_KR"</span>) <span class="comment"># 한국어!</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>, chrome_options=options)</span><br><span class="line"></span><br><span class="line">driver.get(TEST_URL)</span><br><span class="line">driver.execute_script(<span class="string">"Object.defineProperty(navigator, 'plugins', &#123;get: function() &#123;return[1, 2, 3, 4, 5]&#125;&#125;)"</span>)</span><br><span class="line"><span class="comment"># lanuages 속성을 업데이트해주기</span></span><br><span class="line">driver.execute_script(<span class="string">"Object.defineProperty(navigator, 'languages', &#123;get: function() &#123;return ['ko-KR', 'ko']&#125;&#125;)"</span>)</span><br><span class="line"></span><br><span class="line">user_agent = driver.find_element_by_css_selector(<span class="string">'#user-agent'</span>).text</span><br><span class="line">plugins_length = driver.find_element_by_css_selector(<span class="string">'#plugins-length'</span>).text</span><br><span class="line">languages = driver.find_element_by_css_selector(<span class="string">'#languages'</span>).text</span><br><span class="line"></span><br><span class="line">print(<span class="string">'User-Agent: '</span>, user_agent)</span><br><span class="line">print(<span class="string">'Plugin length: '</span>, plugins_length)</span><br><span class="line">print(<span class="string">'languages: '</span>, languages)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>단, 출력물에서는 language가 빈칸으로 나올거에요. 왜냐하면 사이트가 로딩 될때 이미 저 속성이 들어가있기 때문이죠 :’( 그래서 우리는 좀 더 다른방법을 뒤에서 써볼거에요.</p>
+</blockquote>
+<h3 id="WebGL-벤더와-렌더러"><a href="#WebGL-벤더와-렌더러" class="headerlink" title="WebGL 벤더와 렌더러"></a>WebGL 벤더와 렌더러</h3><h4 id="Headless-탐지하기-3"><a href="#Headless-탐지하기-3" class="headerlink" title="Headless 탐지하기"></a>Headless 탐지하기</h4><p>여러분이 브라우저를 사용할때 WebGL이라는 방법으로 그래픽카드를 통해 그려지는 방법을 가속을 한답니다. 즉, 실제로 디바이스에서 돌아간다면 대부분은 그래픽 가속을 사용한다는 가정이 기반인 셈이죠.</p>
+<blockquote>
+<p>사실 이 방법으로 차단하는 웹사이트는 거의 없을거에요. 혹여나 GPU가속을 꺼둔 브라우저라면 구별할 수 없기 때문이죠.</p>
+</blockquote>
+<p>위 코드에서 사용해준 <code>disable-gpu</code>옵션은 사실 이 그래픽 가속을 꺼주는 것이에요. 따라서 이부분을 보완해 줄 필요가 있습니다.</p>
+<h4 id="Headless-탐지-막기-3"><a href="#Headless-탐지-막기-3" class="headerlink" title="Headless 탐지 막기"></a>Headless 탐지 막기</h4><p>가장 쉬운 방법은 크롬이 업데이트되길 기대하고 <code>disable-gpu</code>옵션을 꺼버리는 것이지만, 우선은 이 옵션을 함께 사용하는 방법을 알려드릴게요.</p>
+<p>위에서 사용한 script실행방법을 또 써 볼 것이랍니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">TEST_URL = <span class="string">'https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html'</span></span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(<span class="string">'headless'</span>)</span><br><span class="line">options.add_argument(<span class="string">'window-size=1920x1080'</span>)</span><br><span class="line">options.add_argument(<span class="string">"disable-gpu"</span>)</span><br><span class="line">options.add_argument(<span class="string">"user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"</span>)</span><br><span class="line">options.add_argument(<span class="string">"lang=ko_KR"</span>) <span class="comment"># 한국어!</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>, chrome_options=options)</span><br><span class="line"></span><br><span class="line">driver.get(TEST_URL)</span><br><span class="line">driver.execute_script(<span class="string">"Object.defineProperty(navigator, 'plugins', &#123;get: function() &#123;return[1, 2, 3, 4, 5]&#125;&#125;)"</span>)</span><br><span class="line">driver.execute_script(<span class="string">"Object.defineProperty(navigator, 'languages', &#123;get: function() &#123;return ['ko-KR', 'ko']&#125;&#125;)"</span>)</span><br><span class="line">driver.execute_script(<span class="string">"const getParameter = WebGLRenderingContext.getParameter;WebGLRenderingContext.prototype.getParameter = function(parameter) &#123;if (parameter === 37445) &#123;return 'NVIDIA Corporation'&#125; if (parameter === 37446) &#123;return 'NVIDIA GeForce GTX 980 Ti OpenGL Engine';&#125;return getParameter(parameter);&#125;;"</span>)</span><br><span class="line"></span><br><span class="line">user_agent = driver.find_element_by_css_selector(<span class="string">'#user-agent'</span>).text</span><br><span class="line">plugins_length = driver.find_element_by_css_selector(<span class="string">'#plugins-length'</span>).text</span><br><span class="line">languages = driver.find_element_by_css_selector(<span class="string">'#languages'</span>).text</span><br><span class="line">webgl_vendor = driver.find_element_by_css_selector(<span class="string">'#webgl-vendor'</span>).text</span><br><span class="line">webgl_renderer = driver.find_element_by_css_selector(<span class="string">'#webgl-renderer'</span>).text</span><br><span class="line"></span><br><span class="line">print(<span class="string">'User-Agent: '</span>, user_agent)</span><br><span class="line">print(<span class="string">'Plugin length: '</span>, plugins_length)</span><br><span class="line">print(<span class="string">'languages: '</span>, languages)</span><br><span class="line">print(<span class="string">'WebGL Vendor: '</span>, webgl_vendor)</span><br><span class="line">print(<span class="string">'WebGL Renderer: '</span>, webgl_renderer)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서는 WebGL렌더러를 Nvidia회사와 GTX980Ti엔진인 ‘척’ 하고 있는 방법입니다.</p>
+<blockquote>
+<p>하지만 WebGL print 구문에서는 여전히 빈칸일거에요. 이 역시 이미 사이트 로딩시 속성이 들어가있기 때문이에요.</p>
+</blockquote>
+<h2 id="Headless-브라우저-숨기는-방법-다함께-쓰기"><a href="#Headless-브라우저-숨기는-방법-다함께-쓰기" class="headerlink" title="Headless 브라우저 숨기는 방법 다함께 쓰기"></a>Headless 브라우저 숨기는 방법 다함께 쓰기</h2><p>위에서 사용한 방법 중 <code>User-Agent</code>를 바꾸는 방법 외에는 사실 모두 Javascript를 이용해 값을 추출하고 오버라이딩 하는 방식으로 바꿔보았습니다.</p>
+<p>하지만 번번히 결과물이 빈칸으로 나오는 이유는 <code>driver.execute_script</code>라는 함수 자체가 사이트가 로딩이 끝난 후 (<code>onload()</code>이후) 실행되기 때문입니다.</p>
+<p>즉, 우리는 우리가 써준 저 JS코드가 사이트가 로딩 되기 전 실행되어야 한다는 것이죠!</p>
+<p>사실 기본 크롬이라면 사이트가 로딩 되기전 JS를 실행하는 Extension들을 사용할 수 있어요. 하지만 Headless크롬에서는 아직 Extension을 지원하지 않습니다 :’(</p>
+<p>그래서 차선책으로 <a href="http://docs.mitmproxy.org/en/latest/mitmproxy.html">mitmproxy</a>라는 Proxy 프로그램을 사용해볼거에요.</p>
+<h3 id="mitmproxy-사용하기"><a href="#mitmproxy-사용하기" class="headerlink" title="mitmproxy 사용하기"></a>mitmproxy 사용하기</h3><p>진행하기 전 앞서 만들었던 모든 JS코드가 들어있는 <code>content.js</code>를 아래처럼 만들어주세요.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CDP = <span class="built_in">require</span>(<span class="string">'chrome-remote-interface'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> userAgent = <span class="string">'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'</span></span><br><span class="line"></span><br><span class="line">CDP(<span class="keyword">async</span> <span class="function"><span class="keyword">function</span>(<span class="params">client</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123;Network, Page&#125; = client;</span><br><span class="line">  <span class="keyword">await</span> Page.enable();</span><br><span class="line">  <span class="keyword">await</span> Network.enable();</span><br><span class="line">  <span class="keyword">await</span> Network.setUserAgentOverride(&#123;userAgent&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// user-agent is now set</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// overwrite the `languages` property to use a custom getter</span></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(navigator, <span class="string">'languages'</span>, &#123;</span><br><span class="line">  <span class="keyword">get</span>: function() &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="string">'ko-KR'</span>, <span class="string">'ko'</span>];</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// overwrite the `plugins` property to use a custom getter</span></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(navigator, <span class="string">'plugins'</span>, &#123;</span><br><span class="line">  <span class="keyword">get</span>: function() &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getParameter = WebGLRenderingContext.getParameter;</span><br><span class="line">WebGLRenderingContext.prototype.getParameter = <span class="function"><span class="keyword">function</span>(<span class="params">parameter</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// UNMASKED_VENDOR_WEBGL</span></span><br><span class="line">  <span class="keyword">if</span> (parameter === <span class="number">37445</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Intel Open Source Technology Center'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// UNMASKED_RENDERER_WEBGL</span></span><br><span class="line">  <span class="keyword">if</span> (parameter === <span class="number">37446</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Mesa DRI Intel(R) Ivybridge Mobile '</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getParameter(parameter);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">[<span class="string">'height'</span>, <span class="string">'width'</span>].forEach(<span class="function"><span class="params">property</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// store the existing descriptor</span></span><br><span class="line">  <span class="keyword">const</span> imageDescriptor = <span class="built_in">Object</span>.getOwnPropertyDescriptor(HTMLImageElement.prototype, property);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// redefine the property with a patched descriptor</span></span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(HTMLImageElement.prototype, property, &#123;</span><br><span class="line">    ...imageDescriptor,</span><br><span class="line">    <span class="keyword">get</span>: function() &#123;</span><br><span class="line">      <span class="comment">// return an arbitrary non-zero dimension if the image failed to load</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.complete &amp;&amp; <span class="keyword">this</span>.naturalHeight == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">20</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// otherwise, return the actual dimension</span></span><br><span class="line">      <span class="keyword">return</span> imageDescriptor.get.apply(<span class="keyword">this</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// store the existing descriptor</span></span><br><span class="line"><span class="keyword">const</span> elementDescriptor = <span class="built_in">Object</span>.getOwnPropertyDescriptor(HTMLElement.prototype, <span class="string">'offsetHeight'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// redefine the property with a patched descriptor</span></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(HTMLDivElement.prototype, <span class="string">'offsetHeight'</span>, &#123;</span><br><span class="line">  ...elementDescriptor,</span><br><span class="line">  <span class="keyword">get</span>: function() &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.id === <span class="string">'modernizr'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> elementDescriptor.get.apply(<span class="keyword">this</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>우선 Mitmproxy를 pip로 설치해주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install mitmproxy</span><br></pre></td></tr></table></figure>
+
+<p>그리고 proxy 처리를 해 줄 파일인 <code>inject.py</code>파일을 만들어주세요.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># inject.py</span></span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> mitmproxy <span class="keyword">import</span> ctx</span><br><span class="line"></span><br><span class="line"><span class="comment"># load in the javascript to inject</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'content.js'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    content_js = f.read()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">response</span><span class="params">(flow)</span>:</span></span><br><span class="line">    <span class="comment"># only process 200 responses of html content</span></span><br><span class="line">    <span class="keyword">if</span> flow.response.headers[<span class="string">'Content-Type'</span>] != <span class="string">'text/html'</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> flow.response.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># inject the script tag</span></span><br><span class="line">    html = BeautifulSoup(flow.response.text, <span class="string">'lxml'</span>)</span><br><span class="line">    container = html.head <span class="keyword">or</span> html.body</span><br><span class="line">    <span class="keyword">if</span> container:</span><br><span class="line">        script = html.new_tag(<span class="string">'script'</span>, type=<span class="string">'text/javascript'</span>)</span><br><span class="line">        script.string = content_js</span><br><span class="line">        container.insert(<span class="number">0</span>, script)</span><br><span class="line">        flow.response.text = str(html)</span><br><span class="line"></span><br><span class="line">        ctx.log.info(<span class="string">'Successfully injected the content.js script.'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>이제 터미널에서 아래 명령어로 mitmproxy 서버를 띄워주세요.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mitmdump -p 8080 -s &quot;inject.py&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>이 서버는 크롤링 코드를 실행 할 때 항상 켜져있어야 해요!</p>
+</blockquote>
+<p>이제 우리 크롤링 코드에 <code>add_argument</code>로 Proxy옵션을 추가해 주세요.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">TEST_URL = <span class="string">'https://intoli.com/blog/making-chrome-headless-undetectable/chrome-headless-test.html'</span></span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(<span class="string">'headless'</span>)</span><br><span class="line">options.add_argument(<span class="string">'window-size=1920x1080'</span>)</span><br><span class="line">options.add_argument(<span class="string">"disable-gpu"</span>)</span><br><span class="line">options.add_argument(<span class="string">"user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"</span>)</span><br><span class="line">options.add_argument(<span class="string">"proxy-server=localhost:8080"</span>)</span><br><span class="line">driver = webdriver.Chrome(<span class="string">'chromedriver'</span>, chrome_options=options)</span><br><span class="line"></span><br><span class="line">driver.get(TEST_URL)</span><br><span class="line">print(driver.page_source)</span><br><span class="line"></span><br><span class="line">user_agent = driver.find_element_by_css_selector(<span class="string">'#user-agent'</span>).text</span><br><span class="line">plugins_length = driver.find_element_by_css_selector(<span class="string">'#plugins-length'</span>).text</span><br><span class="line">languages = driver.find_element_by_css_selector(<span class="string">'#languages'</span>).text</span><br><span class="line">webgl_vendor = driver.find_element_by_css_selector(<span class="string">'#webgl-vendor'</span>).text</span><br><span class="line">webgl_renderer = driver.find_element_by_css_selector(<span class="string">'#webgl-renderer'</span>).text</span><br><span class="line"></span><br><span class="line">print(<span class="string">'User-Agent: '</span>, user_agent)</span><br><span class="line">print(<span class="string">'Plugin length: '</span>, plugins_length)</span><br><span class="line">print(<span class="string">'languages: '</span>, languages)</span><br><span class="line">print(<span class="string">'WebGL Vendor: '</span>, webgl_vendor)</span><br><span class="line">print(<span class="string">'WebGL Renderer: '</span>, webgl_renderer)</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>하지만 사실 이 코드는 정상적으로 동작하지 않을거에요. 헤드리스모드를 끄면 잘 돌아가지만 헤드리스모드를 켜면 정상적으로 동작하지 않아요. 바로 SSL오류 때문입니다.</p>
+<p>크롬에서 SSL을 무시하도록 만들수 있고, 로컬의 HTTP를 신뢰 가능하도록 만들 수도 있지만 아직 크롬 Headless모드에서는 지원하지 않습니다.</p>
+<p>정확히는 아직 webdriver에서 지원하지 않습니다. </p>
+<h2 id="결론"><a href="#결론" class="headerlink" title="결론"></a>결론</h2><p>아직까지는 크롬 Headless모드에서 HTTPS 사이트를 ‘완전히 사람처럼’보이게 한뒤 크롤링 하는 것은 어렵습니다. 하지만 곧 업데이트 될 크롬에서는 익스텐션 사용 기능이 추가될 예정이기 때문에 이 기능이 추가되면 복잡한 과정 없이 JS를 바로 추가해 진짜 일반적인 크롬처럼 동작하도록 만들 수 있으리라 생각합니다.</p>
+<p>사실 서버 입장에서 위와 같은 요청을 보내는 경우 처리를 할 수 있는 방법은 JS로 헤드리스 유무를 확인하는 방법이 전부입니다. 즉, 서버 입장에서도 ‘식별’은 가능하지만 이로 인해 유의미한 차단은 하기 어렵습니다. 현재로서는 UserAgent 값만 변경해주어도 대부분의 사이트에서는 자연스럽게 크롤링을 진행할 수 있으리라 생각합니다.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="http://antoinevastel.github.io/bot%20detection/2017/08/05/detect-chrome-headless.html">Detecting Chrome Headless</a></li>
+<li><a href="https://intoli.com/blog/making-chrome-headless-undetectable/">MAKING CHROME HEADLESS UNDETECTABLE</a></li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/10/01/PDF_to_GoogleTranslatorToolkit/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">PDF 책 구글 번역가 도구에서 번역하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/08/26/SSH-Reverse-Proxy-like-ngrok/">
+                <span class="level-item">로컬 개발서버를 HTTPS로 세상에 띄우기(like ngork)</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

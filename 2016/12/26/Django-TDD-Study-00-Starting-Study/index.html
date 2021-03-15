@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>[DjangoTDDStudy] #00: 스터디를 시작하며 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/old_post/new_goat_cover_lrg.jpg" alt="[DjangoTDDStudy] #00: 스터디를 시작하며">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-12-25T15:00:00.000Z">2016-12-26</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DjangoTDDStudy/">DjangoTDDStudy</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DjangoTDDStudy/Python/">Python</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                [DjangoTDDStudy] #00: 스터디를 시작하며
+            
+        </h1>
+        <div class="content">
+            <h1 id="스터디를-시작하며"><a href="#스터디를-시작하며" class="headerlink" title="스터디를 시작하며"></a>스터디를 시작하며</h1><p><a href="http://www.kyobobook.co.kr/product/detailViewKor.laf?barcode=9788994774916">파이썬을 이용한 클린 코드를 위한 테스트 주도 개발</a>이라는 도서를 처음 보았을 때는 Django와 관련이 있는 책이라고는 생각조차 하지 못했다. 단지, 파이썬을 좀 더 잘 하려면 어떤 것을 알아야 할까 하고U 생각하던 중 TEST를 사용하는 때가 생산성이 올라간다는 말을 듣고서 “테스트 주도 개발”을 하려고 시도해 보려던 참, 이 책을 보게 된 것이다.</p>
+<p align="center">
+<img src="http://blogerator.org/uploads/pix2015/Learning_curve_python.png" style="max-height:350px;" />
+</p>
+
+<p>Python/Django 공부에 관심을 가지고 있던 지환님과 이야기 하던 중, 마침 스터디에 대한 이야기가 나왔고 이 염소책과 TDD에 대한 이야기도 나왔다. 사실상 즉석에서 ‘아 그래요? 그러면 해보죠!’라는 느낌으로 시작했다. 그자리에서 명서님에게 물어보니 바로 동참하신다고 해서 9XD에 글을 바로 글을 올리고 스터디원을 모집했다.<br><del>사실 이정도로 인기가 많을거라고 생각하지는 못했다</del></p>
+<p>생각보다 빠르게 열명이 찼고, 저번주 화요일에 첫 모임을 가졌다.</p>
+<h1 id="첫-모임에서"><a href="#첫-모임에서" class="headerlink" title="첫 모임에서"></a>첫 모임에서</h1><p>첫 모임에서는 많은 내용을 다루지는 않았다. 하지만 진행에 있어 미흡한 준비가 아쉬웠다.<br>모임 전 계획은 서로 인사하기 / 왜 우리는 여기에 왔는가 / 우리의 목표 등을 이야기하고, Django를 사용하지 않은 분들을 위해 개발환경을 설치하고, 1장 정도(Selenium을 이용해 크롬드라이버로 테스트 한번 돌려보기)를 진행하려 했다.<br>하지만 위 내용이 생각보다 빨리 진행되어 1시간내로 모든게 끝나버렸고, 남은 1시간동안은 뭘 해야할지 고민이 들어 2장을 조금 진행해 보려고 했는데 사실 이게 욕심이었다고 생각한다. 물론, 2~3단원까지 끝낸다면 진도상으로는 좋다고 말할 수 있지만 구성원들이 스터디를 따라오지 못할 수 있다고 겁을 먹을 수 있었기 때문이다.<br>다음에 스터디를 처음 시작한다면, 좀더 여유로운 시간을 가지고 ‘스터디’가 아닌 ‘모임’으로 첫 만남을 카페 등에서 가지면 더 좋지 싶다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/12/27/Django-TDD-Study-02-Using-UnitTest/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">[DjangoTDDStudy] #02: UnitTest 이용해 기능 테스트 하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/22/CKEditor-Lisence-and-Pricing/">
+                <span class="level-item">CKEditor의 라이센스와 오픈소스 라이센스</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

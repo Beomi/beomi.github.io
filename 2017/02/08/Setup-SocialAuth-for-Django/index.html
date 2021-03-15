@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-08-Setup-SocialAuth-for-Django/social_login.png" alt="Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-07T15:00:00.000Z">2017-02-08</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지
+            
+        </h1>
+        <div class="content">
+            <p>Django등 웹 서비스를 제공하며 항상 다루게 되는 주제가 있습니다. 유저를 우리 서비스의 유저 모델을 통해 직접 가입시키느냐, 혹은 타사의 oAuth를 이용한 Social Login을 붙여 가입없이(혹은 최소화) 서비스를 이용할 수 있도록 유도 하느냐 등입니다.</p>
+<p>Django에서 이러한 Social Login을 이용하기 위한 라이브러리는 여러개가 있었고, 대표적으로는 <code>django-social-auth</code>와 <code>python-social-auth</code>가 있었지만, 두 프로젝트 모두 현재(2017.02.08기준) Deprecated되었고 이 프로젝트들은 <code>python-social-auth</code>가 org자체로 이전해 <code>social-auth-app-django</code>로 바뀌었습니다.</p>
+<p>한편 <code>-social-auth</code>들의 대체재로 <code>django-allauth</code>가 있는데, 올해 1월에도 새 버전 릴리즈가 있는만큼 활동적인 프로젝트입니다. (하지만 이번 글에서는 다루지 않습니다.)</p>
+<p>이번 게시글에서는 <code>social-auth-app-django</code>을 이용해 Django 프로젝트에 social login을 붙여봅니다.</p>
+<p>참조한 공식 docs는 <a href="http://python-social-auth.readthedocs.io/en/latest/configuration/django.html">python-social-auth configuration django</a>에서 볼 수 있습니다.</p>
+<blockquote>
+<p>참고: <code>social-auth-app-django</code>는 pip패키지 이름이며, 프로젝트 이름은 <code>python-social-auth</code>로 동일합니다.</p>
+</blockquote>
+<h2 id="설치하기"><a href="#설치하기" class="headerlink" title="설치하기"></a>설치하기</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install social-auth-app-django</span><br></pre></td></tr></table></figure>
+
+<p>Django의 기본 ORM을 이용하고 있다면 <code>social-auth-app-django</code>를 pip로 설치하면 됩니다.</p>
+<h2 id="settings-py-설정하기"><a href="#settings-py-설정하기" class="headerlink" title="settings.py 설정하기"></a>settings.py 설정하기</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="INSTALLED-APPS-추가하기"><a href="#INSTALLED-APPS-추가하기" class="headerlink" title="INSTALLED_APPS 추가하기"></a>INSTALLED_APPS 추가하기</h3><p>settings.py에 <code>social_django</code>를 추가해줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = (</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'social_django'</span>,</span><br><span class="line">    ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>앱 추가후 migrate를 해줘야 정상적으로 Social Auth용 DB Table이 생성됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<h3 id="AUTHENTICATION-BACKENDS-추가하기"><a href="#AUTHENTICATION-BACKENDS-추가하기" class="headerlink" title="AUTHENTICATION_BACKENDS 추가하기"></a>AUTHENTICATION_BACKENDS 추가하기</h3><p>Social Login은 기존 유저모델과 함께 사용이 가능합니다. 하지만 기본 유저 ModelBackend를 사용하지 않고 독자적인 ModelBackend를 사용하기 때문에 settings.py의 AUTHENTICATION_BACKENDS에 Social login용 Backends를 추가해줘야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'social_core.backends.google.GoogleOAuth2'</span>, <span class="comment"># Google</span></span><br><span class="line">    <span class="string">'social_core.backends.facebook.FacebookOAuth2'</span>, <span class="comment"># Facebook</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django 기본 유저모델</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>django.contrib.auth.backends.ModelBackend</code>가 있어야 <code>createsuperuser</code>로 만들어진 계정의 로그인이 가능해집니다.</p>
+</blockquote>
+<h3 id="Social-Login용-URL-Namespace-지정"><a href="#Social-Login용-URL-Namespace-지정" class="headerlink" title="Social Login용 URL Namespace 지정"></a>Social Login용 URL Namespace 지정</h3><p>최상위 프로젝트 <code>urls.py</code>에 지정할 social login의 namespace를 지정해줍니다. 또한, Login 후 어떤 URL로 장고가 유저를 Redirect시킬지 지정해 줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SOCIAL_AUTH_URL_NAMESPACE = <span class="string">'social'</span></span><br><span class="line"></span><br><span class="line">LOGIN_REDIRECT_URL=<span class="string">'/'</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>꼭 namespace가 ‘social’일 필요는 없습니다. 하지만 가이드에서는 ‘social’을 사용하기에 아래 urls.py 설정에서도 동일하게 사용할 예정입니다.</p>
+</blockquote>
+<h3 id="Social-Login을-위한-API-Key-Secret-설정하기"><a href="#Social-Login을-위한-API-Key-Secret-설정하기" class="headerlink" title="Social Login을 위한 API Key/Secret 설정하기"></a>Social Login을 위한 API Key/Secret 설정하기</h3><p>우선 프로젝트 BASE_DIR(<code>manage.py</code>파일이 있는 폴더)에 <code>envs.json</code>이라는 이름의 환경변수를 담은 json 파일을 만들어 줍니다.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"FACEBOOK_KEY"</span>:<span class="string">"숫자숫자숫자들"</span>,</span><br><span class="line">  <span class="attr">"FACEBOOK_SECRET"</span>:<span class="string">"숫자영어숫자영어들"</span>,</span><br><span class="line">  <span class="attr">"GOOGLE_KEY"</span>:<span class="string">"숫자-영어.apps.googleusercontent.com"</span>,</span><br><span class="line">  <span class="attr">"GOOGLE_SECRET"</span>:<span class="string">"숫자영어대문자들"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>당연하게도 위 파일은 실제 동작하는 Key와 Secret이 아닙니다.</p>
+<p>Social Login을 사용하기 위해 Google에서는 <a href="https://console.developers.google.com/apis/api/plus.googleapis.com">Google+ API</a>를 활성화 하고 <a href="https://console.developers.google.com/apis/credentials">OAuth 2.0 클라이언트 ID</a>를 ‘웹 애플리케이션’으로 생성해 API Key/Secret을 발급받아야 합니다.</p>
+<blockquote>
+<p>Google Login은 Google+ API에 연결되어있기 때문에 다른 Login API는 없습니다.</p>
+</blockquote>
+<p>Facebook의 경우에는 <a href="https://developers.facebook.com/">Facebook for Developers</a>에서 새 앱 추가 후 ‘Facebook 로그인’ 제품을 활성화 시킨 후 앱의 대시보드에서 앱 ID와 앱 시크릿 코드를 받아 이용하면 됩니다.</p>
+<p>두 서비스 모두 지정된 url에서만 동작하기 때문에 Google의 경우에는 ‘OAuth 2.0 클라이언트 ID’에서 ‘승인된 리디렉션 URI’에 <code>http://localhost:8000/complete/google-oauth2/</code>을 추가해줘야 하며, Facebook의 경우에는 ‘Facebook 로그인’의 ‘클라이언트 OAuth 설정’에 있는 ‘유효한 OAuth 리디렉션 URI’에 <code>http://localhost:8000/</code>을 추가해주면 됩니다.</p>
+<blockquote>
+<p>위 설정을 모두 하지 않을 경우 40x번대 에러가 발생합니다.</p>
+</blockquote>
+<p>이제 위에서 만든 <code>envs.json</code>파일을 환경변수로 사용해야 합니다. <code>settings.py</code>파일 최상위에 이와 같은 코드를 적용해 줄 경우, 개발용 <code>envs_dev.json</code>와 배포용 <code>envs.json</code>, 그리고 환경변수로 관리되는 경우 모두 커버가 가능합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> ImproperlyConfigured</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build paths inside the project like this: os.path.join(BASE_DIR, ...)</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Env for dev / deploy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_env</span><span class="params">(setting, envs)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> envs[setting]</span><br><span class="line">    <span class="keyword">except</span> KeyError:</span><br><span class="line">        error_msg = <span class="string">"You SHOULD set &#123;&#125; environ"</span>.format(setting)</span><br><span class="line">        <span class="keyword">raise</span> ImproperlyConfigured(error_msg)</span><br><span class="line"></span><br><span class="line">DEV_ENVS = os.path.join(BASE_DIR, <span class="string">"envs_dev.json"</span>)</span><br><span class="line">DEPLOY_ENVS = os.path.join(BASE_DIR, <span class="string">"envs.json"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> os.path.exists(DEV_ENVS): <span class="comment"># Develop Env</span></span><br><span class="line">    env_file = open(DEV_ENVS)</span><br><span class="line"><span class="keyword">elif</span> os.path.exists(DEPLOY_ENVS): <span class="comment"># Deploy Env</span></span><br><span class="line">    env_file = open(DEPLOY_ENVS)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    env_file = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> env_file <span class="keyword">is</span> <span class="literal">None</span>: <span class="comment"># System environ</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        FACEBOOK_KEY = os.environ[<span class="string">'FACEBOOK_KEY'</span>]</span><br><span class="line">        FACEBOOK_SECRET = os.environ[<span class="string">'FACEBOOK_SECRET'</span>]</span><br><span class="line">        GOOGLE_KEY = os.environ[<span class="string">'GOOGLE_KEY'</span>]</span><br><span class="line">        GOOGLE_SECRET = os.environ[<span class="string">'GOOGLE_SECRET'</span>]</span><br><span class="line">    <span class="keyword">except</span> KeyError <span class="keyword">as</span> error_msg:</span><br><span class="line">        <span class="keyword">raise</span> ImproperlyConfigured(error_msg)</span><br><span class="line"><span class="keyword">else</span>: <span class="comment"># JSON env</span></span><br><span class="line">    envs = json.loads(env_file.read())</span><br><span class="line">    FACEBOOK_KEY = get_env(<span class="string">'FACEBOOK_KEY'</span>, envs)</span><br><span class="line">    FACEBOOK_SECRET = get_env(<span class="string">'FACEBOOK_SECRET'</span>, envs)</span><br><span class="line">    GOOGLE_KEY = get_env(<span class="string">'GOOGLE_KEY'</span>, envs)</span><br><span class="line">    GOOGLE_SECRET = get_env(<span class="string">'GOOGLE_SECRET'</span>, envs)</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 사용할 경우, APACHE웹서버 등에서 시스템 환경변수를 불러오지 못하는 상황이거나, HEROKU나 PythonAnywhere와 같은 PaaS에서도 Django코드와 API키들을 완전히 분리해 사용할 수 있습니다.</p>
+<p>위에서 지정한 FACEBOOK_KEY들을 SocialLogin에 할당해 줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SocialLogin: Facebook</span></span><br><span class="line">SOCIAL_AUTH_FACEBOOK_KEY = FACEBOOK_KEY</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_SECRET = FACEBOOK_SECRET</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_SCOPE = [<span class="string">'email'</span>]</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = &#123;</span><br><span class="line">  <span class="string">'fields'</span>: <span class="string">'id, name, email'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SocialLogin: Google</span></span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = GOOGLE_KEY</span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = GOOGLE_SECRET</span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [<span class="string">'email'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 가장 기본적인 ‘email’을 유저 식별도구로 받아옵니다.</p>
+<blockquote>
+<p> _PROFILE_EXTRA_PARAMS를 이용해 다른 Field를 받아올 수도 있습니다. (필수 아님)</p>
+</blockquote>
+<h2 id="project폴더의-urls-py-설정하기-최상위-urls-py"><a href="#project폴더의-urls-py-설정하기-최상위-urls-py" class="headerlink" title="project폴더의 urls.py 설정하기(최상위 urls.py)"></a>project폴더의 urls.py 설정하기(최상위 urls.py)</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><p>이제 프로젝트 폴더의 urls.py에 Social Login이 사용할 url들을 등록하고 namespace를 지정해 Template에서 사용할 수 있도록 설정해야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url, include <span class="comment"># url뿐 아니라 include를 import해야 합니다.</span></span><br><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, admin.site.urls),</span><br><span class="line">    url(<span class="string">''</span>, include(<span class="string">'social_django.urls'</span>, namespace=<span class="string">'social'</span>)), <span class="comment"># 이 줄을 등록해주면 됩니다.</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 <code>social_django.urls</code>를 include하고 ‘social’ namespace를 등록해 줍니다.</p>
+<h2 id="Template에서-Social-Login-url-호출하기"><a href="#Template에서-Social-Login-url-호출하기" class="headerlink" title="Template에서 Social Login url 호출하기"></a>Template에서 Social Login url 호출하기</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>위 코드들을 추가해주는 것 만으로도 기본적인 Social Login기능은 완성되었습니다. 이제 Template에서 호출을 해봅시다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% raw %&#125;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;% url "</span><span class="attr">social:begin</span>" "<span class="attr">google-oauth2</span>" %&#125;"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"btn btn-danger"</span> <span class="attr">style</span>=<span class="string">"width: 40%"</span>&gt;</span>G+ Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;% url "</span><span class="attr">social:begin</span>" "<span class="attr">facebook</span>" %&#125;"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"btn btn-primary"</span> <span class="attr">style</span>=<span class="string">"width: 40%"</span>&gt;</span>FB Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span>&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 button을 등록해 호출할 수 있습니다.</p>
+<p>위 버튼을 누를 경우 각각 Google/Facebook의 Social Login페이지로 넘어갑니다.</p>
+<h2 id="수고하셨습니다"><a href="#수고하셨습니다" class="headerlink" title="수고하셨습니다!"></a>수고하셨습니다!</h2><h2 id="widgets-4"><a href="#widgets-4" class="headerlink" title="widgets:"></a>widgets:</h2><p>위 코드만으로도 약간의 조작을 통해 더 멋진 Social Login기능을 구현하실 수 있으리라 생각합니다.</p>
+<p>Happy Coding!</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/02/02/Django-CustomAuth/">
+                <span class="level-item">Django에 Custom인증 붙이기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

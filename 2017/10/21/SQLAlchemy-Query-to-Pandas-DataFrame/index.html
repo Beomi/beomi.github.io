@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>SQLAlchemy Query를 Pandas DataFrame로 만들기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-10-21-SQLAlchemy-Query-to-Pandas-DataFrame.png" alt="SQLAlchemy Query를 Pandas DataFrame로 만들기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-10-20T15:00:00.000Z">2017-10-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/flask/">flask</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/flask/sqlalchemy/">sqlalchemy</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/flask/sqlalchemy/pandas/">pandas</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/flask/sqlalchemy/pandas/tips/">tips</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                SQLAlchemy Query를 Pandas DataFrame로 만들기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 글은 <a href="/2017/10/20/DB-To-SQLAlchemy-Model/">기존 DB를 Flask-SQLAlchemy ORM Model로 사용하기</a>를 보고 오시면 좀더 빠르게 실 프로젝트에 적용이 가능합니다.</p>
+</blockquote>
+<h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><blockquote>
+<p>전체 예시를 보시려면 <a href="#tldr">TL;DR</a>를 참고하세요.</p>
+</blockquote>
+<p>DB에 있는 정보를 파이썬 코드 속에서 SQL raw Query를 통해 정보를 가져오는 아래와 같은 코드의 형태는 대다수의 언어에서 지원합니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 굳이 sqlite3이 아닌 다른 MySQL와 같은 DB의 connect를 이뤄도 상관없습니다.</span></span><br><span class="line"><span class="comment"># 여기서는 파이썬 파일과 같은 위치에 blog.sqlite3 파일이 있다고 가정합니다.</span></span><br><span class="line">conn = sqlite3.connect(<span class="string">"blog.sqlite3"</span>) </span><br><span class="line">cur = conn.cursor()</span><br><span class="line">cur.execute(<span class="string">"select * from post where id &lt; 10;"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 형식으로 코드를 사용할 경우 웹이 이루어지는 과정 중 2~3번째 과정인 “SQL쿼리 요청하기”와 “데이터 받기”라는 부분을 수동으로 처리해 줘야 하는 부분이 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/noun/how_web_works_DB_SQL.jpeg" alt=""></p>
+<p>이런 경우 파이썬 파일이더라도 한 파일 안에 두개의 언어를 사용하게 되는 셈입니다. (python와 SQL)</p>
+<p>만약 여러분이 Pandas DataFrame객체를 DB에서 가져와 만들려면 이런 문제가 생깁니다.</p>
+<ul>
+<li>DB에 연결을 구성해야 함</li>
+<li>가져온 데이터를 데이터 타입에 맞춰 파이썬이 이해하는 형태로 변환</li>
+<li>정리한 데이터를 Pandas로 불러오기</li>
+</ul>
+<p>음, 보기만 해도 상당히 귀찮네요.</p>
+<h2 id="설치하기"><a href="#설치하기" class="headerlink" title="설치하기"></a>설치하기</h2><p>우선 필요한 패키지들을 먼저 설치해 줍시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install flask</span><br><span class="line">pip install Flask-SQLAlchemy</span><br><span class="line">pip install pandas</span><br></pre></td></tr></table></figure>
+
+<h2 id="Pandas로-SQL요청하기"><a href="#Pandas로-SQL요청하기" class="headerlink" title="Pandas로 SQL요청하기"></a>Pandas로 SQL요청하기</h2><p>Pandas에서는 이런 귀찮은 점을 보완해 주기 위해 <code>read_sql_query</code>라는 함수를 제공합니다. 위 코드를 조금 바꿔봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment"># NoQA</span></span><br><span class="line"></span><br><span class="line">conn = sqlite3.connect(<span class="string">"blog.sqlite3"</span>)</span><br><span class="line"><span class="comment"># 이 부분을 삭제</span></span><br><span class="line"><span class="comment"># cur = conn.cursor()</span></span><br><span class="line"><span class="comment"># cur.execute("select * from post where id &lt; 10;")</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 아래 부분을 추가</span></span><br><span class="line">df = pd.read_sql_query(<span class="string">"select * from post where id &lt; 10;"</span>, conn)</span><br><span class="line"><span class="comment"># df는 이제 Pandas Dataframe 객체</span></span><br></pre></td></tr></table></figure>
+
+<p>단순하게 DB 커넥션, 그리고 <code>read_sql_query</code>만으로 SQL Query를 바로 Pandas DataFrame 객체로 받아왔습니다. 이제 데이터를 수정하고 가공하는 처리는 Pandas에게 맡기면 되겠군요!</p>
+<p>하지만, 여전히 우리는 SQL을 짜고있어요. 복잡한 쿼리라면 몰라도, 단순한 쿼리를 이렇게까지 할 필요가 있을까요?</p>
+<h2 id="SQLAlchemy-모델-이용하기"><a href="#SQLAlchemy-모델-이용하기" class="headerlink" title="SQLAlchemy 모델 이용하기"></a>SQLAlchemy 모델 이용하기</h2><p>Flask를 사용할때 많이 쓰는 SQLAlchemy는 ORM으로 수많은 DB를 파이썬만으로 제어하도록 도와줍니다. 그리고 이 점이 우리가 SQL을 SQLAlchemy를 통해 바로 만들 수 있도록 도와줍니다.</p>
+<blockquote>
+<p>NOTE: 이번 글에서는 Flask-SQLAlchemy 패키지를 사용합니다. SQLAlchemy와는 약간 다르게 동작할 수도 있습니다.</p>
+</blockquote>
+<h3 id="모델-클래스-만들기"><a href="#모델-클래스-만들기" class="headerlink" title="모델 클래스 만들기"></a>모델 클래스 만들기</h3><p>모델 클래스를 기존 DB를 참조해 만드는 것은 <a href="/2017/10/20/DB-To-SQLAlchemy-Model/">기존 DB를 Flask-SQLAlchemy ORM Model로 사용하기</a> 를 참고하세요.</p>
+<h3 id="예제-모델-Post"><a href="#예제-모델-Post" class="headerlink" title="예제 모델: Post"></a>예제 모델: Post</h3><p>블로그에서 자주 쓸 법한 <code>Post</code>라는 이름의 모델 클래스를 하나 만들어 봅시다.</p>
+<p>우선 <code>SQLAlchemy</code>를 <code>flask_sqlalchemy</code>에서 import 해옵시다. 그리고 Flask도 가져와 <code>app</code>을 만들어 줍시다. 그리고 <code>db</code>객체를 만들어줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, jsonify</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"><span class="comment"># 현재 경로의 blog.sqlite3을 불러오기</span></span><br><span class="line">app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="string">'sqlite:///blog.sqlite3'</span></span><br><span class="line">db = SQLAlchemy(app)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(db.Model)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'post'</span></span><br><span class="line"></span><br><span class="line">    id = db.Column(db.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    title = db.Column(db.String(<span class="number">100</span>))</span><br><span class="line">    content = db.Column(db.Text)</span><br><span class="line">    pub_date = db.Column(db.DateTime, nullable=<span class="literal">False</span>, default=datetime.utcnow)</span><br></pre></td></tr></table></figure>
+
+<p>자, 이제 여러분은 <code>blog.sqlite3</code>파일 안에 <code>post</code>라는 테이블에 값들을 넣거나 뺄 수 있게 되었습니다.</p>
+<h3 id="루트-View-만들기"><a href="#루트-View-만들기" class="headerlink" title="루트 View 만들기"></a>루트 View 만들기</h3><p>여러분이 app.run( ) 으로 Flask 개발 서버를 띄웠을 때 첫 화면(‘/‘ URL에서) 실행될 View 함수(<code>post_all</code>)를 만들어줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, jsonify</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="string">'sqlite:///blog.sqlite3'</span></span><br><span class="line">db = SQLAlchemy(app)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(db.Model)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'post'</span></span><br><span class="line"></span><br><span class="line">    id = db.Column(db.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    title = db.Column(db.String(<span class="number">100</span>))</span><br><span class="line">    content = db.Column(db.Text)</span><br><span class="line">    pub_date = db.Column(db.DateTime, nullable=<span class="literal">False</span>, default=datetime.utcnow)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 아래 줄을 추가해 줍시다.</span></span><br><span class="line"><span class="comment"># List post which id is less then 10</span></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">post_all</span><span class="params">()</span>:</span></span><br><span class="line">    df = pd.read_sql_query(<span class="string">"select * from post where id &lt; 10;"</span>, db.session.bind).to_json()</span><br><span class="line">    <span class="keyword">return</span> jsonify(json.loads(df))</span><br></pre></td></tr></table></figure>
+
+<p>자, 분명히 ORM을 쓰는데도 아직 SQL 쿼리를 쓰고있네요! SQL쿼리문을 지워버립시다!</p>
+<h3 id="queryset-객체를-만들기"><a href="#queryset-객체를-만들기" class="headerlink" title="queryset 객체를 만들기"></a>queryset 객체를 만들기</h3><p>우리는 <code>Post</code>라는 모델을 만들어줬으니 이제 <code>Post</code>객체의 <code>.query</code>와 <code>.filter()</code>를 통해 객체들을 가져와 봅시다.</p>
+<p>우선 <code>queryset</code>라는 이름에 넣어줍시다. 그리고 Pandas의 <code>read_sql</code>(유의: <code>read_sql_query</code>가 아닙니다.)에 <code>queryset</code>의 내용과 세션을 넘겨줘 DataFrame 객체로 만들어줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, jsonify</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="string">'sqlite:///blog.sqlite3'</span></span><br><span class="line">db = SQLAlchemy(app)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(db.Model)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'post'</span></span><br><span class="line"></span><br><span class="line">    id = db.Column(db.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    title = db.Column(db.String(<span class="number">100</span>))</span><br><span class="line">    content = db.Column(db.Text)</span><br><span class="line">    pub_date = db.Column(db.DateTime, nullable=<span class="literal">False</span>, default=datetime.utcnow)</span><br><span class="line"></span><br><span class="line"><span class="comment"># List post which id is less then 10</span></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">post_all</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># 이 줄은 지우고,</span></span><br><span class="line">    <span class="comment"># df = pd.read_sql_query("select * from post where id &lt; 10;", db.session.bind).to_json()</span></span><br><span class="line">    <span class="comment"># 아래 두줄을 추가해주세요.</span></span><br><span class="line">    queryset = Post.query.filter(Post.id &lt; <span class="number">10</span>)  <span class="comment"># SQLAlchemy가 만들어준 쿼리, 하지만 .all()이 없어 실행되지는 않음</span></span><br><span class="line">    df = pd.read_sql(queryset.statement, queryset.session.bind)  <span class="comment"># 진짜로 쿼리가 실행되고 DataFrame이 만들어짐</span></span><br><span class="line">    <span class="keyword">return</span> jsonify(json.loads(df).to_json())</span><br></pre></td></tr></table></figure>
+
+<p>자, 위와 같이 코드를 짜 주면 이제 SQLAlchemy ORM와 Pandas의 <code>read_sql</code>을 통해 <code>df</code>이 DataFrame 객체로 자연스럽게 가져오게 됩니다.</p>
+<h2 id="정리하기"><a href="#정리하기" class="headerlink" title="정리하기"></a>정리하기</h2><p>여러분이 Pandas를 사용해 데이터를 분석하거나 정제하려 할 때 웹앱으로 Flask를 사용하고 ORM을 이용한다면, 굳이 SQL Query를 직접 만드는 대신 이처럼 Pandas와 SQLAlchemy의 강력한 조합을 이용해 보세요. 조금 더 효율적인 시스템 활용을 고려한 파이썬 프로그램이 나올거에요!</p>
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a><a name="tldr"></a>TL;DR</h2><p>아래 코드와 같이 모델을 만들고 <code>db</code> 객체를 만든 뒤 pandas의 <code>read_sql</code>을 사용하면 됩니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, jsonify</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="string">'sqlite:///blog.sqlite3'</span></span><br><span class="line">db = SQLAlchemy(app)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(db.Model)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'post'</span></span><br><span class="line"></span><br><span class="line">    id = db.Column(db.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    title = db.Column(db.String(<span class="number">100</span>))</span><br><span class="line">    content = db.Column(db.Text)</span><br><span class="line">    pub_date = db.Column(db.DateTime, nullable=<span class="literal">False</span>, default=datetime.utcnow)</span><br><span class="line"></span><br><span class="line"><span class="comment"># List post which id is less then 10</span></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">post_all</span><span class="params">()</span>:</span></span><br><span class="line">    queryset = Post.query.filter(Post.id &lt; <span class="number">10</span>)  <span class="comment"># SQLAlchemy가 만들어준 쿼리, 하지만 .all()이 없어 실행되지는 않음</span></span><br><span class="line">    df = pd.read_sql(queryset.statement, queryset.session.bind)  <span class="comment"># 진짜로 쿼리가 실행되고 DataFrame이 만들어짐</span></span><br><span class="line">    <span class="keyword">return</span> jsonify(json.loads(df).to_json())</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/10/29/HowToMakeWebCrawler-ImplicitWait-vs-ExplicitWait/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Selenium Implicitly wait vs Explicitly wait</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/10/20/DB-To-SQLAlchemy-Model/">
+                <span class="level-item">기존 DB를 Flask-SQLAlchemy ORM Model로 사용하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

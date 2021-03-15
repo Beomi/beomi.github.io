@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>pip로 mysqlclient설치 중 mac os x에서 egg_info / OSError 발생시 대처방법 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-05-26T15:00:00.000Z">2016-05-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Python/">Python</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                pip로 mysqlclient설치 중 mac os x에서 egg_info / OSError 발생시 대처방법
+            
+        </h1>
+        <div class="content">
+            <p><a href="https://livingmethod.files.wordpress.com/2016/05/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-05-27-e1848be185a9e18492e185ae-6-19-59.png"><img src="https://livingmethod.files.wordpress.com/2016/05/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-05-27-e1848be185a9e18492e185ae-6-19-59.png?w=809" alt="스크린샷 2016-05-27 오후 6.19.59">
+</a></p>
+<pre><code>(venv) Beomiui-MacBook:Downloads beomi$ pip install mysqlclient-1.3.7.tar.gz
+ Processing ./mysqlclient-1.3.7.tar.gz
+ Complete output from command python setup.py egg_info:
+ /bin/sh: mysql_config: command not found
+ Traceback (most recent call last):
+ File &quot;&quot;, line 20, in
+ File &quot;/var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build/setup.py&quot;, line 17, in
+ metadata, options = get_config()
+ File &quot;/private/var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build/setup_posix.py&quot;, line 44, in get_config
+ libs = mysql_config(&quot;libs_r&quot;)
+ File &quot;/private/var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build/setup_posix.py&quot;, line 26, in mysql_config
+ raise EnvironmentError(&quot;%s not found&quot; % (mysql_config.path,))
+ OSError: mysql_config not found
+
+----------------------------------------
+ Command &quot;python setup.py egg_info&quot; failed with error code 1 in /var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build
+ You are using pip version 7.1.2, however version 8.1.2 is available.
+ You should consider upgrading via the &apos;pip install --upgrade pip&apos; command.</code></pre><p>​<br>    (venv) Beomiui-MacBook:Downloads beomi$ brew install mysql<br>     ==&gt; Downloading <a href="https://homebrew.bintray.com/bottles/mysql-5.7.12.el_capitan.bottle.tar.gz">https://homebrew.bintray.com/bottles/mysql-5.7.12.el_capitan.bottle.tar.gz</a><br>     ######################################################################## 100.0%<br>     ==&gt; Pouring mysql-5.7.12.el_capitan.bottle.tar.gz<br>     ==&gt; /usr/local/Cellar/mysql/5.7.12/bin/mysqld –initialize-insecure –user=beomi –basedir=/usr/local/Cellar/mysql/5.7.12 –datadir=/usr/local/var/mysql –tmpdir=/tmp<br>     ==&gt; Caveats<br>     We’ve installed your MySQL database without a root password. To secure it run:<br>     mysql_secure_installation<br>    To connect run:<br>     mysql -uroot<br>    To have launchd start mysql now and restart at login:<br>     brew services start mysql<br>     Or, if you don’t want/need a background service you can just run:<br>     mysql.server start<br>     ==&gt; Summary<br>     🍺 /usr/local/Cellar/mysql/5.7.12: 13,281 files, 444.8M</p>
+<pre><code>(venv) Beomiui-MacBook:Downloads beomi$ pip install mysqlclient-1.3.7.tar.gz
+Processing ./mysqlclient-1.3.7.tar.gz
+Installing collected packages: mysqlclient
+Running setup.py install for mysqlclient
+Successfully installed mysqlclient-1.3.7
+You are using pip version 7.1.2, however version 8.1.2 is available.
+You should consider upgrading via the &apos;pip install --upgrade pip&apos; command.</code></pre><p>이와 같이</p>
+<pre><code>brew install mysql</code></pre><p>을 진행하면 된다.</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Python/" rel="tag">Python</a>, <a class="has-link-grey -link" href="/tags/brew/" rel="tag">brew</a>, <a class="has-link-grey -link" href="/tags/mac/" rel="tag">mac</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/05/27/eba7a5ec9790ec849c-ec9c88eb8f84rdpeba19c-eca091ec868dec8b9c-ed959cec9881eca084ed9998ed9598eab8b0/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">맥에서 윈도RDP로 접속시 한영전환하기.</span>
+            </a>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 livingmethod&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

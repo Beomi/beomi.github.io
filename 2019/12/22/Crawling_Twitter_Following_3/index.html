@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>트위터에서 많은 팔로워를 크롤링하는 방법 [3]: 1초에 5천개 데이터 가져오기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-22-093821.jpg" alt="트위터에서 많은 팔로워를 크롤링하는 방법 [3]: 1초에 5천개 데이터 가져오기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-22T14:00:00.000Z">2019-12-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DataCollection/">DataCollection</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DataCollection/Twitter/">Twitter</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                트위터에서 많은 팔로워를 크롤링하는 방법 [3]: 1초에 5천개 데이터 가져오기
+            
+        </h1>
+        <div class="content">
+            <p><a href="/2019/12/22/Crawling_Twitter_Following_2/">앞서 쓴 글(2편)</a>에서는 Twint와 직접 만든 크롤러를 이용해 데이터를 수집하는 내용을 정리했다. 하지만 여전히 큰 문제가 남아있었다.</p>
+<blockquote>
+<p>“1만명까지는 어떻게든 모을 수 있다. 그런데 <strong>10만 이상의 팔로워/팔로잉</strong>을 가진 유저의 데이터는 대체 어떻게 가져와야 하나?”</p>
+</blockquote>
+<p>여기서는 몇 가지의 이슈가 충돌했다.</p>
+<ol>
+<li><strong>“여러 계정을 한번에 가져와야 한다.”</strong>: 수집해야하는 계정이 여전히 1k+개.</li>
+<li><strong>“15분 이상의 긴 수집 시간이 필요하다.”</strong>: Lambda에서는 어렵다.</li>
+<li><strong>“한 IP에서 너무 많은 요청을 하면 안된다.”</strong>: 한 IP에서 너무 많은 요청을 하면 걸릴 수 있다.</li>
+<li><strong>“HTML 웹 크롤링은 간혹 일부만 수집후 종료되더라.”</strong>: 트위터에서 간혹 팔로잉/팔로워를 모두 수집하지 않았음에도 (5만명중 1만명만 수집 등) 이후 Cursor를 제공하지 않아 크롤링이 정지되는 경우가 있었다.</li>
+</ol>
+<p>그러다, 이 <strong>이슈를 한번에 해결할 수 있는 방법(꼼수)</strong>를 찾게 되었다.</p>
+<a id="more"></a>
+
+<h2 id="어떤-방법인가"><a href="#어떤-방법인가" class="headerlink" title="어떤 방법인가?"></a>어떤 방법인가?</h2><p>꼼수아닌 꼼수는 아래와 같은 과정을 통해 발견할 수 있었다.</p>
+<blockquote>
+<p>“트위터에 로그인 한 상태로 ‘더보기’ 버튼을 누르면 무한히 내려간다. 근데 이건 ajax요청인데?”</p>
+<p>⬇️</p>
+<p>“어? 어떤 API를 사용하는거지?”</p>
+<p>⬇️</p>
+<p> “트위터 개발자 API와 같은 API네?”</p>
+<p>⬇️</p>
+<p>“개발자 등록을 해서 쓸 때는 15분에 15개 요청 제한인데, 지금은 100번 넘게 해도 잘 가져오네?”</p>
+</blockquote>
+<p>개발자 등록을 해서 얻는 OAuth API Key로는 곧바로 제한이 걸려버리는데, 정작 <strong>일반 트위터 유저로 로그인한 상태에서 요청을 하는 것에는 제한이 없었던</strong> 것!</p>
+<h3 id="Q-그렇다면-제한-한계는-없나"><a href="#Q-그렇다면-제한-한계는-없나" class="headerlink" title="Q. 그렇다면 제한/한계는 없나?"></a>Q. 그렇다면 제한/한계는 없나?</h3><p>A. 같은 API 엔드포인트를 사용하는 만큼, 요청 QueryString에 넣은 쿼리는 트위터 개발자용 API와 100% 호환된다.</p>
+<p>이후 서술하겠지만, 아래의 조건을 지키면 문제가 생기지 않는다.</p>
+<ol>
+<li>정상적으로 인증받은(이메일 &amp; 전화) 트위터 계정을 이용하기<br>➡️ 인증받지 않은 계정을 하면 요청이 금방 막힌다.</li>
+<li>한번에 하나의 요청만 진행할 것<br>➡️ Multiprocess등을 이용해 동시 요청을 하는 순간 바로 막힌다.</li>
+</ol>
+<p>즉, <strong>1개의 PC에서 한번에 1번의 요청</strong>만 보내면 꾸준히 요청이 가능하다는 것이다.</p>
+<p>상당히 쉬운 조건이다!</p>
+<h2 id="1st-try-유저들의-모든-정보를-가져와보자"><a href="#1st-try-유저들의-모든-정보를-가져와보자" class="headerlink" title="1st try: 유저들의 모든 정보를 가져와보자!"></a>1st try: 유저들의 모든 정보를 가져와보자!</h2><h3 id="1st-1-웹-사이트를-뜯어보자"><a href="#1st-1-웹-사이트를-뜯어보자" class="headerlink" title="1st-1) 웹 사이트를 뜯어보자"></a>1st-1) 웹 사이트를 뜯어보자</h3><blockquote>
+<p>💥 <strong>Spoilers</strong> 💥</p>
+<p>이 방법은 <strong>한번에 200개</strong>가 최대이지만, 아래 2nd try에서는 <strong>한번에 5000개</strong>를 가져옵니다.</p>
+</blockquote>
+<p>컨셉은 “로그인이 유지된 상태의 HTTP 요청을 따라하기” 이기 때문에, 트위터에 로그인을 한 상태에서 비동기 요청을 보내는 것을 크롬으로 몰래 가져오면 된다.</p>
+<p>Followers 혹은 Following으로 들어가서 스크롤 몇 번을 해주면 스크린샷 우측과 같이 <code>followers/list.json</code> API로 요청하는 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-22-134830.png" alt="Twitter 트위터의 팔로워들"></p>
+<p>해당 내용을 살펴보면 아래 스크린샷과 같이 각 유저들의 디테일한 정보를 가져오는 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-22-135057.png" alt="트위터가 Following하는 계정 중 하나.&lt;br/&gt;Id, name, screen_name 등의 프로필 정보를 상당히 디테일하게 가져온다."></p>
+<p>위 정보 중에서 사실 필요한 것은 <code>id</code>, 그리고 <code>screen_name</code> 정보다.</p>
+<ul>
+<li><code>id</code>: 트위터 각 계정의 고유한 No. (변경 불가능)</li>
+<li><code>screen_name</code>: 트위터에 로그인할때 &amp; <code>@Mention</code> 기능을 사용할때 쓰는 아이디. (변경 가능)</li>
+</ul>
+<p>그래도 다른 정보도 같이 있으면 좋긴 하니까, 모두 그대로 가져오기로 생각했다.</p>
+<h3 id="1st-2-HTTP-Request-코드를-만들자"><a href="#1st-2-HTTP-Request-코드를-만들자" class="headerlink" title="1st-2) HTTP Request 코드를 만들자"></a>1st-2) HTTP Request 코드를 만들자</h3><p>크롬에서 HTTP 요청이 있다면 곧바로 Python의 <code>requests</code> 기반 요청으로 바꿀 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-22-151047.png" alt="크롬 네트워크 탭에서 HTTP 요청에 우클릭"></p>
+<p>위 과정을 입력하면 해당 HTTP 요청이 cURL 형식으로 복사된다.</p>
+<p>복사한 값을 <a href="https://curl.trillworks.com/">https://curl.trillworks.com/</a> 에 가서 그대로 붙여넣기를 해주자.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-22-151521.png" alt="curl.trillworks.com에서는 cURL을 Python코드로 바꿔준다."></p>
+<p>붙여넣기를 완료한 파이썬 코드는 아래와 같은 결과가 나온다.</p>
+<blockquote>
+<p><strong>[Note]</strong> 아래 token들은 원래 각자 다른 값이 들어있다. </p>
+<p>개인정보 보호를 위해 testToken이라는 이름으로 일괄 숨김을 진행한 것이라, 원래는 영문자와 숫자의 복잡한 값으로 이루어져있다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">cookies = &#123;</span><br><span class="line">    <span class="string">'dnt'</span>: <span class="string">'1'</span>,</span><br><span class="line">    <span class="string">'kdt'</span>: <span class="string">'testToken'</span>,</span><br><span class="line">    <span class="string">'csrf_same_site_set'</span>: <span class="string">'1'</span>,</span><br><span class="line">    <span class="string">'csrf_same_site'</span>: <span class="string">'1'</span>,</span><br><span class="line">    <span class="string">'syndication_guest_id'</span>: <span class="string">'testToken'</span>,</span><br><span class="line">    <span class="string">'_ga'</span>: <span class="string">'testToken'</span>,</span><br><span class="line">    <span class="string">'personalization_id'</span>: <span class="string">'testToken=='</span>,</span><br><span class="line">    <span class="string">'guest_id'</span>: <span class="string">'v1%testToken'</span>,</span><br><span class="line">    <span class="string">'ads_prefs'</span>: <span class="string">'testToken='</span>,</span><br><span class="line">    <span class="string">'remember_checked_on'</span>: <span class="string">'1'</span>,</span><br><span class="line">    <span class="string">'u'</span>: <span class="string">'testToken'</span>,</span><br><span class="line">    <span class="string">'auth_token'</span>: <span class="string">'testToken'</span>,</span><br><span class="line">    <span class="string">'twid'</span>: <span class="string">'u%testToken'</span>,</span><br><span class="line">    <span class="string">'rweb_optin'</span>: <span class="string">'side_no_out'</span>,</span><br><span class="line">    <span class="string">'tfw_exp'</span>: <span class="string">'0'</span>,</span><br><span class="line">    <span class="string">'des_opt_in'</span>: <span class="string">'N'</span>,</span><br><span class="line">    <span class="string">'night_mode'</span>: <span class="string">'0'</span>,</span><br><span class="line">    <span class="string">'ct0'</span>: <span class="string">'testToken'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">'Connection'</span>: <span class="string">'keep-alive'</span>,</span><br><span class="line">    <span class="string">'Pragma'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">    <span class="string">'Cache-Control'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">    <span class="string">'Origin'</span>: <span class="string">'https://twitter.com'</span>,</span><br><span class="line">    <span class="string">'x-twitter-client-language'</span>: <span class="string">'en'</span>,</span><br><span class="line">    <span class="string">'x-csrf-token'</span>: <span class="string">'testtoken'</span>,</span><br><span class="line">    <span class="string">'authorization'</span>: <span class="string">'Bearer testToken'</span>,</span><br><span class="line">    <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'</span>,</span><br><span class="line">    <span class="string">'x-twitter-auth-type'</span>: <span class="string">'OAuth2Session'</span>,</span><br><span class="line">    <span class="string">'x-twitter-active-user'</span>: <span class="string">'yes'</span>,</span><br><span class="line">    <span class="string">'DNT'</span>: <span class="string">'1'</span>,</span><br><span class="line">    <span class="string">'Accept'</span>: <span class="string">'*/*'</span>,</span><br><span class="line">    <span class="string">'Sec-Fetch-Site'</span>: <span class="string">'same-site'</span>,</span><br><span class="line">    <span class="string">'Sec-Fetch-Mode'</span>: <span class="string">'cors'</span>,</span><br><span class="line">    <span class="string">'Referer'</span>: <span class="string">'https://twitter.com/twitter/followers'</span>,</span><br><span class="line">    <span class="string">'Accept-Encoding'</span>: <span class="string">'gzip, deflate, br'</span>,</span><br><span class="line">    <span class="string">'Accept-Language'</span>: <span class="string">'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">params = (</span><br><span class="line">    (<span class="string">'include_profile_interstitial_type'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_blocking'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_blocked_by'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_followed_by'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_want_retweets'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_mute_edge'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_can_dm'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_can_media_tag'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'skip_status'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'cursor'</span>, <span class="string">'1653632830146283795'</span>),</span><br><span class="line">    (<span class="string">'user_id'</span>, <span class="string">'783214'</span>),</span><br><span class="line">    (<span class="string">'count'</span>, <span class="string">'20'</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">response = requests.get(<span class="string">'https://api.twitter.com/1.1/followers/list.json'</span>, headers=headers, params=params, cookies=cookies)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 결과는 response.json()</span></span><br><span class="line">result = response.json()</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 주목해야 하는 부분은 바로 <code>params</code>, 즉 44번째줄의 인자 부분이다. 해당 부분 값 중에서 아래의 3가지 항목이 우리가 변경해야 하는 값이다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">'cursor'</span>, <span class="string">'1653632830146283795'</span>),</span><br><span class="line">(<span class="string">'user_id'</span>, <span class="string">'783214'</span>),</span><br><span class="line">(<span class="string">'count'</span>, <span class="string">'20'</span>),</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>cursor</code>: 요청을 하는 요청 시점. <code>-1</code> 을 넣어주면 첫 요청이 되고, <code>1653632830146283795</code> 처럼 숫자가 들어가있으면 DB 커서처럼 해당 부분부터 <code>count</code> 갯수만큼 반환된다.</li>
+<li><code>user_id</code>: 해당 유저의 ID.</li>
+<li><code>count</code>: 한번에 몇개의 결과를 반환할지. 이 부분은 <strong>max 200</strong>이다.</li>
+</ul>
+<p>따라서, 아래와 같은 로직의 요청을 진행하면 된다.</p>
+<ol>
+<li><code>user_id</code> 를 지정하고, <code>count</code> 를 200으로 설정한 뒤, <code>cursor</code> 를 <code>-1</code> 로 맞추고 요청을 시작한다.</li>
+<li>Response를 <code>.json()</code> 을 이용해 값을 얻어내고, 해당 값 중 <code>cursor</code> 정보를 얻어낸다.</li>
+<li>결과값을 <code>while True:</code> 를 돌면서 <code>cursor</code> 값을 업데이트하면서 Response에서 <code>cursor</code> 가 더이상 등장하지 않을때까지 반복한다.</li>
+</ol>
+<p>이정도면, 꽤 괜찮은 속도로 수집이 가능하다. 😄</p>
+<h3 id="1st-3-user-id-대신-트위터-ID인-screen-name-으로-가져오자"><a href="#1st-3-user-id-대신-트위터-ID인-screen-name-으로-가져오자" class="headerlink" title="1st-3) user_id 대신 트위터 ID인 screen_name 으로 가져오자"></a>1st-3) <code>user_id</code> 대신 트위터 ID인 <code>screen_name</code> 으로 가져오자</h3><p>하지만 위 요청에서는 <strong>한가지 한계</strong>가 있다. 바로 <code>user_id</code> 값을 알아내야 한다는 것.</p>
+<blockquote>
+<p><strong>[Note]</strong> 만약 유저들의 <code>user_id</code> 를 알고있다면, 해당 값을 기준으로 수집하는 것이 가장 안전하고 정확하다. <code>screen_name</code> 은 유저들이 언제든지 변경 가능하기에, 안정적인 고유 식별자가 아니다.</p>
+</blockquote>
+<p>우리가 보통 트위터에서 쉽게 눈으로 보고 얻을 수 있는 정보는 <code>screen_name</code>, 즉 <code>@</code> 로 시작하는 유저의 로그인 아이디이기 때문에 해당 <code>screen_name</code> 값을 통해 가져온다면 좀더 편할 것 같았다.</p>
+<p><strong>Q. 혹시 Parameter를 <code>user_id</code> 대신 <code>screen_name</code> 으로 바꿔도 동작할까?</strong></p>
+<p><strong>A. 잘 동작합니다!</strong></p>
+<p>아래와 같이 <code>params</code> 내용의 값을 바꾸어주면 잘 동작한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">'cursor'</span>, <span class="string">'1653632830146283795'</span>),</span><br><span class="line">(<span class="string">'screen_name'</span>, <span class="string">'twitter'</span>), <span class="comment"># &lt;-- 이 부분이 바뀌었다!</span></span><br><span class="line">(<span class="string">'count'</span>, <span class="string">'200'</span>),</span><br></pre></td></tr></table></figure>
+
+<p>와우! 이제 수집만 하면 될 것 같았다.</p>
+<p>하지만, 1만 팔로워 넘는 <strong>셀럽이 너무 많더라</strong>. 😨</p>
+<h2 id="2nd-try-팔로워-수집-ID만-가져오면-어떨까-🎉"><a href="#2nd-try-팔로워-수집-ID만-가져오면-어떨까-🎉" class="headerlink" title="2nd try: 팔로워 수집, ID만 가져오면 어떨까? 🎉"></a>2nd try: 팔로워 수집, <code>ID</code>만 가져오면 어떨까? 🎉</h2><p>1st try에서 진행했던 방식으로 열심히 크롤링을 하던 중, 한번의 요청에 약 1-1.5s가 걸리는 것을 지켜보면서 10만 Follow를 수집하려면 대략 500-750초가 걸리겠구나.. 하고 생각하고 있었다. 나쁘지 않은 속도, 하지만 크롤링 남은 시간이 800시간인 것을 보면 대략 정신이 멍해진다.</p>
+<p>다른 방법을 찾아야 했다.</p>
+<p>그러던 중, 이런 의문이 들었다.</p>
+<blockquote>
+<p>“음… 혹시 똑같은 Auth Token으로 다른 API를 쓸 수는 없을까?”</p>
+</blockquote>
+<p>답은 놀랍게도, <strong>가능하다!</strong></p>
+<p>트위터 웹에서 사용하는 <code>/followers/list.json</code> 뿐만 아니라 다른 API도 호출이 가능했던 것.</p>
+<h3 id="2nd-1-ids-json-API가-있네"><a href="#2nd-1-ids-json-API가-있네" class="headerlink" title="2nd-1)  ids.json API가 있네..?"></a>2nd-1)  <code>ids.json</code> API가 있네..?</h3><p>새로 사용해보는 API는 Follower들의 <code>id</code> 만 목록으로 받아내는 API였다.</p>
+<blockquote>
+<p>공식 문서는 ➡️ <a href="https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-followers-ids">https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-followers-ids</a></p>
+</blockquote>
+<p>앞서 사용한 <code>list.json</code> API가 팔로워들의 모든 정보(팔로우 수, BIO, 계정명, ID, …)를 가져오는 것에 반해, <code>ids.json</code> API는 단순히 <code>Id</code> 하나만을 리스트로 툭 하고 반환할 뿐이다.</p>
+<p>대신, 한번에 <strong>5000개</strong>의 값을 반환해준다. 🎉</p>
+<p>하지만 나에게 필요했던 것은 단순히 <code>팔로우-팔로잉</code> 관계만 알아내면 되는 것이기 때문에, 다른 정보는 필요하지 않았다.</p>
+<p>따라서 <strong>대박이다!</strong> 를 외치고 작업을 시작했다.</p>
+<h3 id="2nd-2-ids-json-API-요청은-어떻게-하나"><a href="#2nd-2-ids-json-API-요청은-어떻게-하나" class="headerlink" title="2nd-2) ids.json API 요청은 어떻게 하나?"></a>2nd-2) <code>ids.json</code> API 요청은 어떻게 하나?</h3><p>99% 동일하다. (사실상 같다.)</p>
+<p>요청시 API 주소만 다르게 하고, Params만 아래와 같이 입력해주면 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ... 생략 ...</span></span><br><span class="line"></span><br><span class="line">params = (</span><br><span class="line">    (<span class="string">'include_profile_interstitial_type'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_blocking'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_blocked_by'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_followed_by'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_want_retweets'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_mute_edge'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_can_dm'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'include_can_media_tag'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'skip_status'</span>, <span class="string">'1'</span>),</span><br><span class="line">    (<span class="string">'cursor'</span>, cursor),</span><br><span class="line">    (<span class="string">'user_id'</span>, user_id), <span class="comment"># &lt;-- screen_name으로 대체가능</span></span><br><span class="line">    (<span class="string">'count'</span>, <span class="string">'5000'</span>), <span class="comment"># &lt;-- max 5000</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">response = requests.get(<span class="string">'https://api.twitter.com/1.1/folloewrs/ids.json'</span>, headers=headers, params=params)</span><br></pre></td></tr></table></figure>
+
+<p>params의 <code>count</code> 를 무려 <code>5000</code>으로 올릴 수 있다는 것이다.</p>
+<h3 id="2nd-3-모든-팔로워-팔로잉을-가져올때-까지-가져오는-함수를-만들자"><a href="#2nd-3-모든-팔로워-팔로잉을-가져올때-까지-가져오는-함수를-만들자" class="headerlink" title="2nd-3) 모든 팔로워/팔로잉을 가져올때 까지 가져오는 함수를 만들자."></a>2nd-3) 모든 팔로워/팔로잉을 가져올때 까지 가져오는 함수를 만들자.</h3><p>앞서 진행한 로직과 같이 <code>while True:</code> 를 돌면서 <code>cursor</code> 값이 <code>0</code> 이 될 때까지 수집을 진행하면 된다.</p>
+<p>아래 코드는 크게 두 함수로 만들어져있다.</p>
+<ol>
+<li><code>get_follow_ids</code>: <code>user_id</code>와 <code>username</code>(<code>screen_name</code>), <code>cursor</code>를 넣으면 해당 요청의 결과(json)을 반환하는 함수.</li>
+<li><code>get_follow_all</code>: <code>user_id</code>와 <code>username</code>(<code>screen_name</code>), <code>user_follow_count</code>(유저의 팔로우 수, Optional)를 넣으면 전체 결과를 반환하는 함수.</li>
+</ol>
+<p>아래 코드 내 <code>[TESTTOKEN]</code> 으로 된 부분만 앞서 체크한 cURL 요청 변환에서 찾아 넣어주면, 성공적으로 요청을 진행할 수 있다.</p>
+<blockquote>
+<p><strong>[Note]</strong> Cookie 부분은 앞서 나온 코드처럼 <code>cookie=cookie</code> 인자로 전달해줘도 된다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_follow_ids</span><span class="params">(user_id, username, cursor=<span class="number">-1</span>)</span>:</span></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'authority'</span>: <span class="string">'api.twitter.com'</span>,</span><br><span class="line">        <span class="string">'origin'</span>: <span class="string">'https://twitter.com'</span>,</span><br><span class="line">        <span class="string">'x-twitter-client-language'</span>: <span class="string">'ko'</span>,</span><br><span class="line">        <span class="string">'x-csrf-token'</span>: <span class="string">'[TESTTOKEN]'</span>,</span><br><span class="line">        <span class="string">'authorization'</span>: <span class="string">'Bearer [TESTTOKEN]'</span>,</span><br><span class="line">        <span class="string">'user-agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'</span>,</span><br><span class="line">        <span class="string">'x-twitter-auth-type'</span>: <span class="string">'OAuth2Session'</span>,</span><br><span class="line">        <span class="string">'x-twitter-active-user'</span>: <span class="string">'yes'</span>,</span><br><span class="line">        <span class="string">'dnt'</span>: <span class="string">'1'</span>,</span><br><span class="line">        <span class="string">'accept'</span>: <span class="string">'*/*'</span>,</span><br><span class="line">        <span class="string">'sec-fetch-site'</span>: <span class="string">'same-site'</span>,</span><br><span class="line">        <span class="string">'sec-fetch-mode'</span>: <span class="string">'cors'</span>,</span><br><span class="line">        <span class="string">'referer'</span>: <span class="string">f'https://twitter.com/<span class="subst">&#123;username&#125;</span>/following'</span>,</span><br><span class="line">        <span class="string">'accept-encoding'</span>: <span class="string">'gzip, deflate, br'</span>,</span><br><span class="line">        <span class="string">'accept-language'</span>: <span class="string">'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'</span>,</span><br><span class="line">        <span class="string">'cookie'</span>: <span class="string">'personalization_id="[TESTTOKEN]"; guest_id=v1%[TESTTOKEN]; ct0=[TESTTOKEN]; ads_prefs="[TESTTOKEN]="; kdt=[TESTTOKEN]; remember_checked_on=1; _twitter_sess=[TESTTOKEN]; auth_token=[TESTTOKEN]; csrf_same_site_set=1; rweb_optin=side_no_out; csrf_same_site=1; twid=u%[TESTTOKEN]'</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    params = (</span><br><span class="line">        (<span class="string">'include_profile_interstitial_type'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_blocking'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_blocked_by'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_followed_by'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_want_retweets'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_mute_edge'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_can_dm'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'include_can_media_tag'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'skip_status'</span>, <span class="string">'1'</span>),</span><br><span class="line">        (<span class="string">'cursor'</span>, cursor),</span><br><span class="line">        (<span class="string">'user_id'</span>, user_id),</span><br><span class="line">        (<span class="string">'count'</span>, <span class="string">'5000'</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    response = requests.get(<span class="string">'https://api.twitter.com/1.1/followers/ids.json'</span>, headers=headers, params=params)</span><br><span class="line">    <span class="keyword">return</span> response.json()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_follow_all</span><span class="params">(user_id, username, user_follow_count=None)</span>:</span>    </span><br><span class="line">    cursor = <span class="number">-1</span></span><br><span class="line">    dataset = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> cursor != <span class="number">0</span>: <span class="comment"># 커서가 0이면 다음페이지가 없다.</span></span><br><span class="line">        data = get_follow_ids(user_id, username, cursor)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cursor = data[<span class="string">'next_cursor'</span>]</span><br><span class="line">        <span class="keyword">except</span> KeyError <span class="keyword">as</span> e:</span><br><span class="line">            print(data)</span><br><span class="line">            <span class="keyword">if</span> data.get(<span class="string">'error'</span>) <span class="keyword">and</span> data[<span class="string">'error'</span>] == <span class="string">'Not authorized.'</span>:</span><br><span class="line">                open(<span class="string">f"protected/<span class="subst">&#123;user_id&#125;</span>"</span>, <span class="string">'w'</span>).close()</span><br><span class="line">                print(username, <span class="string">"Protected"</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> data.get(<span class="string">'errors'</span>) <span class="keyword">and</span> data[<span class="string">'errors'</span>][<span class="number">0</span>][<span class="string">'code'</span>] == <span class="number">34</span>:</span><br><span class="line">                open(<span class="string">f"deleted/<span class="subst">&#123;user_id&#125;</span>"</span>, <span class="string">'w'</span>).close()</span><br><span class="line">                print(username, <span class="string">"Does Not exist"</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            print(<span class="string">'='</span>*<span class="number">50</span>)</span><br><span class="line">            print(<span class="string">'Username:'</span>, username, <span class="string">'User_id'</span>, user_id)</span><br><span class="line">            print(data)</span><br><span class="line">            print(<span class="string">'='</span>*<span class="number">50</span>)</span><br><span class="line">            <span class="keyword">raise</span> e</span><br><span class="line">        dataset += data[<span class="string">'ids'</span>]</span><br><span class="line">        print(<span class="string">f'<span class="subst">&#123;username&#125;</span>(<span class="subst">&#123;user_id&#125;</span>): <span class="subst">&#123;len(set(dataset))&#125;</span> / <span class="subst">&#123;user_follow_count&#125;</span>'</span>, end=<span class="string">'\r'</span>)</span><br><span class="line">    dataset = list(set(dataset))</span><br><span class="line">    json.dump(dataset, open(<span class="string">f'success/<span class="subst">&#123;user_id&#125;</span>.json'</span>, <span class="string">'w+'</span>))</span><br><span class="line">    print(<span class="string">f'# Final for USER [<span class="subst">&#123;username&#125;</span>(<span class="subst">&#123;user_id&#125;</span>)]: <span class="subst">&#123;len(dataset)&#125;</span> / <span class="subst">&#123;user_follow_count&#125;</span>'</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>온전한 Following(팔로잉)을 가져오는 코드는 아래 Github Gist에서 찾을 수 있습니다.</p>
+<p><a href="https://gist.github.com/Beomi/9d263bf9d1128180e1c17c1e94b0409b">https://gist.github.com/Beomi/9d263bf9d1128180e1c17c1e94b0409b</a></p>
+</blockquote>
+<p>이제 위 함수를 <code>user_id</code> 를 <code>for</code> loop를 돌며 실행하면 API의 응답에 따라 <code>proetectd</code>, <code>deleted</code>, <code>success</code> 등의 폴더에 자동으로 정리된다. (당연히 각 폴더는 미리 생성해두어야 에러가 나지 않는다.)</p>
+<p>이번 요청 역시 하나에 1~1.5s가 걸리지만, 앞서 200개 대비 무려 <strong>25배</strong> 빨라지기 때문에 훨씬 편안한 수집이 가능하다.</p>
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><p>트위터에서 RT가 어떻게 퍼지는지 Network Tree를 그리기 위해, 엄밀하고 정확한 수준의 팔로워-팔로잉 그래프가 필요했다.</p>
+<p>앞선 시행착오를 통해 5k+ 유저들의 경우 이 방식으로 수집하고, 그 이하의 경우는 앞서 만든 병렬 처리 가능한 HTML 크롤러로 나머지 수집을 진행했다.</p>
+<p>약 20만명+ 수준을 수집할 수 있었고, 실제로 5k+ 유저들을 모으는데 걸리는 시간이 그 이하를 AWS lambda를 통해 병렬수집하는 시간보다 훨씬 오래 걸렸다.</p>
+<p>이후 <code>id</code> 와 <code>screen_name</code> 의 중복 사용 혹은 변경 등을 체크해 맞는지/아닌지를 검사해 팔로우/팔로워 수집 태스크를 마쳤다.</p>
+<p>앞으로 트위터에서 어떻게 대응할지는 모르겠지만, API의 한계를 이런 식으로 넘을 수 있어서 정말 다행히도 프로젝트 진행이 가능했다. 😂</p>
+<blockquote>
+<p><strong>결론:</strong> 트위터 API는 돈주고 쓰는게 마음편하다…..</p>
+</blockquote>
+<p>다음부터 가능하면 결제 펑펑 할 수 있기를 바라며, 글을 마친다.</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/crawling/" rel="tag">crawling</a>, <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>, <a class="has-link-grey -link" href="/tags/twitter/" rel="tag">twitter</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/31/Postmortem-2019/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">2019년 회고, 2년치 연말정산</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/12/22/Crawling_Twitter_Following_2/">
+                <span class="level-item">트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#어떤-방법인가">
+        <span class="has-mr-6">1</span>
+        <span>어떤 방법인가?</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Q-그렇다면-제한-한계는-없나">
+        <span class="has-mr-6">1.1</span>
+        <span>Q. 그렇다면 제한/한계는 없나?</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#1st-try-유저들의-모든-정보를-가져와보자">
+        <span class="has-mr-6">2</span>
+        <span>1st try: 유저들의 모든 정보를 가져와보자!</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1st-1-웹-사이트를-뜯어보자">
+        <span class="has-mr-6">2.1</span>
+        <span>1st-1) 웹 사이트를 뜯어보자</span>
+        </a></li><li>
+        <a class="is-flex" href="#1st-2-HTTP-Request-코드를-만들자">
+        <span class="has-mr-6">2.2</span>
+        <span>1st-2) HTTP Request 코드를 만들자</span>
+        </a></li><li>
+        <a class="is-flex" href="#1st-3-user-id-대신-트위터-ID인-screen-name-으로-가져오자">
+        <span class="has-mr-6">2.3</span>
+        <span>1st-3) user_id 대신 트위터 ID인 screen_name 으로 가져오자</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2nd-try-팔로워-수집-ID만-가져오면-어떨까-🎉">
+        <span class="has-mr-6">3</span>
+        <span>2nd try: 팔로워 수집, ID만 가져오면 어떨까? 🎉</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2nd-1-ids-json-API가-있네">
+        <span class="has-mr-6">3.1</span>
+        <span>2nd-1)  ids.json API가 있네..?</span>
+        </a></li><li>
+        <a class="is-flex" href="#2nd-2-ids-json-API-요청은-어떻게-하나">
+        <span class="has-mr-6">3.2</span>
+        <span>2nd-2) ids.json API 요청은 어떻게 하나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#2nd-3-모든-팔로워-팔로잉을-가져올때-까지-가져오는-함수를-만들자">
+        <span class="has-mr-6">3.3</span>
+        <span>2nd-3) 모든 팔로워/팔로잉을 가져올때 까지 가져오는 함수를 만들자.</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#맺으며">
+        <span class="has-mr-6">4</span>
+        <span>맺으며</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

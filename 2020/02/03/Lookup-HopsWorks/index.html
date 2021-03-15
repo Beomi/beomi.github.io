@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>데이터 분석 파이프라인 풀세트, HopsWorks 설치기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-181524.jpg" alt="데이터 분석 파이프라인 풀세트, HopsWorks 설치기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-02-02T15:00:00.000Z">2020-02-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/DataScience/">DataScience</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                데이터 분석 파이프라인 풀세트, HopsWorks 설치기
+            
+        </h1>
+        <div class="content">
+            <p>성윤님의 블로그에서 <a href="https://zzsza.github.io/mlops/2020/02/02/feature-store/#Hopsworks">Machine Learning의 Feature Store란?</a> 글을 보고서 <code>hopsworks</code> 라는 제품에 관심을 갖게 되었다.</p>
+<p>과연 어떤 기능을 갖고 있는 것일까? 내가 생각하는 것 처럼 데이터 버저닝부터 모델링 버전까지 모두 관리해주는 좋은 ‘실험실’을 구축해줄 수 있는 것일까? 라는 호기심에 설치를 시도해보었다.</p>
+<a id="more"></a>
+
+<h2 id="로컬-기기-Ubuntu-Debian-에-설치하기"><a href="#로컬-기기-Ubuntu-Debian-에-설치하기" class="headerlink" title="로컬 기기(Ubuntu/Debian)에 설치하기"></a>로컬 기기(Ubuntu/Debian)에 설치하기</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-194700.png" alt="Single Machine Installation Docs"></p>
+<p>마침 집에서 돌리고 있는 딥러닝용 데스크탑이 있어 거기에 올려보면 어떨까? 하는 마음에 해당 기기에 설치를 진행했다. (공식 문서에서는 Ubuntu 18.04 LTS에서 테스트를 진행했다고 한다.)</p>
+<p>설치는 무척 쉽다. <a href="https://hopsworks.readthedocs.io/en/latest/getting_started/setups/single_machine.html">링크</a>에 있는  <code>simplesetup.sh</code> 파일을 받은 뒤 실행하면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://hopsworks.readthedocs.io/en/latest/_downloads/e150a261128e5d4a0c804611e116503c/simplesetup.sh</span><br><span class="line">chmod +x simplesetup.sh</span><br><span class="line">./simplesetup.sh --install-deps</span><br></pre></td></tr></table></figure>
+
+<p>한가지 유의할 점은 공식 docs에서는 sh파일만 실행하면 된다고 하지만 실제로는 <code>--install-deps</code> 옵션을 꼭 붙혀줘야 <code>apt-get</code> 을 이용한 의존성 패키지를 제대로 설치해준다.</p>
+<h3 id="에러-“Vagrant-Unknown-configuration-section-‘disksize’”를-만나다"><a href="#에러-“Vagrant-Unknown-configuration-section-‘disksize’”를-만나다" class="headerlink" title="에러 “Vagrant: * Unknown configuration section ‘disksize’”를 만나다"></a>에러 “Vagrant: * Unknown configuration section ‘disksize’”를 만나다</h3><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-195325.png" alt="Vagrnat 에러. 에러가 아닌 줄.."></p>
+<p>신나게 VirtualBox와 Vagrant등을 설치하고 Github에서 여러 스토리보드 레포를 다운받으며 무언가 만드는 것을 진행하지만, 그러던 중 문제가 발생하는 것을 볼 수 있다.</p>
+<p>바로 Vagrant의  <code>Unknown configuration section &#39;disksize&#39;</code> 에러.</p>
+<p>해당 에러를 어디서 해결해야하나, 하고 구글링을 한 결과, StackOverflow의 글(<a href="[]()">링크</a>)에서 해답을 찾았다.</p>
+<p>아래 명령어를 로컬 터미널에 입력해 <code>vagrant-disksize</code> 패키지를 설치해주면 문제가 해결된다.</p>
+<p>(Host os 터미널에서 실행하면 된다.)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant plugin install vagrant-disksize</span><br></pre></td></tr></table></figure>
+
+<h3 id="하지만…"><a href="#하지만…" class="headerlink" title="하지만…"></a>하지만…</h3><p>놀랍게도 1시간 10분이나 걸린 작업이 Fail로 끝이 났다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-204059.png" alt="가끔 실패한다. 왜일까?"></p>
+<p>한편, 해당 이슈는 TimeOut으로 보여 다시 실행을 하니 정상적으로 실행되는 것을 볼 수 있었다.</p>
+<p>매번 Chef에서 새로운 업데이트가 있는지 github에서 fetch를 진행한 뒤 추가 작업을 진행하다 보니 더 느려지는 경향이 있는 듯 했다.</p>
+<p>또한, 위 공식 문서 “Single Machine Installation”에서는 VirtualBox를 이용해 VM을 띄워 각각을 Driver / Worker처럼 제공하다 보니 시스템 자원을 오히려 많이 잡아먹어서 ‘유용하지는 않은데…’ 하는 생각이 들었다.</p>
+<h2 id="실제-사용을-해보다-on-AWS"><a href="#실제-사용을-해보다-on-AWS" class="headerlink" title="실제 사용을 해보다 on AWS"></a>실제 사용을 해보다 on AWS</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-194957.png" alt="AWS AMI에 올라온 HopsWorks"></p>
+<p>한편, 해당 설치과정에서 “1시간 넘게 걸리니 기다리세요~” 하는 말이 있어서 위 에러가 났음에도 에러가 원인이라고 생각하지 않고서 (멍청하게) 마냥 기다리던 중, <a href="https://hopsworks.readthedocs.io/en/latest/getting_started/setups/hopsworks_ami.html">링크</a>에서 Amazon AWS에는 사전 설정된 AMI(디스크 이미지)를 지원해준다는 것을 보고서 해당 이미지로 먼저 시도해보기로 했다.</p>
+<p>공식 문서에 설명대로 <code>Hopsworks</code> 최신 버전의 AMI를 선택해 EC2 인스턴스를 띄워보았다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-194936.png" alt="Hopsworks AMI 선택하기"></p>
+<p>다만, 현재 해당 이미지는 London리전과 Ohio리전에만 지원을 해, 테스트 할 때는 Ohio 리전에서 테스트를 해 보았다.</p>
+<p>보다 저렴한 가격에 테스트를 해보기 위해 아래와 같이 스팟 요청으로 <code>t3.xlarge</code> 인스턴스를 띄웠다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-195709.png" alt="Spot으로 띄운 t3.xlarge 인스턴스"></p>
+<blockquote>
+<p>HopsWorks에서는 원활한 서비스 자원 이용을 위해서는 최소 16GB가 넘는 메모리를 가진 인스턴스를 사용하도록 권장한다.</p>
+</blockquote>
+<p>또한 해당 인스턴스의 보안그룹에서 22번 포트(ssh)와 443 포트(https)는 기본적으로 열려있어야 이용이 가능하다.</p>
+<h3 id="띄워보기"><a href="#띄워보기" class="headerlink" title="띄워보기"></a>띄워보기</h3><p>인스턴스를 잘 띄우고 SSH로 해당 인스턴스에 접속을 한 뒤, 아래 스크립트 실행을 통해 서버를 띄워야 한다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;start-services.sh</span><br></pre></td></tr></table></figure>
+
+<p>위 파일은 <code>ubuntu</code> 유저의 홈 디렉토리에 곧바로 저장되어있고, 해당 파일을 실행하면 다음과 같이 email주소를 요청한 뒤 입력을 하면 아래 스크린샷처럼 IP부터 시작해 여러 세부 서비스들을 한번에 모두 띄워준다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-195557.png" alt="HopsWorks를 띄운 뒤 첫 실행하기"></p>
+<p>모두 끝나면 <code>https://&lt;public_ip&gt;/hopswork</code> 주소에 접속하면 된다. 아래의 username와 pw를 이용해 로그인할 수 있다.</p>
+<blockquote>
+<p>NOTE: <code>http</code> 가 아닌 <code>https</code> 로만 동작한다. </p>
+</blockquote>
+<ul>
+<li>username : <a href="mailto:admin%40hopsworks.ai">admin@hopsworks.ai</a></li>
+<li>password : admin</li>
+</ul>
+<h3 id="살펴보기"><a href="#살펴보기" class="headerlink" title="살펴보기"></a>살펴보기</h3><p>실제로 서버를 띄운 뒤 로그인을 진행하고 샘플 프로젝트에 들어가보니 다음과 같이 Jupyter Lab을 이용할 수 있었다.</p>
+<p>아래 스크린샷 우측의 ‘Open Jupyter in a new Tab’ 기능으로 JupyterLab에 곧장 접근이 가능했다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-200328.png" alt="Sample Project에 들어온 모습. JupyterLab을 이용할 수 있다."></p>
+<p>최근 자주 사용하는 라이브러리인 PyTorch를 비롯해 Pandas, sklearn등 데이터 분석을 위해 자주 쓰이는 패키지들이 이미 설치되어있었다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-200610.png" alt="PyTorch가 설치되어있는 JupyterLab"></p>
+<p>또한 딥러닝 패키지들과 함께 PySpark 세션을 통해 Worker Node에 딥러닝 학습 및 실험을 버저닝과 함께 맡길 수도 있었다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-02-200819.png" alt="PySpark 위에서 PyTorch로 MNIST 학습시키기"></p>
+<p>한편, 테스트를 진행하다 아래와 같은 질문이 들었다.</p>
+<p>위 서버를 띄운 것은 <code>t3.xlarge</code>로 CPU서버이고, CPU 서버에서는 당연히 CUDA가 지원되지는 않는다.(애초에 그래픽카드가 없으니까!)</p>
+<blockquote>
+<p>“그렇다면 GPU 인스턴스에서는 곧바로 GPU를 사용할 수 있을까?”</p>
+</blockquote>
+<h3 id="GPU-인스턴스에서-CUDA가속이-바로-되는지-확인하기"><a href="#GPU-인스턴스에서-CUDA가속이-바로-되는지-확인하기" class="headerlink" title="GPU 인스턴스에서 CUDA가속이 바로 되는지 확인하기"></a>GPU 인스턴스에서 CUDA가속이 바로 되는지 확인하기</h3><p>결과부터 말하면, NO.</p>
+<p>GPU인스턴스인 <code>g3s.xlarge</code> 와 <code>p2.xlarge</code> 를 이용해보았지만 둘 다 <code>torch.cuda.is_available()</code> 명령어에 <code>False</code> 를 반환했다.</p>
+<p>그 외에도 당장 AMI에서 <code>nvidia-smi</code> 를 입력했을 때, 설치조차 되어있지 않았다는 것을 알 수 있었다.</p>
+<p><a href="https://hopsworks.readthedocs.io/en/latest/installation_guide/hops-manual-installation-guide.html#building-the-gpu-driver">GPU 사용 공식 Docs 링크</a> 에서는 GPU Layer Interface를 설치해야 한다고 한다.</p>
+<p>한편, apt로 maven을 설치하고 아래 명령어들을 따라 실행했지만 실제로 GPU를 전달하고 있는지는 확인할 수 없었다. (추가적 연구가 필요할 듯 하다.)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y maven</span><br><span class="line">cd ~</span><br><span class="line">git clone https://github.com/hopshadoop/hops-gpu-management.git</span><br><span class="line">cd hops-gpu-management &amp;&amp; mvn install -DskipTests</span><br><span class="line"></span><br><span class="line">cd ~</span><br><span class="line">git clone https://github.com/hopshadoop/hops-gpu-management-impl-nvidia.git</span><br><span class="line">cd hops-gpu-management-impl-nvidia</span><br><span class="line">mvn install -DskipTests</span><br></pre></td></tr></table></figure>
+
+<p>다시 HopsWorks 세션에 들어가 PyTorch에서 Cuda 가속이 되는지 확인해보았지만, 되지 않았다.</p>
+<p>추가적으로 확인해 보기 위해 Nvidia Driver를 설치해 보았다. (<code>nvidia-smi</code> 명령어를 사용해보기 위해)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://kr.download.nvidia.com/tesla/418.116.00/NVIDIA-Linux-x86_64-418.116.00.run</span><br><span class="line">chmod +x NVIDIA-Linux-x86_64-418.116.00.run</span><br><span class="line">sudo ./NVIDIA-Linux-x86_64-418.116.00.run</span><br></pre></td></tr></table></figure>
+
+<p><code>nvidia-smi</code> 명령어도 잘 먹히고 cuda도 잘 잡혔지만, 여전히 HopsWorks 설정에서는 잘 나타나지 않았다. ㅠㅠ</p>
+<h2 id="총평"><a href="#총평" class="headerlink" title="총평"></a>총평</h2><p>뭔가 기능이 많고 ‘잘 만든’ 느낌이 강하긴 하지만, 설치에 대한 문서화가 아쉬운 상태다.</p>
+<p>“Data Scientist들, 환경에 대해 걱정하지 말고 개발해!” 라는 철학이 드러나기는 하지만 세팅을 누군가가 빡세게 해줘야 한다는 점은 분명해보였다.</p>
+<p>사실은 GPU 가속만 잘 되면 좋을 것 같은데, 해당 부분이 안되어서 어떻게 해야할지 방법을 찾아보는 중이다. 공식 소개 영상에서는 Cluster에 있는 GPU 자원도 워크스페이스별로 N개를 할당해 사용할 수 있도록 제공하고 있어 이게 가능하다면 보다 편리한 병렬 실험이 가능해보이기는 하다.</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/data-pipeline/" rel="tag">data-pipeline</a>, <a class="has-link-grey -link" href="/tags/hopsworks/" rel="tag">hopsworks</a>, <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/02/13/AWS-SSM-with-Bastion/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">AWS SSM로 VPN없이 Private 자원 접근하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/01/29/Use-parquet-on-pandas/">
+                <span class="level-item">Pandas에서 Parquet 사용하기 with Snappy/Gzip</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#로컬-기기-Ubuntu-Debian-에-설치하기">
+        <span class="has-mr-6">1</span>
+        <span>로컬 기기(Ubuntu/Debian)에 설치하기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#에러-“Vagrant-Unknown-configuration-section-‘disksize’”를-만나다">
+        <span class="has-mr-6">1.1</span>
+        <span>에러 “Vagrant: * Unknown configuration section ‘disksize’”를 만나다</span>
+        </a></li><li>
+        <a class="is-flex" href="#하지만…">
+        <span class="has-mr-6">1.2</span>
+        <span>하지만…</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#실제-사용을-해보다-on-AWS">
+        <span class="has-mr-6">2</span>
+        <span>실제 사용을 해보다 on AWS</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#띄워보기">
+        <span class="has-mr-6">2.1</span>
+        <span>띄워보기</span>
+        </a></li><li>
+        <a class="is-flex" href="#살펴보기">
+        <span class="has-mr-6">2.2</span>
+        <span>살펴보기</span>
+        </a></li><li>
+        <a class="is-flex" href="#GPU-인스턴스에서-CUDA가속이-바로-되는지-확인하기">
+        <span class="has-mr-6">2.3</span>
+        <span>GPU 인스턴스에서 CUDA가속이 바로 되는지 확인하기</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#총평">
+        <span class="has-mr-6">3</span>
+        <span>총평</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

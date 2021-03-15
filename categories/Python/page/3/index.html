@@ -1,0 +1,2403 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>카테고리: python - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-3-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/categories">카테고리</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">python</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-01-25-HowToMakeWebCrawler-With-Selenium/selenium1.jpg" alt="나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-26T15:00:00.000Z">2017-02-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>Updated @ 2019.10.10. Typo/Layout fix, 네이버 로그인 Captcha관련 수정 추가</p>
+</blockquote>
+<p>이전게시글: <a href="/2017/01/20/HowToMakeWebCrawler-With-Login/">나만의 웹 크롤러 만들기(2): Login with Session</a></p>
+<h2 id="Selenium이란"><a href="#Selenium이란" class="headerlink" title="Selenium이란?"></a>Selenium이란?</h2><p>Selenium은 주로 웹앱을 테스트하는데 이용하는 프레임워크다. <code>webdriver</code>라는 API를 통해 운영체제에 설치된 Chrome등의 브라우저를 제어하게 된다.</p>
+<p>브라우저를 직접 동작시킨다는 것은 JavaScript를 이용해 비동기적으로 혹은 뒤늦게 불러와지는 컨텐츠들을 가져올 수 있다는 것이다. 즉, ‘눈에 보이는’ 컨텐츠라면 모두 가져올 수 있다는 뜻이다. 우리가 requests에서 사용했던 <code>.text</code>의 경우 브라우저에서 ‘소스보기’를 한 것과 같이 동작하여, JS등을 통해 동적으로 DOM이 변화한 이후의 HTML을 보여주지 않는다. 반면 Selenium은 실제 웹 브라우저가 동작하기 때문에 JS로 렌더링이 완료된 후의 DOM결과물에 접근이 가능하다.</p>
+<h2 id="어떻게-설치하나"><a href="#어떻게-설치하나" class="headerlink" title="어떻게 설치하나?"></a>어떻게 설치하나?</h2><h3 id="pip-selenium-package"><a href="#pip-selenium-package" class="headerlink" title="pip selenium package"></a>pip selenium package</h3><p>Selenium을 설치하는 것은 기본적으로 <code>pip</code>를 이용한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>참고: Selenium의 버전은 자주 업데이트 되고, 브라우저의 업데이트 마다 새로운 Driver를 잡아주기 때문에 항상 최신버전을 깔아 주는 것이 좋다.</p>
+</blockquote>
+<p>이번 튜토리얼에서는 <code>BeautifulSoup</code>이 설치되어있다고 가정합니다.</p>
+<blockquote>
+<p>BeautifulSoup은 <code>pip install bs4</code>로 설치 가능합니다.</p>
+</blockquote>
+<h3 id="webdriver"><a href="#webdriver" class="headerlink" title="webdriver"></a>webdriver</h3><p>Selenium은 <code>webdriver</code>라는 것을 통해 디바이스에 설치된 브라우저들을 제어할 수 있다. 이번 가이드에서는 Chrome을 사용해 볼 예정이다.</p>
+<h3 id="Chrome-WebDriver"><a href="#Chrome-WebDriver" class="headerlink" title="Chrome WebDriver"></a>Chrome WebDriver</h3><p>크롬을 사용하려면 로컬에 크롬이 설치되어있어야 한다.</p>
+<p>그리고 크롬 드라이버를 다운로드 받아주자.</p>
+<p><a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">https://sites.google.com/a/chromium.org/chromedriver/downloads</a></p>
+<p>글 수정일자인 2019년 10월 10일에는 크롬 77버전이 최신이며, 해당하는 크롬 드라이버를 받아야 한다.</p>
+<blockquote>
+<p>Update @ 2019.10.10</p>
+<p>크롬에서는 현재 <code>버전별</code> 지정된 chromedriver를 받도록 안내하며, 버전에 일치하지 않는 드라이버를 사용하면 에러가 납니다.</p>
+<p>현재 사용하는 크롬의 버전은 크롬 창에 👉 <code>chrome://version</code> 👈 이 URL을 주소창에 그대로 입력하면(http없이) 버전을 확인할 수 있습니다.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-10-10-085013.png" alt="스크린샷 2019-10-10 오후 5.49.07"></p>
+</blockquote>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-10-10-085538.png" alt="스크린샷 2019-10-10 오후 5.53.25"></p>
+<p>버전을 클릭하면 아래와 같은 OS별 Driver파일이 나열되어있다. 사용하는 OS에 따른 driver를 받아주자.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-10-10-085753.png" alt="스크린샷 2019-10-10 오후 5.56.03"></p>
+<p>zip파일을 받고 풀어주면 <code>chromedriver</code>라는 파일이 저장된다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2021.41.17.png" alt=""></p>
+<p>위 폴더를 기준으로 할 경우 <code>/Users/beomi/Downloads/chromedriver</code>가 크롬드라이버 파일의 위치가 된다.</p>
+<p>이 경로를 나중에 Selenium 객체를 생성할 때 지정해 주어야 한다. (그래야 python이 chromedriver를 통해 크롬 브라우저를 조작할 수 있다!)</p>
+<h3 id="PhantomJS-webdriver"><a href="#PhantomJS-webdriver" class="headerlink" title="PhantomJS webdriver"></a>PhantomJS webdriver</h3><blockquote>
+<p>단, 2018년+ 기준 PhantomJS는 더이상 개발되지 않고 있기 때문에 앞으로는 크롬의 <code>headless</code>모드를 사용하는 것을 추천합니다.</p>
+</blockquote>
+<p>PhantomJS는 기본적으로 WebTesting을 위해 나온 Headless Browser다.(즉, 화면이 존재하지 않는다)</p>
+<p>하지만 JS등의 처리를 온전하게 해주며 CLI환경에서도 사용이 가능하기 때문에, 만약 CLI서버 환경에서 돌아가는 크롤러라면 PhantomJS를 사용하는 것도 방법이다.</p>
+<p>PhantomJS는 공식 프로젝트의 <a href="http://phantomjs.org/download.html">PhantomJS Download Page</a>에서 받을 수 있다.</p>
+<p>Binary 자체로 제공되기 때문에, Linux를 제외한 OS에서는 외부 dependency없이 바로 실행할 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2021.47.01.png" alt="Extracted PhantomJS Zip file"></p>
+<p>압축을 풀어주면 아래와 같은 많은 파일들이 있지만, 우리가 사용하는 것은 <code>bin</code>폴더 안의 <code>phantomjs</code>파일이다.</p>
+<p>위 폴더 기준으로 할 경우 <code>/Users/beomi/Downloads/phantomjs-2.1.1-macosx/bin/phantomjs</code>가 PhantomJS드라이버의 위치다.</p>
+<h2 id="Selenium으로-사이트-브라우징"><a href="#Selenium으로-사이트-브라우징" class="headerlink" title="Selenium으로 사이트 브라우징"></a>Selenium으로 사이트 브라우징</h2><p>Selenium은 <code>webdriver api</code>를 통해 브라우저를 제어한다.</p>
+<p>우선 <code>webdriver</code>를 import해주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>driver</code>라는 이름의 webdriver 객체를 만들어 주자.</p>
+<blockquote>
+<p>이름이 꼭 <code>driver</code>일 필요는 없다.</p>
+<p>이번 가이드에서는 크롬을 기본적으로 이용할 예정이다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># Chrome의 경우 | 아까 받은 chromedriver의 위치를 지정해준다.</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line"><span class="comment"># PhantomJS의 경우 | 아까 받은 PhantomJS의 위치를 지정해준다.</span></span><br><span class="line"><span class="comment"># driver = webdriver.PhantomJS('/Users/beomi/Downloads/phantomjs-2.1.1-macosx/bin/phantomjs')</span></span><br></pre></td></tr></table></figure>
+
+<p>Selenium은 기본적으로 웹 자원들이 모두 로드될때까지 기다려주지만, 암묵적으로 모든 자원이 로드될때 까지 기다리게 하는 시간을 직접 <code>implicitly_wait</code>을 통해 지정할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line"><span class="comment"># 암묵적으로 웹 자원 로드를 위해 3초까지 기다려 준다.</span></span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>이제 특정 url로 브라우저를 켜 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line"><span class="comment"># url에 접근한다.</span></span><br><span class="line">driver.get(<span class="string">'https://google.com'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>만약 chromedriver의 위치가 정확하다면 새 크롬 화면이 뜨고 구글 첫 화면으로 들어가질 것이다.</p>
+<p>Selenium은 driver객체를 통해 여러가지 메소드를 제공한다.</p>
+<blockquote>
+<p>아래의 메소드들은 보통 <code>driver.~~~</code> 방식으로 사용합니다.</p>
+</blockquote>
+<p>URL에 접근하는 메소드,</p>
+<ul>
+<li><code>get(&#39;http://url.com&#39;)</code></li>
+</ul>
+<p>페이지의 단일 element에 접근하는 메소드,</p>
+<ul>
+<li><code>find_element_by_name(&#39;HTML_name&#39;)</code></li>
+<li><code>find_element_by_id(&#39;HTML_id&#39;)</code></li>
+<li><code>find_element_by_xpath(&#39;/html/body/some/xpath&#39;)</code></li>
+<li><code>find_element_by_css_selector(&#39;#css &gt; div.selector&#39;)</code></li>
+<li><code>find_element_by_class_name(&#39;some_class_name&#39;)</code></li>
+<li><code>find_element_by_tag_name(&#39;h1&#39;)</code></li>
+</ul>
+<p>페이지의 여러 elements에 접근하는 메소드 등이 있다. (대부분 <code>element</code> 를 <code>elements</code> 로 바꾸기만 하면 된다.)</p>
+<ul>
+<li><code>find_elements_by_css_selector(&#39;#css &gt; div.selector&#39;)</code></li>
+</ul>
+<p>위 메소드들을 활용시 HTML을 브라우저에서 파싱해주기 때문에 굳이 Python와 BeautifulSoup을 사용하지 않아도 된다.</p>
+<p>하지만 Selenium에 내장된 함수만 사용가능하기 때문에 좀더 사용이 편리한 soup객체를 이용하려면 <code>driver.page_source</code> API를 이용해 현재 렌더링 된 페이지의 Elements를 모두 가져올 수 있다.</p>
+<blockquote>
+<p><code>driver.page_source</code>: 브라우저에 보이는 그대로의 HTML, 크롬 개발자 도구의 <code>Element</code> 탭 내용과 동일.</p>
+<p><code>requests</code> 통해 가져온 <code>req.text</code>: HTTP요청 결과로 받아온 HTML, 크롬 개발자 도구의 <code>페이지 소스</code> 내용과 동일.</p>
+<p>위 2개는 사이트에 따라 같을수도 다를수도 있습니다.</p>
+</blockquote>
+<h2 id="네이버-로그인-하기"><a href="#네이버-로그인-하기" class="headerlink" title="네이버 로그인 하기"></a>네이버 로그인 하기</h2><p>네이버는 requests를 이용해 로그인하는 것이 어렵다. 프론트 단에서 JS처리를 통해 로그인 처리를 하기 때문인데, Selenium을 이용하면 보다 쉽게 로그인을 할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line"><span class="comment"># url에 접근한다.</span></span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>네이버 로그인 화면을 확인 해 보면 아이디를 입력받는 부분의 name이 <code>id</code>, ​비밀번호를 입력받는 부분의 name이 <code>pw</code>인 것을 알 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.19.18.png" alt="Naver Login Page"></p>
+<p><code>find_element_by_name</code>을 통해 아이디/비밀번호 input 태그를 잡아주고, 값을 입력해 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br><span class="line"><span class="comment"># 아이디/비밀번호를 입력해준다.</span></span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.23.11.png" alt="Naver Login Input"></p>
+<p>성공적으로 값이 입력된 것을 확인할 수 있다.</p>
+<p>이제 Login버튼을 눌러 실제로 로그인이 되는지 확인해 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br><span class="line"><span class="comment"># 로그인 버튼을 눌러주자.</span></span><br><span class="line">driver.find_element_by_xpath(<span class="string">'//*[@id="frmNIDLogin"]/fieldset/input'</span>).click()</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Update @ 2019.10.10.</p>
+</blockquote>
+<p>하지만 로그인이 이전처럼 잘 되지 않고 Captcha를 요구하는 창이 뜰 수 있다.</p>
+<p>네이버에서 </p>
+<p>성공적으로 로그인이 되는 것을 확인할 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.28.00.png" alt="Naver Login Success"></p>
+<p>로그인이 필요한 페이지인 네이버 페이의 주문내역 페이지를 가져와보자.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.38.43.png" alt="Naver Pay Order"></p>
+<p>네이버 페이의 Url은 <code>https://order.pay.naver.com/home</code> 이다. 위 페이지의 알림 텍스트를 가져와 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br><span class="line">driver.find_element_by_xpath(<span class="string">'//*[@id="frmNIDLogin"]/fieldset/input'</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Naver 페이 들어가기</span></span><br><span class="line">driver.get(<span class="string">'https://order.pay.naver.com/home'</span>)</span><br><span class="line">html = driver.page_source</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">notices = soup.select(<span class="string">'div.p_inr &gt; div.p_info &gt; a &gt; span'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> notices:</span><br><span class="line">    print(n.text.strip())</span><br></pre></td></tr></table></figure>
+
+<p>로그인이 잘 되고, 성공적으로 리스트를 받아오는 것을 확인해 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.41.46.png" alt="Result"></p>
+<h2 id="정리하기"><a href="#정리하기" class="headerlink" title="정리하기"></a>정리하기</h2><p>Selenium은 웹 테스트 자동화 도구이지만, 멋진 크롤링 도구로 사용할 수 있다.</p>
+<p>또한, BeautifulSoup와 함께 사용도 가능하기 때문에 크롤링을 하는데 제약도 줄어 훨씬 쉽게 크롤링을 할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"><span class="comment"># setup Driver|Chrome : 크롬드라이버를 사용하는 driver 생성</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>) <span class="comment"># 암묵적으로 웹 자원을 (최대) 3초 기다리기</span></span><br><span class="line"><span class="comment"># Login</span></span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>) <span class="comment"># 네이버 로그인 URL로 이동하기</span></span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>) <span class="comment"># 값 입력</span></span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br><span class="line">driver.find_element_by_xpath(</span><br><span class="line">    <span class="string">'//*[@id="frmNIDLogin"]/fieldset/input'</span></span><br><span class="line">).click() <span class="comment"># 버튼클릭하기</span></span><br><span class="line">driver.get(<span class="string">'https://order.pay.naver.com/home'</span>) <span class="comment"># Naver 페이 들어가기</span></span><br><span class="line">html = driver.page_source <span class="comment"># 페이지의 elements모두 가져오기</span></span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>) <span class="comment"># BeautifulSoup사용하기</span></span><br><span class="line">notices = soup.select(<span class="string">'div.p_inr &gt; div.p_info &gt; a &gt; span'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> notices:</span><br><span class="line">    print(n.text.strip())</span><br></pre></td></tr></table></figure>
+
+<h2 id="다음-가이드"><a href="#다음-가이드" class="headerlink" title="다음 가이드"></a>다음 가이드</h2><p>Selenium으로 많은 사이트에서 여러 정보를 가져와 볼 수 있게 되었습니다. </p>
+<p>하지만 가져온 데이터를 DB에 저장하려면 약간의 어려움이 따르게 됩니다.</p>
+<p>다음 시간에는 Django의 ORM을 이용해 sqlite3 DB에 데이터를 저장해보는 방법에 대해 알아보겠습니다.</p>
+<p>다음 가이드: <a href="/2017/03/01/HowToMakeWebCrawler-Save-with-Django/">나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/02/08/Setup-SocialAuth-for-Django/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-08-Setup-SocialAuth-for-Django/social_login.png" alt="Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-07T15:00:00.000Z">2017-02-08</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/02/08/Setup-SocialAuth-for-Django/">Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지</a>
+            
+        </h1>
+        <div class="content">
+            <p>Django등 웹 서비스를 제공하며 항상 다루게 되는 주제가 있습니다. 유저를 우리 서비스의 유저 모델을 통해 직접 가입시키느냐, 혹은 타사의 oAuth를 이용한 Social Login을 붙여 가입없이(혹은 최소화) 서비스를 이용할 수 있도록 유도 하느냐 등입니다.</p>
+<p>Django에서 이러한 Social Login을 이용하기 위한 라이브러리는 여러개가 있었고, 대표적으로는 <code>django-social-auth</code>와 <code>python-social-auth</code>가 있었지만, 두 프로젝트 모두 현재(2017.02.08기준) Deprecated되었고 이 프로젝트들은 <code>python-social-auth</code>가 org자체로 이전해 <code>social-auth-app-django</code>로 바뀌었습니다.</p>
+<p>한편 <code>-social-auth</code>들의 대체재로 <code>django-allauth</code>가 있는데, 올해 1월에도 새 버전 릴리즈가 있는만큼 활동적인 프로젝트입니다. (하지만 이번 글에서는 다루지 않습니다.)</p>
+<p>이번 게시글에서는 <code>social-auth-app-django</code>을 이용해 Django 프로젝트에 social login을 붙여봅니다.</p>
+<p>참조한 공식 docs는 <a href="http://python-social-auth.readthedocs.io/en/latest/configuration/django.html">python-social-auth configuration django</a>에서 볼 수 있습니다.</p>
+<blockquote>
+<p>참고: <code>social-auth-app-django</code>는 pip패키지 이름이며, 프로젝트 이름은 <code>python-social-auth</code>로 동일합니다.</p>
+</blockquote>
+<h2 id="설치하기"><a href="#설치하기" class="headerlink" title="설치하기"></a>설치하기</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install social-auth-app-django</span><br></pre></td></tr></table></figure>
+
+<p>Django의 기본 ORM을 이용하고 있다면 <code>social-auth-app-django</code>를 pip로 설치하면 됩니다.</p>
+<h2 id="settings-py-설정하기"><a href="#settings-py-설정하기" class="headerlink" title="settings.py 설정하기"></a>settings.py 설정하기</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="INSTALLED-APPS-추가하기"><a href="#INSTALLED-APPS-추가하기" class="headerlink" title="INSTALLED_APPS 추가하기"></a>INSTALLED_APPS 추가하기</h3><p>settings.py에 <code>social_django</code>를 추가해줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = (</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'social_django'</span>,</span><br><span class="line">    ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>앱 추가후 migrate를 해줘야 정상적으로 Social Auth용 DB Table이 생성됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<h3 id="AUTHENTICATION-BACKENDS-추가하기"><a href="#AUTHENTICATION-BACKENDS-추가하기" class="headerlink" title="AUTHENTICATION_BACKENDS 추가하기"></a>AUTHENTICATION_BACKENDS 추가하기</h3><p>Social Login은 기존 유저모델과 함께 사용이 가능합니다. 하지만 기본 유저 ModelBackend를 사용하지 않고 독자적인 ModelBackend를 사용하기 때문에 settings.py의 AUTHENTICATION_BACKENDS에 Social login용 Backends를 추가해줘야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'social_core.backends.google.GoogleOAuth2'</span>, <span class="comment"># Google</span></span><br><span class="line">    <span class="string">'social_core.backends.facebook.FacebookOAuth2'</span>, <span class="comment"># Facebook</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django 기본 유저모델</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>django.contrib.auth.backends.ModelBackend</code>가 있어야 <code>createsuperuser</code>로 만들어진 계정의 로그인이 가능해집니다.</p>
+</blockquote>
+<h3 id="Social-Login용-URL-Namespace-지정"><a href="#Social-Login용-URL-Namespace-지정" class="headerlink" title="Social Login용 URL Namespace 지정"></a>Social Login용 URL Namespace 지정</h3><p>최상위 프로젝트 <code>urls.py</code>에 지정할 social login의 namespace를 지정해줍니다. 또한, Login 후 어떤 URL로 장고가 유저를 Redirect시킬지 지정해 줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SOCIAL_AUTH_URL_NAMESPACE = <span class="string">'social'</span></span><br><span class="line"></span><br><span class="line">LOGIN_REDIRECT_URL=<span class="string">'/'</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>꼭 namespace가 ‘social’일 필요는 없습니다. 하지만 가이드에서는 ‘social’을 사용하기에 아래 urls.py 설정에서도 동일하게 사용할 예정입니다.</p>
+</blockquote>
+<h3 id="Social-Login을-위한-API-Key-Secret-설정하기"><a href="#Social-Login을-위한-API-Key-Secret-설정하기" class="headerlink" title="Social Login을 위한 API Key/Secret 설정하기"></a>Social Login을 위한 API Key/Secret 설정하기</h3><p>우선 프로젝트 BASE_DIR(<code>manage.py</code>파일이 있는 폴더)에 <code>envs.json</code>이라는 이름의 환경변수를 담은 json 파일을 만들어 줍니다.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"FACEBOOK_KEY"</span>:<span class="string">"숫자숫자숫자들"</span>,</span><br><span class="line">  <span class="attr">"FACEBOOK_SECRET"</span>:<span class="string">"숫자영어숫자영어들"</span>,</span><br><span class="line">  <span class="attr">"GOOGLE_KEY"</span>:<span class="string">"숫자-영어.apps.googleusercontent.com"</span>,</span><br><span class="line">  <span class="attr">"GOOGLE_SECRET"</span>:<span class="string">"숫자영어대문자들"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>당연하게도 위 파일은 실제 동작하는 Key와 Secret이 아닙니다.</p>
+<p>Social Login을 사용하기 위해 Google에서는 <a href="https://console.developers.google.com/apis/api/plus.googleapis.com">Google+ API</a>를 활성화 하고 <a href="https://console.developers.google.com/apis/credentials">OAuth 2.0 클라이언트 ID</a>를 ‘웹 애플리케이션’으로 생성해 API Key/Secret을 발급받아야 합니다.</p>
+<blockquote>
+<p>Google Login은 Google+ API에 연결되어있기 때문에 다른 Login API는 없습니다.</p>
+</blockquote>
+<p>Facebook의 경우에는 <a href="https://developers.facebook.com/">Facebook for Developers</a>에서 새 앱 추가 후 ‘Facebook 로그인’ 제품을 활성화 시킨 후 앱의 대시보드에서 앱 ID와 앱 시크릿 코드를 받아 이용하면 됩니다.</p>
+<p>두 서비스 모두 지정된 url에서만 동작하기 때문에 Google의 경우에는 ‘OAuth 2.0 클라이언트 ID’에서 ‘승인된 리디렉션 URI’에 <code>http://localhost:8000/complete/google-oauth2/</code>을 추가해줘야 하며, Facebook의 경우에는 ‘Facebook 로그인’의 ‘클라이언트 OAuth 설정’에 있는 ‘유효한 OAuth 리디렉션 URI’에 <code>http://localhost:8000/</code>을 추가해주면 됩니다.</p>
+<blockquote>
+<p>위 설정을 모두 하지 않을 경우 40x번대 에러가 발생합니다.</p>
+</blockquote>
+<p>이제 위에서 만든 <code>envs.json</code>파일을 환경변수로 사용해야 합니다. <code>settings.py</code>파일 최상위에 이와 같은 코드를 적용해 줄 경우, 개발용 <code>envs_dev.json</code>와 배포용 <code>envs.json</code>, 그리고 환경변수로 관리되는 경우 모두 커버가 가능합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> ImproperlyConfigured</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build paths inside the project like this: os.path.join(BASE_DIR, ...)</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Env for dev / deploy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_env</span><span class="params">(setting, envs)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> envs[setting]</span><br><span class="line">    <span class="keyword">except</span> KeyError:</span><br><span class="line">        error_msg = <span class="string">"You SHOULD set &#123;&#125; environ"</span>.format(setting)</span><br><span class="line">        <span class="keyword">raise</span> ImproperlyConfigured(error_msg)</span><br><span class="line"></span><br><span class="line">DEV_ENVS = os.path.join(BASE_DIR, <span class="string">"envs_dev.json"</span>)</span><br><span class="line">DEPLOY_ENVS = os.path.join(BASE_DIR, <span class="string">"envs.json"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> os.path.exists(DEV_ENVS): <span class="comment"># Develop Env</span></span><br><span class="line">    env_file = open(DEV_ENVS)</span><br><span class="line"><span class="keyword">elif</span> os.path.exists(DEPLOY_ENVS): <span class="comment"># Deploy Env</span></span><br><span class="line">    env_file = open(DEPLOY_ENVS)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    env_file = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> env_file <span class="keyword">is</span> <span class="literal">None</span>: <span class="comment"># System environ</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        FACEBOOK_KEY = os.environ[<span class="string">'FACEBOOK_KEY'</span>]</span><br><span class="line">        FACEBOOK_SECRET = os.environ[<span class="string">'FACEBOOK_SECRET'</span>]</span><br><span class="line">        GOOGLE_KEY = os.environ[<span class="string">'GOOGLE_KEY'</span>]</span><br><span class="line">        GOOGLE_SECRET = os.environ[<span class="string">'GOOGLE_SECRET'</span>]</span><br><span class="line">    <span class="keyword">except</span> KeyError <span class="keyword">as</span> error_msg:</span><br><span class="line">        <span class="keyword">raise</span> ImproperlyConfigured(error_msg)</span><br><span class="line"><span class="keyword">else</span>: <span class="comment"># JSON env</span></span><br><span class="line">    envs = json.loads(env_file.read())</span><br><span class="line">    FACEBOOK_KEY = get_env(<span class="string">'FACEBOOK_KEY'</span>, envs)</span><br><span class="line">    FACEBOOK_SECRET = get_env(<span class="string">'FACEBOOK_SECRET'</span>, envs)</span><br><span class="line">    GOOGLE_KEY = get_env(<span class="string">'GOOGLE_KEY'</span>, envs)</span><br><span class="line">    GOOGLE_SECRET = get_env(<span class="string">'GOOGLE_SECRET'</span>, envs)</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 사용할 경우, APACHE웹서버 등에서 시스템 환경변수를 불러오지 못하는 상황이거나, HEROKU나 PythonAnywhere와 같은 PaaS에서도 Django코드와 API키들을 완전히 분리해 사용할 수 있습니다.</p>
+<p>위에서 지정한 FACEBOOK_KEY들을 SocialLogin에 할당해 줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SocialLogin: Facebook</span></span><br><span class="line">SOCIAL_AUTH_FACEBOOK_KEY = FACEBOOK_KEY</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_SECRET = FACEBOOK_SECRET</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_SCOPE = [<span class="string">'email'</span>]</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = &#123;</span><br><span class="line">  <span class="string">'fields'</span>: <span class="string">'id, name, email'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SocialLogin: Google</span></span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = GOOGLE_KEY</span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = GOOGLE_SECRET</span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [<span class="string">'email'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 가장 기본적인 ‘email’을 유저 식별도구로 받아옵니다.</p>
+<blockquote>
+<p> _PROFILE_EXTRA_PARAMS를 이용해 다른 Field를 받아올 수도 있습니다. (필수 아님)</p>
+</blockquote>
+<h2 id="project폴더의-urls-py-설정하기-최상위-urls-py"><a href="#project폴더의-urls-py-설정하기-최상위-urls-py" class="headerlink" title="project폴더의 urls.py 설정하기(최상위 urls.py)"></a>project폴더의 urls.py 설정하기(최상위 urls.py)</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><p>이제 프로젝트 폴더의 urls.py에 Social Login이 사용할 url들을 등록하고 namespace를 지정해 Template에서 사용할 수 있도록 설정해야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url, include <span class="comment"># url뿐 아니라 include를 import해야 합니다.</span></span><br><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, admin.site.urls),</span><br><span class="line">    url(<span class="string">''</span>, include(<span class="string">'social_django.urls'</span>, namespace=<span class="string">'social'</span>)), <span class="comment"># 이 줄을 등록해주면 됩니다.</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 <code>social_django.urls</code>를 include하고 ‘social’ namespace를 등록해 줍니다.</p>
+<h2 id="Template에서-Social-Login-url-호출하기"><a href="#Template에서-Social-Login-url-호출하기" class="headerlink" title="Template에서 Social Login url 호출하기"></a>Template에서 Social Login url 호출하기</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>위 코드들을 추가해주는 것 만으로도 기본적인 Social Login기능은 완성되었습니다. 이제 Template에서 호출을 해봅시다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% raw %&#125;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;% url "</span><span class="attr">social:begin</span>" "<span class="attr">google-oauth2</span>" %&#125;"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"btn btn-danger"</span> <span class="attr">style</span>=<span class="string">"width: 40%"</span>&gt;</span>G+ Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;% url "</span><span class="attr">social:begin</span>" "<span class="attr">facebook</span>" %&#125;"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"btn btn-primary"</span> <span class="attr">style</span>=<span class="string">"width: 40%"</span>&gt;</span>FB Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span>&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 button을 등록해 호출할 수 있습니다.</p>
+<p>위 버튼을 누를 경우 각각 Google/Facebook의 Social Login페이지로 넘어갑니다.</p>
+<h2 id="수고하셨습니다"><a href="#수고하셨습니다" class="headerlink" title="수고하셨습니다!"></a>수고하셨습니다!</h2><h2 id="widgets-4"><a href="#widgets-4" class="headerlink" title="widgets:"></a>widgets:</h2><p>위 코드만으로도 약간의 조작을 통해 더 멋진 Social Login기능을 구현하실 수 있으리라 생각합니다.</p>
+<p>Happy Coding!</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/02/02/Django-CustomAuth/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-02-Django-CustomAuth/authentication.png" alt="Django에 Custom인증 붙이기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-01T15:00:00.000Z">2017-02-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/02/02/Django-CustomAuth/">Django에 Custom인증 붙이기</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가기-전"><a href="#들어가기-전" class="headerlink" title="들어가기 전"></a>들어가기 전</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><p>Django는 기본적으로 authentication을 내장하고 있고, User Model을 장고 자체가 가지고 있다.</p>
+<p>UserModel의 경우 <code>settings.py</code>에서 <code>AUTH_USER_MODEL</code>을 커스텀 유저 모델로 지정해주면 프로젝트 전역에서 사용 가능하지만, 이번 글에서는 이 부분이 아니라 <code>AUTH</code> 처리를 추가할 수 있는지에 대해 알아볼 것이다.</p>
+<p>프로젝트 폴더 구조는 아래와 같다. (<code>django-admin startproject sample_project</code>로 생성한 것과 같다. <code>my_user</code>라는 폴더를 만들고 안에 <code>custom_auth.py</code>와 <code>my_auth.py</code>파일을 만든다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── manage.py</span><br><span class="line">├── my_user <span class="comment"># 유저 모델을 다룰 곳</span></span><br><span class="line">│   ├── custom_auth.py</span><br><span class="line">│   └── my_auth.py</span><br><span class="line">└── sample_project <span class="comment"># 프로젝트 디렉토리</span></span><br><span class="line">    ├── __init__.py</span><br><span class="line">    ├── settings.py <span class="comment"># 장고 프로젝트 settings</span></span><br><span class="line">    ├── urls.py</span><br><span class="line">    └── wsgi.py</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="사용하는-경우"><a href="#사용하는-경우" class="headerlink" title="사용하는 경우"></a>사용하는 경우</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><p>예를들어, “OO커뮤니티 소속이라면, 우리 서비스에서도 커뮤니티 id와 pw로 로그인이 가능하게 하자”가 대표적인 예시가 될 수 있다.</p>
+<p>위 문장을 좀더 풀어쓴다면 “OO커뮤니티에 로그인이 가능한 ID”를 받아 “OO커뮤니티의 인증”으로 “우리 서비스에도 로그인” 할 수 있게 하는 것이다.</p>
+<h2 id="만들어봅시다"><a href="#만들어봅시다" class="headerlink" title="만들어봅시다"></a>만들어봅시다</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="1-check-if-user-함수-만들기"><a href="#1-check-if-user-함수-만들기" class="headerlink" title="1. check_if_user 함수 만들기"></a>1. check_if_user 함수 만들기</h3><p>우선 “OO커뮤니티 사이트에 로그인이 가능한 유저인지”를 확인해야 한다.<br>예를들어 “community-dummy”라는 사이트에 로그인하는 url이 <code>/login</code>이고, 유저만 볼 수 있는 페이지가 <code>/login_requited_page</code>라고 가정하자.<br>이 사이트에서는 <code>/login_requited_page</code>에 접속시 로그인된 상태라면 HTTP <code>200</code>코드를, 로그인 되어있지 않다면 HTTP <code>401</code>등의 에러코드를 전송한다고 가정하자.</p>
+<p>그렇다면 우리는 파이썬의 <code>requests</code>모듈을 이용해 <code>/login</code>에 로그인 정보를 <code>POST</code>방식으로 전송하고 <code>/login_requited_page</code>에 <code>GET</code>방식으로 접근해 HTTP코드를 <code>.status_code</code>를 통해 확인해보면 된다.<br>아래 코드를 확인해보자.</p>
+<blockquote>
+<p>참고: requests는 <code>pip install requests</code>로 설치 가능하다.</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># custom_auth.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_if_user</span><span class="params">(user_id, user_pw)</span>:</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">'user_id'</span>: str(user_id),</span><br><span class="line">        <span class="string">'user_pw'</span>: str(user_pw)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">        s.post(<span class="string">'https://community-dummy.com/login'</span>, data=payload)</span><br><span class="line">        auth = s.get(<span class="string">'https://community-dummy.com/login_requited_page'</span>)</span><br><span class="line">        <span class="keyword">if</span> auth.status_code == <span class="number">200</span>: <span class="comment"># 성공적으로 가져올 때</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 로그인이 실패시</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>우리는 이제 이 코드를 통해 유저가 우리 사이트에 입력한 id와 pw가 정확한(OO커뮤니티에 로그인 가능한)것인지를 확인할 수 있다.</p>
+<h3 id="2-커스텀-UserBackend-만들기"><a href="#2-커스텀-UserBackend-만들기" class="headerlink" title="2. 커스텀 UserBackend 만들기"></a>2. 커스텀 UserBackend 만들기</h3><p>우선 django 프로젝트가 사용하는 User모델을 가져오자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br></pre></td></tr></table></figure>
+
+<p>위 방식으로 사용할 경우 Django의 기본 UserModel인 <code>django.contrib.auth.models.User</code> 뿐 아니라 <code>settings.py</code>에 따로 지정한 <code>AUTH_USER_MODEL</code> 클래스를 가져오게 된다.</p>
+<blockquote>
+<p>참고: <code>get_user_model</code>와 <code>AUTH_USER_MODEL</code>은 다르다.<br><code>django.contrib.auth</code>의 <code>get_user_model</code>은 유저모델 class를 반환하는 반면,<br><code>django.conf.settings</code>의 <code>AUTH_USER_MODEL</code>은 유저모델 지정을 str로 반환한다.</p>
+</blockquote>
+<p>그리고 위에서 만든 <code>custom_auth.py</code>에서 <code>check_if_user</code>를 import해주자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model() <span class="comment"># django.contrib.auth.models.User대신 사용</span></span><br></pre></td></tr></table></figure>
+
+<p>이제 장고가 <code>AUTHENTICATION_BACKENDS</code>로서 추가적으로 사용할 <code>UserBackend</code> class를 만들어보자.</p>
+<p><code>UserBackend</code>클래스는 최소한 <code>authenticate</code>, <code>user_can_authenticate</code>, <code>get_user</code>라는 함수는 있어야 동작한다.</p>
+<p><code>authenticate</code>함수는 <code>self</code>, <code>username</code>, <code>password</code>를 인자로 받은 후, 정상적으로 인증된 경우 <code>user 객체</code>를 ‘하나’ 반환해야 하고, 없는 경우 <code>None</code>값을 반환해야 한다.</p>
+<p><code>user_can_authenticate</code>함수는 <code>user</code>객체를 인자로 받아서 <code>is_active</code>값을 가져와 활성화된 유저인지를 체크한다. (유저가 없거나 활성화된 경우 <code>True</code>, 비활성화된 경우 <code>False</code>)</p>
+<p><code>get_user</code>함수는 <code>user_id</code>를 인자로 받아 User객체를 <code>pk</code>로 참조해 <code>user</code>객체를 반환한다. 없는경우 <code>None</code>을 반환한다.</p>
+<p>위 함수들을 작성하면 아래와 같다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBackend</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate</span><span class="params">(self, username=None, password=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> check_if_user(username, password): <span class="comment"># OO커뮤니티 사이트 인증에 성공한 경우</span></span><br><span class="line">            <span class="keyword">try</span>: <span class="comment"># 유저가 있는 경우</span></span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">            <span class="keyword">except</span> UserModel.DoesNotExist: <span class="comment"># 유저 정보가 없지만 인증 통과시 user 생성</span></span><br><span class="line">                user = UserModel(username=username)</span><br><span class="line">                user.is_staff = <span class="literal">False</span></span><br><span class="line">                user.is_superuser = <span class="literal">False</span></span><br><span class="line">                user.save()</span><br><span class="line">                <span class="comment"># 여기서는 user.password를 저장하는 의미가 없음.(장고가 관리 못함)</span></span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># OO 커뮤니티 사이트 인증에 실패한 경우, Django기본 User로 감안해 password검증</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">                <span class="keyword">if</span> user.check_password(password) <span class="keyword">and</span> self.user_can_authenticate(user):</span><br><span class="line">                    <span class="keyword">return</span> user</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">user_can_authenticate</span><span class="params">(self, user)</span>:</span></span><br><span class="line">        is_active = getattr(user, <span class="string">'is_active'</span>, <span class="literal">None</span>) <span class="comment"># 유저가 활성화 되었는지</span></span><br><span class="line">        <span class="keyword">return</span> is_active <span class="keyword">or</span> is_active <span class="keyword">is</span> <span class="literal">None</span> <span class="comment"># 유저가 없는 경우 is_active는 None이므로 True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_user</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> UserModel.objects.get(pk=user_id) <span class="comment"># 유저를 pk로 가져온다</span></span><br><span class="line">        <span class="keyword">except</span> UserModel.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-settings-py에-AUTHENTICATION-BACKENDS-추가하기"><a href="#3-settings-py에-AUTHENTICATION-BACKENDS-추가하기" class="headerlink" title="3. settings.py에 AUTHENTICATION_BACKENDS 추가하기"></a>3. settings.py에 AUTHENTICATION_BACKENDS 추가하기</h3><p>장고에서 기본적으로 관리해주는 <code>AUTHENTICATION_BACKENDS</code>에는 <code>django.contrib.auth.backends.ModelBackend</code>가 있다. 하지만 위에서 우리가 만든 UserBackend를 추가해줘야 한다.</p>
+<p><code>AUTHENTICATION_BACKENDS</code>는 기본적으로 list로 구성되어있으며, 적혀진 순서대로 위에서부터 Auth을 진행한다.(실패시 다음 auth backend를 이용)</p>
+<p>아래 코드와 같이 <code>settings.py</code> 파일 아래에 추가해 주자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'my_user.my_auth.UserBackend'</span>, <span class="comment"># 우리가 만든 AUTH를 먼저 검사</span></span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django가 관리하는 AUTH</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이렇게 추가해 줌으로서 django는 우리의 <code>UserBackend</code>를 이용해 유저를 관리하게 된다.</p>
+<h2 id="마무리-코드"><a href="#마무리-코드" class="headerlink" title="마무리 코드"></a>마무리 코드</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>custom_auth 파일(진짜 OO커뮤니티 유저인가?)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># custom_auth.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_if_user</span><span class="params">(user_id, user_pw)</span>:</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">'user_id'</span>: str(user_id),</span><br><span class="line">        <span class="string">'user_pw'</span>: str(user_pw)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">        s.post(<span class="string">'https://community-dummy.com/login'</span>, data=payload)</span><br><span class="line">        auth = s.get(<span class="string">'https://community-dummy.com/login_requited_page'</span>)</span><br><span class="line">        <span class="keyword">if</span> auth.status_code == <span class="number">200</span>: <span class="comment"># 성공적으로 가져올 때</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 로그인이 실패시</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>my_auth 파일 (우리가 만든 UserBackend)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBackend</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate</span><span class="params">(self, username=None, password=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> check_if_user(username, password): <span class="comment"># OO커뮤니티 사이트 인증에 성공한 경우</span></span><br><span class="line">            <span class="keyword">try</span>: <span class="comment"># 유저가 있는 경우</span></span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">            <span class="keyword">except</span> UserModel.DoesNotExist: <span class="comment"># 유저 정보가 없지만 인증 통과시 user 생성</span></span><br><span class="line">                user = UserModel(username=username)</span><br><span class="line">                user.is_staff = <span class="literal">False</span></span><br><span class="line">                user.is_superuser = <span class="literal">False</span></span><br><span class="line">                user.save()</span><br><span class="line">                <span class="comment"># 여기서는 user.password를 저장하는 의미가 없음.(장고가 관리 못함)</span></span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># OO 커뮤니티 사이트 인증에 실패한 경우, Django기본 User로 감안해 password검증</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">                <span class="keyword">if</span> user.check_password(password) <span class="keyword">and</span> self.user_can_authenticate(user):</span><br><span class="line">                    <span class="keyword">return</span> user</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">user_can_authenticate</span><span class="params">(self, user)</span>:</span></span><br><span class="line">        is_active = getattr(user, <span class="string">'is_active'</span>, <span class="literal">None</span>) <span class="comment"># 유저가 활성화 되었는지</span></span><br><span class="line">        <span class="keyword">return</span> is_active <span class="keyword">or</span> is_active <span class="keyword">is</span> <span class="literal">None</span> <span class="comment"># 유저가 없는 경우 is_active는 None이므로 True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_user</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> UserModel.objects.get(pk=user_id) <span class="comment"># 유저를 pk로 가져온다</span></span><br><span class="line">        <span class="keyword">except</span> UserModel.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<p>장고의 프로젝트 settings.py파일</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'my_user.my_auth.UserBackend'</span>, <span class="comment"># 우리가 만든 AUTH를 먼저 검사</span></span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django가 관리하는 AUTH</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/01/20/HowToMakeWebCrawler/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-01-19-HowToMakeWebCrawler/crawler.jpg" alt="나만의 웹 크롤러 만들기 with Requests/BeautifulSoup">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-01-19T15:00:00.000Z">2017-01-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/01/20/HowToMakeWebCrawler/">나만의 웹 크롤러 만들기 with Requests/BeautifulSoup</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>(@2017.03.18) 본 블로그 테마가 업데이트되면서 구 블로그의 URL은 <a href="https://beomi.github.io/beomi.github.io_old/로">https://beomi.github.io/beomi.github.io_old/로</a> 변경되었습니다. 예제 코드에서는 변경을 완료하였지만 캡쳐 화면은 변경하지 않았으니 유의 바랍니다.</p>
+</blockquote>
+<h1 id="웹-크롤러란"><a href="#웹-크롤러란" class="headerlink" title="웹 크롤러란?"></a>웹 크롤러란?</h1><p>우리가 어떤 정보를 브라우저에서만 보는 것 뿐 아니라 그 정보들을 내가 이용하기 편한 방식(ex: json)으로 로컬에 저장하고 싶을 때가 있다.</p>
+<p><a href="https://www.httrack.com/">HTTrack</a>의 경우에는 웹을 그대로 자신의 컴퓨터로 복사를 해오지만, 내가 원하는 방식으로의 가공까지는 제공해주지 않는다.</p>
+<p>Python을 이용하면 간단한 코드 몇줄 만으로도 쉽게 웹 사이트에서 원하는 정보만을 가져올 수 있다.</p>
+<h1 id="웹에서-정보-가져오기"><a href="#웹에서-정보-가져오기" class="headerlink" title="웹에서 정보 가져오기"></a>웹에서 정보 가져오기</h1><h2 id="Requests"><a href="#Requests" class="headerlink" title="Requests"></a>Requests</h2><p>Python에는 <code>requests</code>라는 유명한 http request 라이브러리가 있다.</p>
+<h3 id="설치하기"><a href="#설치하기" class="headerlink" title="설치하기"></a>설치하기</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install requests</span><br></pre></td></tr></table></figure>
+
+<p>pip로 간단하게 설치가 가능하다.</p>
+<h3 id="이용방법"><a href="#이용방법" class="headerlink" title="이용방법"></a>이용방법</h3><p>Python 파일 하나(ex: parser.py)를 만들어 <code>requests</code>를 import 해준다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP GET Request</span></span><br><span class="line">req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTML 소스 가져오기</span></span><br><span class="line">html = req.text</span><br><span class="line"><span class="comment"># HTTP Header 가져오기</span></span><br><span class="line">header = req.headers</span><br><span class="line"><span class="comment"># HTTP Status 가져오기 (200: 정상)</span></span><br><span class="line">status = req.status_code</span><br><span class="line"><span class="comment"># HTTP가 정상적으로 되었는지 (True/False)</span></span><br><span class="line">is_ok = req.ok</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 우리가 사용할 것은 HTML 소스를 이용하는 것이다. 따라서 <code>html=req.text</code>를 이용한다.</p>
+<h2 id="BeautifulSoup"><a href="#BeautifulSoup" class="headerlink" title="BeautifulSoup"></a>BeautifulSoup</h2><p>Requests는 정말 좋은 라이브러리이지만, html을 ‘의미있는’, 즉 Python이 이해하는 객체 구조로 만들어주지는 못한다. 위에서 req.text는 python의 문자열(str)객체를 반환할 뿐이기 때문에 정보를 추출하기가 어렵다.</p>
+<p>따라서 <code>BeautifulSoup</code>을 이용하게 된다. 이 BeautifulSoup은 html 코드를 Python이 이해하는 객체 구조로 변환하는 Parsing을 맡고 있고, 이 라이브러리를 이용해 우리는 제대로 된 ‘의미있는’ 정보를 추출해 낼 수 있다.</p>
+<h3 id="설치하기-1"><a href="#설치하기-1" class="headerlink" title="설치하기"></a>설치하기</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install bs4</span><br></pre></td></tr></table></figure>
+
+<p>BeautifulSoup을 직접 쳐서 설치하는 것도 가능하지만, bs4라는 wrapper라이브러리를 통해 설치하는 방법이 더 쉽고 안전하다.</p>
+<h3 id="이용방법-1"><a href="#이용방법-1" class="headerlink" title="이용방법"></a>이용방법</h3><p>위에서 이용한 parser.py파일을 좀 더 다듬어 보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP GET Request</span></span><br><span class="line">req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line"><span class="comment"># HTML 소스 가져오기</span></span><br><span class="line">html = req.text</span><br><span class="line"><span class="comment"># BeautifulSoup으로 html소스를 python객체로 변환하기</span></span><br><span class="line"><span class="comment"># 첫 인자는 html소스코드, 두 번째 인자는 어떤 parser를 이용할지 명시.</span></span><br><span class="line"><span class="comment"># 이 글에서는 Python 내장 html.parser를 이용했다.</span></span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>soup</code> 객체에서 원하는 정보를 찾아낼 수 있다.</p>
+<p>BeautifulSoup에서는 여러가지 기능을 제공하는데, 여기서는 <code>select</code>를 이용한다. <code>select</code>는 CSS Selector를 이용해 조건과 일치하는 모든 객체들을 List로 반환해준다.</p>
+<p>예시로 이 블로그의 모든 제목을 가져와 보도록 하자.</p>
+<p align="center">
+<img src="/img/2017-01-19-HowToMakeWebCrawler/blog_page.png"/>
+</p>
+
+<p>크롬에 내장된 검사도구(요소 위에서 우측 클릭 후 검사)를 이용해보면 현재 title은 a 태그로 구성되어있다는 것을 알 수 있다. 이 상황에서 모든 a 태그를 가져올 수도 있지만, 보다 정확하게 가져오기 위해 CSS Selector를 확인해 보자.</p>
+<p align="center">
+<img src="/img/2017-01-19-HowToMakeWebCrawler/blog_css_selector.png"/>
+</p>
+
+<p>확인해보니 아래와 같은 코드가 나왔다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &gt; <span class="selector-tag">h3</span><span class="selector-pseudo">:nth-child(4)</span> &gt; <span class="selector-tag">a</span></span><br></pre></td></tr></table></figure>
+
+<p>하지만 <code>:nth-child(4)</code> 등이 붙어있는 것으로 보아 현재 요소를 ‘정확하게’ 특정하고 있기 때문에, 좀 더 유연하게 만들어 주기 위해 아래와 같이 selector를 바꿔준다.(위 코드는 단 하나의 링크만을 특정하고, 아래 코드는 css selector에 일치하는 모든 요소를 가리킨다.)</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">h3</span> &gt; <span class="selector-tag">a</span></span><br></pre></td></tr></table></figure>
+
+<p>이제 parsing.py파일을 더 다듬어 보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line"><span class="comment"># CSS Selector를 통해 html요소들을 찾아낸다.</span></span><br><span class="line">my_titles = soup.select(</span><br><span class="line">    <span class="string">'h3 &gt; a'</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 my_titles는 string의 list가 아니라 soup객체들의 list이다. 따라서 태그의 속성들도 이용할 수 있는데, a 태그의 경우 href속성이 대표적인 예시다.</p>
+<p>soup객체는 &lt;태그&gt;&lt;/태그&gt;로 구성된 요소를 Python이 이해하는 상태로 바꾼 것이라 볼 수 있다. 따라서 여러가지로 조작이 가능하다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">my_titles = soup.select(</span><br><span class="line">    <span class="string">'h3 &gt; a'</span></span><br><span class="line">    )</span><br><span class="line"><span class="comment"># my_titles는 list 객체</span></span><br><span class="line"><span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">    <span class="comment"># Tag안의 텍스트</span></span><br><span class="line">    print(title.text)</span><br><span class="line">    <span class="comment"># Tag의 속성을 가져오기(ex: href속성)</span></span><br><span class="line">    print(title.get(<span class="string">'href'</span>))</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 코드를 처리할 경우 a 태그 안의 텍스트와 a 태그의 href속성의 값을 가져오게 된다. 위 코드에서 title 객체는 python의 dictionary와 같이 태그의 속성들을 저장한다. 따라서 <code>title.get(&#39;속성이름&#39;)</code>나 <code>title[&#39;속성이름&#39;]</code>처럼 이용할 수 있다.</p>
+<p><code>select</code>를 통해 요소들을 가져온 이후에는 각자가 생각하는 방식으로 python코드를 이용해 저장하면 된다.</p>
+<h2 id="정리-예제"><a href="#정리-예제" class="headerlink" title="정리 예제"></a>정리 예제</h2><p>아래 코드는 크롤링한 데이터를 Python파일와 같은 위치에 <code>result.json</code>을 만들어 저장하는 예제다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># python파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">my_titles = soup.select(</span><br><span class="line">    <span class="string">'h3 &gt; a'</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">data = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">    data[title.text] = title.get(<span class="string">'href'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'result.json'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> json_file:</span><br><span class="line">    json.dump(data, json_file)</span><br></pre></td></tr></table></figure>
+
+<h1 id="다음-가이드"><a href="#다음-가이드" class="headerlink" title="다음 가이드"></a>다음 가이드</h1><p>다음 가이드에서는 <code>Session</code>을 이용해 어떻게 웹 사이트에 로그인을 하고, 로그인 상태를 유지하며 브라우징을 하는지에 대해 알아보겠습니다.</p>
+<p>다음 가이드: <a href="/2017/01/20/HowToMakeWebCrawler-With-Login/">나만의 웹 크롤러 만들기(2): Login With Session</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/01/20/HowToMakeWebCrawler-With-Login/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-01-20-HowToMakeWebCrawler-With-Login/httpcookie.jpg" alt="나만의 웹 크롤러 만들기(2): Login with Session">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-01-19T15:00:00.000Z">2017-01-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/01/20/HowToMakeWebCrawler-With-Login/">나만의 웹 크롤러 만들기(2): Login with Session</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>이전게시글: <a href="/2017/01/20/HowToMakeWebCrawler/">나만의 웹 크롤러 만들기 with Requests/BeautifulSoup</a></p>
+</blockquote>
+<blockquote>
+<p>@2017.07.12 Update: 뉴클리앙으로 업데이트 됨에 따라 코드와 스크린샷이 업데이트 되었습니다.</p>
+</blockquote>
+<p>웹 사이트를 로그인 하는데 있어 쿠키와 세션을 빼놓고 이야기하는 것은 불가능합니다.</p>
+<p>이번 포스팅에서는 requests모듈을 이용해 로그인이 필요한 웹 사이트를 크롤링 하는 예제를 다룹니다.</p>
+<h2 id="쿠키-Cookie-세션-Session"><a href="#쿠키-Cookie-세션-Session" class="headerlink" title="쿠키(Cookie)? 세션(Session)?"></a>쿠키(Cookie)? 세션(Session)?</h2><p>웹은 대다수가 HTTP기반으로 동작합니다. 하지만 HTTP가 구현된 방식에서 웹 서버와 클라이언트는 지속적으로 연결을 유지한 상태가 아니라 요청(request)-응답(response)의 반복일 뿐이기 때문에, 이전 요청과 새로운 요청이 같은 사용자(같은 브라우저)에서 이루어졌는지를 확인하는 방법이 필요합니다. 이 때 등장하는 것이 ‘쿠키’와 ‘세션’입니다.</p>
+<p>쿠키는 유저가 웹 사이트를 방문할 때 사용자의 브라우저에 심겨지는 작은 파일인데, Key - Value 형식으로 로컬 브라우저에 저장됩니다. 서버는 이 쿠키의 정보를 읽어 HTTP 요청에 대해 브라우저를 식별합니다.</p>
+<p>그러나, 쿠키는 로컬에 저장된다는 근원적인 문제로 인해 악의적 사용자가 쿠키를 변조하거나 탈취해 정상적이지 않은 쿠키로 서버에 요청을 보낼 수 있습니다. 만약 ‘로그인 하였음’이라는 식별을, 로컬 쿠키만을 신뢰해 로그인을 한 상태로 서버가 인식한다면 쿠키 변조를 통해 마치 관리자나 다른 유저처럼 행동할 수도 있는 것이죠.(굉장히 위험합니다.)</p>
+<p>이로 인해 서버측에서 클라이언트를 식별하는 ‘세션’을 주로 이용하게 됩니다.</p>
+<p>세션은 브라우저가 웹 서버에 요청을 한 경우 서버 내에 해당 세션 정보를 파일이나 DB에 저장하고 클라이언트의 브라우저에 session-id라는 임의의 긴 문자열을 줍니다. 이때 사용되는 쿠키는 클라이언트와 서버간 연결이 끊어진 경우 삭제되는 메모리 쿠키를 이용합니다.</p>
+<h2 id="Requests의-Session"><a href="#Requests의-Session" class="headerlink" title="Requests의 Session"></a>Requests의 Session</h2><p>이전 게시글에서 다룬 requests모듈에는 Session이라는 도구가 있습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성</span></span><br><span class="line">s = requests.Session()</span><br></pre></td></tr></table></figure>
+
+<p>Session은 위와 같은 방식으로 만들 수 있습니다.</p>
+<p>이렇게 만들어진 세션은 이전 게시글에서의 <code>requests</code>위치를 대신하는데, 이전 게시글의 코드를 바꿔본다면 아래와 같습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성</span></span><br><span class="line">s = requests.Session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP GET Request: requests대신 s 객체를 사용한다.</span></span><br><span class="line">req = s.get(<span class="string">'https://www.clien.net/service/'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTML 소스 가져오기</span></span><br><span class="line">html = req.text</span><br><span class="line"><span class="comment"># HTTP Header 가져오기</span></span><br><span class="line">header = req.headers</span><br><span class="line"><span class="comment"># HTTP Status 가져오기 (200: 정상)</span></span><br><span class="line">status = req.status_code</span><br><span class="line"><span class="comment"># HTTP가 정상적으로 되었는지 (True/False)</span></span><br><span class="line">is_ok = req.ok</span><br></pre></td></tr></table></figure>
+
+<p>코드를 with구문을 사용해 좀 더 정리하면 아래와 같습니다. 위 코드와 아래코드는 정확히 동일하게 동작하지만, 위쪽 코드의 경우 Session이 가끔 풀리는 경우가 있어 (5번중 한번 꼴) 아래 코드로 진행하는 것을 추천합니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># HTTP GET Request: requests대신 s 객체를 사용한다.</span></span><br><span class="line">    req = s.get(<span class="string">'https://www.clien.net/service/'</span>)</span><br><span class="line">    <span class="comment"># HTML 소스 가져오기</span></span><br><span class="line">    html = req.text</span><br><span class="line">    <span class="comment"># HTTP Header 가져오기</span></span><br><span class="line">    header = req.headers</span><br><span class="line">    <span class="comment"># HTTP Status 가져오기 (200: 정상)</span></span><br><span class="line">    status = req.status_code</span><br><span class="line">    <span class="comment"># HTTP가 정상적으로 되었는지 (True/False)</span></span><br><span class="line">    is_ok = req.ok</span><br></pre></td></tr></table></figure>
+
+<h2 id="로그인하기"><a href="#로그인하기" class="headerlink" title="로그인하기"></a>로그인하기</h2><p>로그인을 구현하기 위한 예시로 클리앙에 로그인 해 클리앙 장터를 크롤링 해 봅시다.</p>
+<p align="center">
+<img src="/img/dropbox/Screenshot%202017-07-12%2021.18.52.png?dl=1" />
+</p>
+
+<p>크롬 개발자 도구 중 Inspect(검사)를 이용해 로그인 폼 필드의 <code>name</code>값들을 알아봅시다.(폼 위에서 마우스 오른쪽 버튼을 클릭하고 <code>검사</code>를 눌러주세요.)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2021.20.53.png" alt=""></p>
+<p>아래 스크린샷 우측을 확인해 봅시다. <code>form</code> 태그 안에 <code>input</code>필드가 여러개가 있는 것을 알 수 있습니다.</p>
+<p align="center">
+<img src="/img/dropbox/Screenshot%202017-07-12%2021.22.33.png?dl=1" />
+</p>
+
+<p>조금 더 상세하게 뜯어봅시다. 아래 스크린샷을 보시면 <code>input</code>필드들의 <code>name</code>이 <code>_csrf</code>,<code>userID</code>,<code>userPassword</code>,<code>remember-me</code>가 있는 것을 볼 수 있습니다. 또한, 로그인 버튼을 누르면 <code>auth.login()</code>라는 자바스크립트 함수가 먼저 실행되는 것을 볼 수 있습니다.</p>
+<p align="center">
+    <img src="/img/dropbox/Screenshot%202017-07-12%2021.26.02.png?dl=1">
+</p>
+
+<p>로그인을 구현하기 전, HTML form에 대해 간단하게 알아봅시다.</p>
+<p>HTML form Field에서는 <code>name:입력값</code>이라는 Key:Value식으로 데이터를 전달합니다.(주로 POST방식)</p>
+<p>클리앙 로그인 폼 필드의 경우 <code>userID:사용자id</code>, <code>userPassword:사용자pw</code>라는 세트로 입력을 받는 것을 볼 수 있습니다.</p>
+<p>그리고 약간 특이해 보이는 <code>_csrf</code>이라는 것도 있습니다. 원래 CSRF는 사용자의 요청이 악의적이거나 제 3자에 의해 변조된(해킹된) 요청이 아닌지 확인해주는 보안 도구중 하나입니다. 세션과 연결되어 폼을 전달할때 폼의 안정성을 높여줍니다. 새로고침하시면 매번 달라지는 CSRF값을 보실 수 있습니다. 그리고 CSRF를 사용하는 경우 CSRF값이 없는 폼 전송은 위험한 요청으로 생각하고 폼을 받아들이지 않습니다.(즉, 로그인이 되지 않습니다.) 따라서 우리는 <code>_csrf</code>라는 것도 함께 전송해 줘야 합니다. 따라서 메인 화면을 먼저 가져와 <code>_csrf</code>필드를 가져오고 로그인을 해야 합니다.</p>
+<blockquote>
+<p>이전 클리앙은 CSRF검증이 없었습니다. 이번 업데이트를 하면서 클리앙의 보안이 전반적으로 올라갔습니다. 좋은 변화입니다!</p>
+</blockquote>
+<p>다음으로는 <code>auth.login()</code>이라는 함수를 살펴봅시다. 함수를 살펴보면 그냥 입력 유무만 확인하는 심플한 함수입니다. 사실 이것보다 더 길지만, 실제로 <code>login</code>함수에서 사용되는 코드 부분은 이부분이 전부이기 때문에 뒷부분을 잘랐습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Auth</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _this = <span class="keyword">this</span>; <span class="comment">// _this에 Auth라는 함수를 넣었습니다.</span></span><br><span class="line">    _this.env = &#123;&#125;;</span><br><span class="line">    _this.env.form = $(<span class="string">'#loginForm'</span>); <span class="comment">// 로그인 폼입니다. id, pw, _csrf 등을 받는다고 위에서 확인했죠?</span></span><br><span class="line">    _this.env.iptUserId = _this.env.form.find(<span class="string">'*[name=userId]'</span>); <span class="comment">// 사용자가 폼에 입력한 ID입니다.</span></span><br><span class="line">    _this.env.iptUserPassWord = _this.env.form.find(<span class="string">'*[name=userPassword]'</span>); <span class="comment">// 사용자가 폼에 입력한 PW입니다.</span></span><br><span class="line"></span><br><span class="line">    _this.loginValidate = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> isValid = <span class="literal">true</span>; <span class="comment">// 아무 문제가 없다면(id나 pw가 빈칸이 아니라면) true를 반환하는 함수입니다.</span></span><br><span class="line">        <span class="keyword">if</span> (_this.env.iptUserId.val().trim() == <span class="string">''</span>) &#123; <span class="comment">// 아이디가 빈칸이면 false죠?</span></span><br><span class="line">            alert(<span class="string">'아이디를 입력하세요.'</span>);</span><br><span class="line">            _this.env.iptUserId.focus();</span><br><span class="line">            isValid = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span> isValid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (_this.env.iptUserPassWord.val().trim() == <span class="string">''</span>) &#123; <span class="comment">// 비번이 빈칸이어도 false가 됩니다.</span></span><br><span class="line">            alert(<span class="string">'비밀번호를 입력하세요.'</span>);</span><br><span class="line">            _this.env.iptUserPassWord.focus();</span><br><span class="line">            isValid = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span> isValid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> isValid;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    _this.login = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> isValid = _this.loginValidate(); <span class="comment">// 방금 본 아이디/비번이 빈칸인지 확인하기</span></span><br><span class="line">        <span class="keyword">if</span> (isValid) &#123; <span class="comment">// 빈칸이 아니라면 -&gt;</span></span><br><span class="line">            _this.env.form.attr(&#123; <span class="comment">// 폼 속성을 정의해 줍시다.</span></span><br><span class="line">                method: <span class="string">'POST'</span>, <span class="comment">// 폼 전송 방식은 'POST'이고,</span></span><br><span class="line">                action: BASE_URL + <span class="string">'/login'</span> <span class="comment">// 폼 전송하는 주소는 https://www.clien.net/service/login 이네요!</span></span><br><span class="line">            &#125;);</span><br><span class="line">            _this.env.form.submit(); <span class="comment">// 진짜로 폼을 전송해줍니다.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위 자바스크립트 코드에서 알게된 것은 아이디와 비밀번호 폼에 빈칸이 없다면 <code>POST</code>방식으로 <code>https://www.clien.net/service/login</code>에 폼을 전송해 로그인을 한다는 것입니다.</p>
+<p>한번 이 주소에 폼 값들만 넣어서 전송해 봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 로그인할 유저정보를 넣어주자 (모두 문자열)</span></span><br><span class="line">LOGIN_INFO = &#123;</span><br><span class="line">    <span class="string">'userId'</span>: <span class="string">'사용자이름'</span>,</span><br><span class="line">    <span class="string">'userPassword'</span>: <span class="string">'사용자패스워드'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># HTTP POST request: 로그인을 위해 POST url와 함께 전송될 data를 넣어주자.</span></span><br><span class="line">    login_req = s.post(<span class="string">'https://www.clien.net/service/login'</span>, data=LOGIN_INFO)</span><br><span class="line">    <span class="comment"># 어떤 결과가 나올까요?</span></span><br><span class="line">    print(login_req.status_code)</span><br></pre></td></tr></table></figure>
+
+<p>이런! 404가 나와버렸네요. 제대로 로그인이 되지 않은 것 같아요. 아마 <code>_csrf</code>값이 없어서가 아닐까요?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; python parsing.py</span><br><span class="line">404</span><br></pre></td></tr></table></figure>
+
+<p>그렇다면 코드를 조금 더 수정해 봅시다. 우선 클리앙 공식 홈페이지에 들어가 form에 들어있는 <code>_csrf</code>값을 가져와 봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 로그인할 유저정보를 넣어줍시다. (모두 문자열입니다!)</span></span><br><span class="line">LOGIN_INFO = &#123;</span><br><span class="line">    <span class="string">'userId'</span>: <span class="string">'myidid'</span>,</span><br><span class="line">    <span class="string">'userPassword'</span>: <span class="string">'mypassword123'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># 우선 클리앙 홈페이지에 들어가 봅시다.</span></span><br><span class="line">    first_page = s.get(<span class="string">'https://www.clien.net/service'</span>)</span><br><span class="line">    html = first_page.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    csrf = soup.find(<span class="string">'input'</span>, &#123;<span class="string">'name'</span>: <span class="string">'_csrf'</span>&#125;) <span class="comment"># input태그 중에서 name이 _csrf인 것을 찾습니다.</span></span><br><span class="line">    print(csrf[<span class="string">'value'</span>]) <span class="comment"># 위에서 찾은 태그의 value를 가져옵니다.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 LOGIN_INFO에 csrf값을 넣어줍시다.</span></span><br><span class="line">    <span class="comment"># (p.s.)Python3에서 두 dict를 합치는 방법은 &#123;**dict1, **dict2&#125; 으로 dict들을 unpacking하는 것입니다.</span></span><br><span class="line">    LOGIN_INFO = &#123;**LOGIN_INFO, **&#123;<span class="string">'_csrf'</span>: csrf[<span class="string">'value'</span>]&#125;&#125;</span><br><span class="line">    print(LOGIN_INFO)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 다시 로그인을 해봅시다.</span></span><br><span class="line">    login_req = s.post(<span class="string">'https://www.clien.net/service/login'</span>, data=LOGIN_INFO)</span><br><span class="line">    <span class="comment"># 어떤 결과가 나올까요? (200이면 성공!)</span></span><br><span class="line">    print(login_req.status_code)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.12.00.png?dl=1" alt=""></p>
+<p>와우! 200이 나온걸 보니 성공적으로 로그인이 된 것 같아요.</p>
+<h2 id="진짜-데이터를-가져와봅시다"><a href="#진짜-데이터를-가져와봅시다" class="headerlink" title="진짜 데이터를 가져와봅시다"></a>진짜 데이터를 가져와봅시다</h2><p>이제 우리 코드를 좀 더 멋지게 만들어 봅시다. 로그인이 실패한 경우 Exception을 만들고, 성공일 경우에는 회원 장터의 게시글을 가져와봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.24.12.png?dl=1" alt=""></p>
+<p>위 스크린샷처럼 오른쪽 버튼을 누르고 Copy &gt; Copy selector를 눌러주면 <code>#div_content &gt; div.post-title &gt; div.title-subject &gt; div</code>라는 CSS Selector가 나옵니다. 이 HTML문서에서 이 제목만을 콕 하고 찾아줍니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.30.35.png?dl=1" alt=""></p>
+<p>본문도 같은 방식으로 찾아줍시다. 다만 <code>p</code>태그가 아니라 글 전체를 담고있는 <code>#div_content &gt; div.post.box &gt; div.post-content &gt; div.post-article.fr-view</code>을 가져와봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 로그인할 유저정보를 넣어줍시다. (모두 문자열입니다!)</span></span><br><span class="line">LOGIN_INFO = &#123;</span><br><span class="line">    <span class="string">'userId'</span>: <span class="string">'myidid'</span>,</span><br><span class="line">    <span class="string">'userPassword'</span>: <span class="string">'mypassword123'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># 우선 클리앙 홈페이지에 들어가 봅시다.</span></span><br><span class="line">    first_page = s.get(<span class="string">'https://www.clien.net/service'</span>)</span><br><span class="line">    html = first_page.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    csrf = soup.find(<span class="string">'input'</span>, &#123;<span class="string">'name'</span>: <span class="string">'_csrf'</span>&#125;) <span class="comment"># input태그 중에서 name이 _csrf인 것을 찾습니다.</span></span><br><span class="line">    print(csrf[<span class="string">'value'</span>]) <span class="comment"># 위에서 찾은 태그의 value를 가져옵니다.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 LOGIN_INFO에 csrf값을 넣어줍시다.</span></span><br><span class="line">    <span class="comment"># (p.s.)Python3에서 두 dict를 합치는 방법은 &#123;**dict1, **dict2&#125; 으로 dict들을 unpacking하는 것입니다.</span></span><br><span class="line">    LOGIN_INFO = &#123;**LOGIN_INFO, **&#123;<span class="string">'_csrf'</span>: csrf[<span class="string">'value'</span>]&#125;&#125;</span><br><span class="line">    print(LOGIN_INFO)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 다시 로그인을 해봅시다.</span></span><br><span class="line">    login_req = s.post(<span class="string">'https://www.clien.net/service/login'</span>, data=LOGIN_INFO)</span><br><span class="line">    <span class="comment"># 어떤 결과가 나올까요? (200이면 성공!)</span></span><br><span class="line">    print(login_req.status_code)</span><br><span class="line">    <span class="comment"># 로그인이 되지 않으면 경고를 띄워줍시다.</span></span><br><span class="line">    <span class="keyword">if</span> login_req.status_code != <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">'로그인이 되지 않았어요! 아이디와 비밀번호를 다시한번 확인해 주세요.'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># -- 여기서부터는 로그인이 된 세션이 유지됩니다 --</span></span><br><span class="line">    <span class="comment"># 이제 장터의 게시글 하나를 가져와 봅시다. 아래 예제 링크는 중고장터 공지글입니다.</span></span><br><span class="line">    post_one = s.get(<span class="string">'https://www.clien.net/service/board/rule/10707408'</span>)</span><br><span class="line">    soup = bs(post_one.text, <span class="string">'html.parser'</span>) <span class="comment"># Soup으로 만들어 줍시다.</span></span><br><span class="line">    <span class="comment"># 아래 CSS Selector는 공지글 제목을 콕 하고 집어줍니다.</span></span><br><span class="line">    title = soup.select(<span class="string">'#div_content &gt; div.post-title &gt; div.title-subject &gt; div'</span>)</span><br><span class="line">    contents = soup.select(<span class="string">'#div_content &gt; div.post.box &gt; div.post-content &gt; div.post-article.fr-view'</span>)</span><br><span class="line">    <span class="comment"># HTML을 제대로 파싱한 뒤에는 .text속성을 이용합니다.</span></span><br><span class="line">    print(title[<span class="number">0</span>].text) <span class="comment"># 글제목의 문자만을 가져와봅시다.</span></span><br><span class="line">    <span class="comment"># [0]을 하는 이유는 select로 하나만 가져와도 title자체는 리스트이기 때문입니다.</span></span><br><span class="line">    <span class="comment"># 즉, 제목 글자는 title이라는 리스트의 0번(첫번째)에 들어가 있습니다.</span></span><br><span class="line">    print(contents[<span class="number">0</span>].text) <span class="comment"># 글내용도 마찬가지겠지요?</span></span><br></pre></td></tr></table></figure>
+
+<p>코드를 실행해 봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.33.05.png?dl=1" alt=""></p>
+<p>잘 가져옵니다 :)</p>
+<h2 id="그러나-위-코드가-안먹힌다면"><a href="#그러나-위-코드가-안먹힌다면" class="headerlink" title="그러나, 위 코드가 안먹힌다면?"></a>그러나, 위 코드가 안먹힌다면?</h2><p>일부 사이트의 경우 프론트 브라우저 단에서 ID와 PW를 이용해 암호화된 전송값을 보내는 경우가 있습니다.(대표적으로 네이버가 이렇습니다.) 또한, SPA등으로 인해 PageSource을 가져오는 것이 불충분한 경우가 자주 있습니다.</p>
+<p>물론 오늘처럼 JS파일을 분석해 수동으로 data에 넣어주는 방법도 있지만, 브라우저를 직접 다뤄서 사람이 로그인하듯 크롤링을 해보면 어떨까요?</p>
+<p>다음 포스팅에서 좀 더 간편히 실제 브라우저(혹은 Headless브라우저)를 이용해 로그인부터 크롤링까지, 간편하게 해보는 방법을 알아봅시다.</p>
+<p>다음 가이드: <a href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기</a></p>
+<h3 id="업데이트-후기"><a href="#업데이트-후기" class="headerlink" title="업데이트 후기"></a>업데이트 후기</h3><p>2017년 7월 12일, 올해 초(1월 20일)에 작성한 인기 크롤링글 대상인 클리앙이 바뀌어 업데이트가 필요했습니다. 사실 예전 코드를 업데이트 하는 것도 사실상 새 글을 쓰는 것과 같은 시간과 노력이 듭니다. 하지만 오래된 정보를 두는 것보다 새로운 정보를 두는 것이 낫다고 생각해 업데이트를 했으나..!</p>
+<p>클리앙을 이용하는데 덧글 쓰기/글 쓰기 빼고 글을 읽는 것에 제한은 회원장터조차도 제한이 없어졌더군요. (눈물)</p>
+<p>그래도 이 가이드를 기반으로 다른 사이트 로그인 하는데 조금 더 쉬워지기를 바랍니다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/categories/python/page/2/">이전</a>
+        </div>
+        <div class="pagination-next is-invisible is-hidden-mobile">
+            <a class="is-flex-grow has-text-black-ter" href="/categories/python/page/4/">다음</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/categories/python/">1</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/categories/python/page/2/">2</a></li>
+            
+            <li><a class="pagination-link is-current" href="/categories/python/page/3/">3</a></li>
+            
+        </ul>
+    </nav>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/profile_beomi.jpg" alt="Junbum Lee">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Junbum Lee
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Beomi&#39;s tech blog
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Seoul, KR</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/beomi">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/DataCollection/">
+            <span class="level-start">
+                <span class="level-item">DataCollection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DataCollection/Twitter/">
+            <span class="level-start">
+                <span class="level-item">Twitter</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/">
+            <span class="level-start">
+                <span class="level-item">DevEnv</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DataScience/">
+            <span class="level-start">
+                <span class="level-item">DataScience</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DeepLearning/">
+            <span class="level-start">
+                <span class="level-item">DeepLearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Ubuntu/">
+            <span class="level-start">
+                <span class="level-item">Ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Django/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/">
+            <span class="level-start">
+                <span class="level-item">DjangoTDDStudy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/MacOS/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/NLP/">
+            <span class="level-start">
+                <span class="level-item">NLP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/NLP/LanguageModel/">
+            <span class="level-start">
+                <span class="level-item">LanguageModel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/NLP/Unsupervised/">
+            <span class="level-start">
+                <span class="level-item">Unsupervised</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Postmortem/">
+            <span class="level-start">
+                <span class="level-item">Postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Python/Celery/">
+            <span class="level-start">
+                <span class="level-item">Celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/Fabric/">
+            <span class="level-start">
+                <span class="level-item">Fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Tech/">
+            <span class="level-start">
+                <span class="level-item">Tech</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Translation/">
+            <span class="level-start">
+                <span class="level-item">Translation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/aws/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/azure/">
+            <span class="level-start">
+                <span class="level-item">azure</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/blog/">
+            <span class="level-start">
+                <span class="level-item">blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/blog/github/">
+            <span class="level-start">
+                <span class="level-item">github</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/django/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/django/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/flask/sqlalchemy/">
+            <span class="level-start">
+                <span class="level-item">sqlalchemy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/javascript/webpack/">
+            <span class="level-start">
+                <span class="level-item">webpack</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/life/">
+            <span class="level-start">
+                <span class="level-item">life</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/machinelearning/">
+            <span class="level-start">
+                <span class="level-item">machinelearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/machinelearning/seminar/">
+            <span class="level-start">
+                <span class="level-item">seminar</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/macos/">
+            <span class="level-start">
+                <span class="level-item">macos</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/macos/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/nlp/">
+            <span class="level-start">
+                <span class="level-item">nlp</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/nlp/languagemodel/">
+            <span class="level-start">
+                <span class="level-item">languagemodel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/postmortem/">
+            <span class="level-start">
+                <span class="level-item">postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">25</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/python/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/celery/">
+            <span class="level-start">
+                <span class="level-item">celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/dataanalysis/">
+            <span class="level-start">
+                <span class="level-item">dataanalysis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/pyspark/">
+            <span class="level-start">
+                <span class="level-item">pyspark</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/react/">
+            <span class="level-start">
+                <span class="level-item">react</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/react/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/tips/githubpages/">
+            <span class="level-start">
+                <span class="level-item">githubpages</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ubuntu/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/vlang/">
+            <span class="level-start">
+                <span class="level-item">vlang</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

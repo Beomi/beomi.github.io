@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>카테고리: Windows - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-3-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/categories">카테고리</a></li>
+            
+            <li><a href="/categories/Python/MacOS/Ubuntu/">Ubuntu</a></li>
+            
+            <li><a href="/categories/Python/MacOS/">MacOS</a></li>
+            
+            <li><a href="/categories/Python/">Python</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">Windows</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/old_post/python-virtualenv.jpg" alt="Virtualenv/VirtualenvWrapper OS별 설치&amp;이용법">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-12-27T15:00:00.000Z">2016-12-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Python/">Python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Python/MacOS/">MacOS</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Python/MacOS/Ubuntu/">Ubuntu</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Python/MacOS/Ubuntu/Windows/">Windows</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Python/MacOS/Ubuntu/Windows/DevEnv/">DevEnv</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/">Virtualenv/VirtualenvWrapper OS별 설치&amp;이용법</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="Virtualenv란"><a href="#Virtualenv란" class="headerlink" title="Virtualenv란?"></a>Virtualenv란?</h1><p>Virtualenv란 시스템 OS에 설치된 주 python뿐만 아니라 여러 버전의 Python과 프로젝트별로 다른 종류의 라이브러리를 사용하는 것에 있어 가장 핵심된 기능을 제공합니다.</p>
+<p>예를들어, 어떤 옛날 프로젝트에서는 Python2.7버전에 pip로 Django1.6을 사용했다고 가정해봅시다. 하지만 이번에 새로 시작하는 프로젝트는 Python3.6에 pip로 Django1.10을 사용하려고 합니다. 물론 가장 쉬운 방법은 개발 환경별로 다른 컴퓨터를 사용하는 것이지만, 공간적/금전적/편의적으로 어렵습니다.</p>
+<p>따라서 우리는 Python실행파일과 pip로 설치된 라이브러리들을 독립된 폴더에 넣어버리는 방법을 선택할 수 있는데, 이것이 Virtualenv의 핵심입니다.</p>
+<p>아래 가이드는 OS별로 나누어져있습니다. <a href="#macos">[MAC OS가이드]</a> <a href="#linux">[LINUX 가이드(UBUNTU)]</a> <a href="#windows">[WINDOWS 가이드]</a></p>
+<p>2016.12.30 기준 MAC OS가 완성되어있습니다.</p>
+<p><span id="macos"></span></p>
+<h1 id="MAC-OS-OS-X-의-경우"><a href="#MAC-OS-OS-X-의-경우" class="headerlink" title="MAC OS(OS X)의 경우"></a>MAC OS(OS X)의 경우</h1><h2 id="Virtualenv를-설치해보자-MAC-OS"><a href="#Virtualenv를-설치해보자-MAC-OS" class="headerlink" title="Virtualenv를 설치해보자 [MAC OS]"></a>Virtualenv를 설치해보자 [MAC OS]</h2><p>MAC OS에는 시스템 전역에 기본적으로 Python2가 설치되어있기 때문에 아래 명령어로 쉽게 pip를 설치할 수 있습니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo easy_install pip</span><br></pre></td></tr></table></figure>
+
+<p>만약 sudo로 시스템 전역에 설치하기가 싫다면 <a href="http://brew.sh/">HomeBrew</a>를 이용해 Python을 유저영역에 설치할 수도 있습니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew install python</span><br><span class="line"><span class="comment">#Python3의 경우는 brew install python3)</span></span><br></pre></td></tr></table></figure>
+
+<p>pip가 성공적으로 설치되었는지 확인하려면 다음 명령어로 pip의 버전을 확인해 보면 됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pip -V</span><br><span class="line"><span class="comment">#Python3 pip의 경우에는 pip3 -V</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2017.56.54.png" alt=""></p>
+<p>만약 pip나 pip3이라는 명령어가 먹히지 않는다면 아래의 명령어로 Python의 모듈로서 pip를 호출할 수 있습니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2의 경우</span></span><br><span class="line">$ python -m pip -V</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python3의 경우</span></span><br><span class="line">$ python3 -m pip -V</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2017.57.57.png" alt=""></p>
+<p>Virtualenv와 VirtualenvWrapper는 pip를 통해 설치가 가능합니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2의 경우</span></span><br><span class="line">$ pip install virtualenv virtualenvwrapper</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python3의 경우</span></span><br><span class="line">$ pip3 install virtualenv virtualenvwrapper</span><br></pre></td></tr></table></figure>
+
+<p>만약 <code>pip</code>/<code>pip3</code> 명령이 먹지 않는다면 아래 명령어로 대체할 수 있습니다.<br>(시스템에 easy_install로 pip를 설치한 경우 sudo권한이 필요할 수 있는데, 이때는 <code>sudo pip install</code>으로 명령어 앞에 sudo를 붙여줍시다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2 pip의 경우</span></span><br><span class="line">$ python -m pip install virtualenv virtualenvwrapper</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python3 pip의 경우</span></span><br><span class="line">$ python3 -m pip install virtualenv virtualenvwrapper</span><br></pre></td></tr></table></figure>
+
+<p>지금까지 사용한 <code>pip</code>와 <code>pip3</code>은 virtualenv를 어느 pip에 설치할까에 대한 내용일 뿐, 파이썬 가상환경에 어떤 Python이 설치될지와는 무관합니다.</p>
+<h2 id="Virtualenv의-기본적-명령어-MAC-OS"><a href="#Virtualenv의-기본적-명령어-MAC-OS" class="headerlink" title="Virtualenv의 기본적 명령어 [MAC OS]"></a>Virtualenv의 기본적 명령어 [MAC OS]</h2><p>Virtualenv는 기본적으로 아래의 명령어로 동작합니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv --python=파이썬버전 가상환경이름</span><br><span class="line"><span class="comment"># ex)</span></span><br><span class="line"><span class="comment"># $ virtualenv --python=python3.5 test_env</span></span><br><span class="line"><span class="comment"># $ virtualenv --python=python2.7 test_env2</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2018.13.11.png" alt=""></p>
+<p>이와 같이 Python버전을 명시해주고 가상환경을 만들 수 있습니다. (단, 선택할 Python은 시스템에 깔려있는 버전이어야 합니다.)</p>
+<blockquote>
+<p>만약</p>
+</blockquote>
+<blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2019.18.33.png" alt=""></p>
+</blockquote>
+<blockquote>
+<p>와 같이 The path x.x does not exist라는 에러가 난다면 PYTHON의 PATH을 절대경로로 맞춰줘야 합니다. <code>which python3</code>을 했을 때 <code>/usr/bin/python3</code>이 나왔다면, <code>virtualenv --python=/usr/bin/python3</code>와 같이 절대경로로 입력해주시면 됩니다.</p>
+</blockquote>
+<blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2019.23.40.png" alt=""></p>
+</blockquote>
+<p>만든 가상환경에 진입(가상환경을 활성화)하려면 아래 명령어를 이용하면 됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> 가상환경이름/bin/activate</span><br></pre></td></tr></table></figure>
+
+<p>Python3이 설치된 test_env로 진입한 경우</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2018.14.28.png" alt=""></p>
+<p>Python2가 설치된 test_env2로 진입한 경우</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2018.15.53.png" alt=""></p>
+<p>각각 다른 python버전이 실행되고 있다는 것을 알 수 있습니다.</p>
+<p>이후 pip를 통해 외부 모듈과 라이브러리들을 설치하는 경우, source 명령어로 가상환경에 진입하지 않으면 라이브러리들을 불러쓸 수 없게됩니다. 즉, 프로젝트 별로 다른 라이브러리만이 설치된 환경을 구성한 것이죠.</p>
+<h2 id="VirtualenvWrapper-설정하기"><a href="#VirtualenvWrapper-설정하기" class="headerlink" title="VirtualenvWrapper 설정하기"></a>VirtualenvWrapper 설정하기</h2><p>VirtualEnv를 사용하기 위해서는 <code>source</code>를 이용해 가상환경에 진입합니다. 그러나, 이 진입 방법은 가상환경이 설치된 위치로 이동해야되는 것 뿐 아니라 가상환경이 어느 폴더에 있는지 일일이 사용자가 기억해야 하는 단점이 있습니다. 이를 보완하기 위해 <code>VirtualenvWrapper</code>를 사용합니다.</p>
+<p>또한, VirtualenvWrapper를 사용할 경우 터미널이 현재 위치한 경로와 관계없이 가상환경을 활성화할 수 있다는 장점이 있습니다.</p>
+<p>VirtualenvWrapper는 <code>.bashrc</code>나 <code>.zshrc</code>에 약간의 설정과정을 거쳐야 합니다.</p>
+<p>우선 홈 디렉토리로 이동해보세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+
+<p>가상환경이 들어갈 폴더 <code>.virtualenvs</code>를 만들어주세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/.virtualenvs</span><br></pre></td></tr></table></figure>
+
+<p>그리고 홈 디렉토리의 <code>.bashrc</code>나 <code>.zshrc</code>의 파일 제일 마지막에 아래 코드를 복사해 붙여넣어줍시다.<br>(파일이 없다면 만들어 사용하시면 됩니다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python virtualenv settings</span></span><br><span class="line"><span class="built_in">export</span> WORKON_HOME=~/.virtualenvs</span><br><span class="line"><span class="built_in">export</span> VIRTUALENVWRAPPER_PYTHON=<span class="string">"<span class="variable">$(which python3)</span>"</span>  <span class="comment"># Usage of python3</span></span><br><span class="line"><span class="built_in">source</span> /usr/<span class="built_in">local</span>/bin/virtualenvwrapper.sh</span><br></pre></td></tr></table></figure>
+
+<p>저장하고 나온 후 터미널을 종료후 새로 켜주면, VirtualenvWrapper의 명령어들을 사용할 수 있습니다.</p>
+<p>만약 <code>/usr/local/bin/virtualenvwrapper.sh</code>파일이 존재하지 않는다면 다음 명령어로 <code>virtualenvwrapper.sh</code>파일을 찾아서 위 코드를 바꿔 사용하세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /usr -name virtualenvwrapper.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="VirtualenvWrapper-명령어들"><a href="#VirtualenvWrapper-명령어들" class="headerlink" title="VirtualenvWrapper 명령어들"></a>VirtualenvWrapper 명령어들</h2><p>VirtualenvWrapper의 명령어는 여러가지가 존재하지만, 이 포스팅에서는 기본적인 것만 다루고 넘어갑니다.</p>
+<ul>
+<li>가상환경 만들기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkvirtualenv 가상환경이름</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># $ mkvirtualenv test_env3</span></span><br></pre></td></tr></table></figure>
+
+<p><code>mkvirtualenv</code> 명령어를 사용할 경우 홈 디렉토리의 <code>.virtualenvs</code>폴더 안에 <code>가상환경이름</code>을 가진 폴더(<code>test_env3</code>)가 생깁니다.</p>
+<ul>
+<li>가상환경 지우기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ rmvirtualenv 가상환경이름</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># $ rmvirtualenv test_env3</span></span><br></pre></td></tr></table></figure>
+
+<p><code>rmvirtualenv</code> 명령어를 사용할 경우 <code>mkvirtualenv</code>로 만든 가상환경을 지워줍니다.</p>
+<p>만든 가상환경을 지우는 방법은 이방법 뿐 아니라 홈 디렉토리의 <code>.virtualenvs</code>폴더 안의 가상환경이름을 가진 폴더를 지우는 방법도 있습니다.</p>
+<ul>
+<li>가상환경 진입하기 + 가상환경 목록 보기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ workon 가상환경이름</span><br><span class="line"><span class="comment"># 가상환경으로 진입시 앞에 (가상환경이름)이 붙습니다.</span></span><br><span class="line">(가상환경이름) $</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># $ workon test_env3</span></span><br><span class="line"><span class="comment"># (test_env3) $</span></span><br></pre></td></tr></table></figure>
+
+<p><code>workon</code>명령어를 통해 <code>mkvirtualenv</code>로 만든 가상환경으로 진입할 수 있습니다.</p>
+<p><code>workon</code>명령어를 가상환경이름 없이 단순하게 칠 경우, 현재 만들어져있는 가상환경의 전체 목록을 불러옵니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ workon</span><br><span class="line">test_env3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>가상환경 빠져나오기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(가상환경이름) $ deactivate</span><br><span class="line">$</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># (test_env3) $ deactivate</span></span><br><span class="line"><span class="comment"># $</span></span><br></pre></td></tr></table></figure>
+
+<p>가상환경에서 빠져나오는 것은 다른것들과 동일하게 <code>deactivate</code>명령어로 빠져나올 수 있습니다.</p>
+<p><span id="linux"></span></p>
+<h1 id="LINUX-UBUNTU-의-경우"><a href="#LINUX-UBUNTU-의-경우" class="headerlink" title="LINUX(UBUNTU)의 경우"></a>LINUX(UBUNTU)의 경우</h1><h2 id="Virtualenv를-설치해-보자-LINUX-UBUNTU"><a href="#Virtualenv를-설치해-보자-LINUX-UBUNTU" class="headerlink" title="Virtualenv를 설치해 보자 [LINUX(UBUNTU)]"></a>Virtualenv를 설치해 보자 [LINUX(UBUNTU)]</h2><p>Ubuntu의 경우에는 14버전 기준으로 Python2와 Python3이 기본적으로 설치되어있습니다.</p>
+<blockquote>
+<p>Ubuntu16에서는 Python3이 기본입니다.</p>
+</blockquote>
+<p>하지만 <code>pip</code>/<code>pip3</code>이 설치되어있지 않을 수 있기 때문에 <code>python-pip</code>나 <code>python3-pip</code>를 설치해야 합니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># APT를 업데이트</span></span><br><span class="line">$ sudo apt-get update &amp;&amp; apt-get upgrade -y</span><br><span class="line"><span class="comment"># Python2를 이용할 경우</span></span><br><span class="line">$ sudo apt-get install python-pip python-dev</span><br><span class="line"><span class="comment"># Python3을 이용할 경우</span></span><br><span class="line">$ sudo apt-get install python3-pip python3-dev</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2018.56.35.png" alt=""></p>
+<blockquote>
+<p>꼭 <code>python-dev</code>와 <code>python3-dev</code>를 설치하지 않아도 됩니다. 하지만 이후 정상적 동작을 보장할 수 없습니다.</p>
+</blockquote>
+<p>pip 설치가 완료되었는지 확인하려면 아래 명령어를 입력해보면 됩니다.<br>(이번 게시글에서는 python3-pip로 진행합니다. Python2의 pip를 이용하시려면 <code>python3-pip</code>대신 <code>python-pip</code>를 설치하셔서 <code>pip</code>명령어를 사용하세요.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2 pip의 경우</span></span><br><span class="line">$ pip -V</span><br><span class="line"><span class="comment"># Python3 pip의 경우</span></span><br><span class="line">$ pip3 -V</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2018.57.52.png" alt=""></p>
+<p>이제 pip설치가 완료되었으므로 Virtualenv와 VirtualenvWrapper를 설치해보겠습니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2의 경우</span></span><br><span class="line">$ pip install virtualenv virtualenvwrapper</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python3의 경우</span></span><br><span class="line">$ pip3 install virtualenv virtualenvwrapper</span><br></pre></td></tr></table></figure>
+
+<p>만약 <code>pip</code>/<code>pip3</code> 명령이 먹지 않는다면 아래 명령어로 대체할 수 있습니다.<br>(시스템에 root권한으로 pip를 설치한 경우 sudo권한이 필요할 수 있는데, 이때는 <code>sudo pip install</code>으로 명령어 앞에 sudo를 붙여줍시다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2 pip의 경우</span></span><br><span class="line">$ python -m pip install virtualenv virtualenvwrapper</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python3 pip의 경우</span></span><br><span class="line">$ python3 -m pip install virtualenv virtualenvwrapper</span><br></pre></td></tr></table></figure>
+
+<p>지금까지 사용한 <code>pip</code>와 <code>pip3</code>은 virtualenv를 어느 pip에 설치할까에 대한 내용일 뿐, 파이썬 가상환경에 어떤 Python이 설치될지와는 무관합니다.</p>
+<h2 id="Virtualenv의-기본적-명령어-LINUX-UBUNTU"><a href="#Virtualenv의-기본적-명령어-LINUX-UBUNTU" class="headerlink" title="Virtualenv의 기본적 명령어 [LINUX(UBUNTU)]"></a>Virtualenv의 기본적 명령어 [LINUX(UBUNTU)]</h2><p>Virtualenv는 기본적으로 아래의 명령어로 동작합니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2019.29.18.png" alt=""></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv --python=파이썬버전 가상환경이름</span><br><span class="line"><span class="comment"># ex)</span></span><br><span class="line"><span class="comment"># $ virtualenv --python=python3.5 py3_env</span></span><br><span class="line"><span class="comment"># $ virtualenv --python=python2.7 test_env2</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>만약 virtualenv 라는 명령이 먹히지 않는다면 <code>python3 -m virtualenv</code>(python2는 <code>python -m virtualenv</code>)명령어를 이용하거나, 쉘을 껐다가 다시 켜주세요.</p>
+</blockquote>
+<blockquote>
+<p>만약</p>
+</blockquote>
+<blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2019.18.33.png" alt=""></p>
+</blockquote>
+<blockquote>
+<p>와 같이 The path x.x does not exist라는 에러가 난다면 PYTHON의 PATH을 절대경로로 맞춰줘야 합니다. <code>which python3</code>을 했을 때 <code>/usr/bin/python3</code>이 나왔다면, <code>virtualenv --python=/usr/bin/python3</code>와 같이 절대경로로 입력해주시면 됩니다.</p>
+</blockquote>
+<blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2019.23.40.png" alt=""></p>
+</blockquote>
+<p>이와 같이 Python버전을 명시해주고 가상환경을 만들 수 있습니다. (단, 선택할 Python은 시스템에 깔려있는 버전이어야 합니다. Ubuntu16의 경우 python2이 깔려있지 않을 수 있습니다.)</p>
+<p>만든 가상환경에 진입(가상환경을 활성화)하려면 아래 명령어를 이용하면 됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> 가상환경이름/bin/activate</span><br></pre></td></tr></table></figure>
+
+<p>Python3이 설치된 py3_env로 진입한 경우</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-30%2019.32.26.png" alt=""></p>
+<p>이후 pip를 통해 외부 모듈과 라이브러리들을 설치하는 경우, source 명령어로 가상환경에 진입하지 않으면 라이브러리들을 불러쓸 수 없게됩니다. 즉, 프로젝트 별로 다른 라이브러리만이 설치된 환경을 구성한 것이죠.</p>
+<h2 id="VirtualenvWrapper-설정하기-LINUX-UBUNTU"><a href="#VirtualenvWrapper-설정하기-LINUX-UBUNTU" class="headerlink" title="VirtualenvWrapper 설정하기 [LINUX(UBUNTU)]"></a>VirtualenvWrapper 설정하기 [LINUX(UBUNTU)]</h2><p>VirtualEnv를 사용하기 위해서는 <code>source</code>를 이용해 가상환경에 진입합니다. 그러나, 이 진입 방법은 가상환경이 설치된 위치로 이동해야되는 것 뿐 아니라 가상환경이 어느 폴더에 있는지 일일이 사용자가 기억해야 하는 단점이 있습니다. 이를 보완하기 위해 <code>VirtualenvWrapper</code>를 사용합니다.</p>
+<p>또한, VirtualenvWrapper를 사용할 경우 터미널이 현재 위치한 경로와 관계없이 가상환경을 활성화할 수 있다는 장점이 있습니다.</p>
+<p>VirtualenvWrapper는 <code>.bashrc</code>나 <code>.zshrc</code>에 약간의 설정과정을 거쳐야 합니다.</p>
+<p>우선 홈 디렉토리로 이동해보세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+
+<p>가상환경이 들어갈 폴더 <code>.virtualenvs</code>를 만들어주세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/.virtualenvs</span><br></pre></td></tr></table></figure>
+
+<p>그리고 홈 디렉토리의 <code>.bashrc</code>나 <code>.zshrc</code>의 파일 제일 마지막에 아래 코드를 복사해 붙여넣어줍시다.<br>(파일이 없다면 만들어 사용하시면 됩니다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python virtualenv settings</span></span><br><span class="line"><span class="built_in">export</span> WORKON_HOME=~/.virtualenvs</span><br><span class="line"><span class="built_in">export</span> VIRTUALENVWRAPPER_PYTHON=<span class="string">'$(command \which python3)'</span>  <span class="comment"># Usage of python3</span></span><br><span class="line"><span class="built_in">source</span> /usr/<span class="built_in">local</span>/bin/virtualenvwrapper.sh</span><br></pre></td></tr></table></figure>
+
+<p>저장하고 나온 후 터미널을 종료후 새로 켜주면, VirtualenvWrapper의 명령어들을 사용할 수 있습니다.</p>
+<p>만약 <code>/usr/local/bin/virtualenvwrapper.sh</code>파일이 존재하지 않는다면 다음 명령어로 <code>virtualenvwrapper.sh</code>파일을 찾아서 위 코드를 바꿔 사용하세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /usr -name virtualenvwrapper.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="VirtualenvWrapper-명령어들-LINUX-UBUNTU"><a href="#VirtualenvWrapper-명령어들-LINUX-UBUNTU" class="headerlink" title="VirtualenvWrapper 명령어들 [LINUX(UBUNTU)]"></a>VirtualenvWrapper 명령어들 [LINUX(UBUNTU)]</h2><p>VirtualenvWrapper의 명령어는 여러가지가 존재하지만, 이 포스팅에서는 기본적인 것만 다루고 넘어갑니다.</p>
+<ul>
+<li>가상환경 만들기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkvirtualenv 가상환경이름</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># $ mkvirtualenv test_env3</span></span><br></pre></td></tr></table></figure>
+
+<p><code>mkvirtualenv</code> 명령어를 사용할 경우 홈 디렉토리의 <code>.virtualenvs</code>폴더 안에 <code>가상환경이름</code>을 가진 폴더(<code>test_env3</code>)가 생깁니다.</p>
+<ul>
+<li>가상환경 지우기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ rmvirtualenv 가상환경이름</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># $ rmvirtualenv test_env3</span></span><br></pre></td></tr></table></figure>
+
+<p><code>rmvirtualenv</code> 명령어를 사용할 경우 <code>mkvirtualenv</code>로 만든 가상환경을 지워줍니다.</p>
+<p>만든 가상환경을 지우는 방법은 이방법 뿐 아니라 홈 디렉토리의 <code>.virtualenvs</code>폴더 안의 가상환경이름을 가진 폴더를 지우는 방법도 있습니다.</p>
+<ul>
+<li>가상환경 진입하기 + 가상환경 목록 보기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ workon 가상환경이름</span><br><span class="line"><span class="comment"># 가상환경으로 진입시 앞에 (가상환경이름)이 붙습니다.</span></span><br><span class="line">(가상환경이름) $</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># $ workon test_env3</span></span><br><span class="line"><span class="comment"># (test_env3) $</span></span><br></pre></td></tr></table></figure>
+
+<p><code>workon</code>명령어를 통해 <code>mkvirtualenv</code>로 만든 가상환경으로 진입할 수 있습니다.</p>
+<p><code>workon</code>명령어를 가상환경이름 없이 단순하게 칠 경우, 현재 만들어져있는 가상환경의 전체 목록을 불러옵니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ workon</span><br><span class="line">test_env3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>가상환경 빠져나오기</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(가상환경이름) $ deactivate</span><br><span class="line">$</span><br><span class="line"><span class="comment"># 예시</span></span><br><span class="line"><span class="comment"># (test_env3) $ deactivate</span></span><br><span class="line"><span class="comment"># $</span></span><br></pre></td></tr></table></figure>
+
+<p>가상환경에서 빠져나오는 것은 다른것들과 동일하게 <code>deactivate</code>명령어로 빠져나올 수 있습니다.</p>
+<p><span id="windows"></span></p>
+<h1 id="Windows의-경우"><a href="#Windows의-경우" class="headerlink" title="Windows의 경우"></a>Windows의 경우</h1>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/profile_beomi.jpg" alt="Junbum Lee">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Junbum Lee
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Beomi&#39;s tech blog
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Seoul, KR</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/beomi">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/DataCollection/">
+            <span class="level-start">
+                <span class="level-item">DataCollection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DataCollection/Twitter/">
+            <span class="level-start">
+                <span class="level-item">Twitter</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/">
+            <span class="level-start">
+                <span class="level-item">DevEnv</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DataScience/">
+            <span class="level-start">
+                <span class="level-item">DataScience</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DeepLearning/">
+            <span class="level-start">
+                <span class="level-item">DeepLearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Ubuntu/">
+            <span class="level-start">
+                <span class="level-item">Ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Django/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/">
+            <span class="level-start">
+                <span class="level-item">DjangoTDDStudy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/MacOS/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/NLP/">
+            <span class="level-start">
+                <span class="level-item">NLP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/NLP/LanguageModel/">
+            <span class="level-start">
+                <span class="level-item">LanguageModel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/NLP/Unsupervised/">
+            <span class="level-start">
+                <span class="level-item">Unsupervised</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Postmortem/">
+            <span class="level-start">
+                <span class="level-item">Postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Python/Celery/">
+            <span class="level-start">
+                <span class="level-item">Celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/Fabric/">
+            <span class="level-start">
+                <span class="level-item">Fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Tech/">
+            <span class="level-start">
+                <span class="level-item">Tech</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Translation/">
+            <span class="level-start">
+                <span class="level-item">Translation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/aws/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/azure/">
+            <span class="level-start">
+                <span class="level-item">azure</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/blog/">
+            <span class="level-start">
+                <span class="level-item">blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/blog/github/">
+            <span class="level-start">
+                <span class="level-item">github</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/django/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/django/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/flask/sqlalchemy/">
+            <span class="level-start">
+                <span class="level-item">sqlalchemy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/javascript/webpack/">
+            <span class="level-start">
+                <span class="level-item">webpack</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/life/">
+            <span class="level-start">
+                <span class="level-item">life</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/machinelearning/">
+            <span class="level-start">
+                <span class="level-item">machinelearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/machinelearning/seminar/">
+            <span class="level-start">
+                <span class="level-item">seminar</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/macos/">
+            <span class="level-start">
+                <span class="level-item">macos</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/macos/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/nlp/">
+            <span class="level-start">
+                <span class="level-item">nlp</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/nlp/languagemodel/">
+            <span class="level-start">
+                <span class="level-item">languagemodel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/postmortem/">
+            <span class="level-start">
+                <span class="level-item">postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">25</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/python/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/celery/">
+            <span class="level-start">
+                <span class="level-item">celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/dataanalysis/">
+            <span class="level-start">
+                <span class="level-item">dataanalysis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/pyspark/">
+            <span class="level-start">
+                <span class="level-item">pyspark</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/react/">
+            <span class="level-start">
+                <span class="level-item">react</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/react/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/tips/githubpages/">
+            <span class="level-start">
+                <span class="level-item">githubpages</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ubuntu/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/vlang/">
+            <span class="level-start">
+                <span class="level-item">vlang</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

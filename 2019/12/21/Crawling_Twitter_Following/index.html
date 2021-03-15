@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까? - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-151535.png" alt="트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까?">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-20T15:00:00.000Z">2019-12-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DataCollection/">DataCollection</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DataCollection/Twitter/">Twitter</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까?
+            
+        </h1>
+        <div class="content">
+            <p>트위터에는 수많은 유저가 있다. 그 중에서는 단 1명의 팔로워도 모으지 못한 유저도 있지만 반대로 수백 수천만명의 팔로워를 가진 유저도 있다.</p>
+<blockquote>
+<p>Twitter의 트위터 공식 계정에는 약 5천6백만명의 팔로워가 있다.</p>
+</blockquote>
+<p>당장 우리가 ‘팔로워’ 를 클릭해 내용을 살펴보면 한번에 20명씩 정보를 보여준다. 스크롤을 해서 5천만명의 유저 데이터를 가져올 수는 없다.</p>
+<p>그렇다면 어떤 방법을 써야 저 데이터를 가져올 수 있을까?</p>
+<a id="more"></a>
+
+<h2 id="어떤-상황에-처해있나-어떤-데이터가-필요한가-데이터가-얼마나-필요한가"><a href="#어떤-상황에-처해있나-어떤-데이터가-필요한가-데이터가-얼마나-필요한가" class="headerlink" title="어떤 상황에 처해있나? 어떤 데이터가 필요한가? 데이터가 얼마나 필요한가?"></a>어떤 상황에 처해있나? 어떤 데이터가 필요한가? 데이터가 얼마나 필요한가?</h2><p>여러가지 방법을 생각해 볼 수 있지만, 각각의 방법에는 ‘조건’이 필요하다.</p>
+<p>예를들어, 아래와 같은 질문에 대한 응답이 데이터 수집 방법을 쓸 수 있는 조건이 된다.</p>
+<ul>
+<li><p>Q. “트위터 API를 유료로 구매해서 쓸 수 있는가?”</p>
+<ul>
+<li>위 질문을 통해 트위터 API를 회피해야 하는지, 아니면 정직하게 지불을 하고서 사용을 해야하는지가 갈리게 된다.</li>
+</ul>
+</li>
+<li><p>Q. “얼마나 많은 팔로워를 수집해야 하는가?”</p>
+<ul>
+<li><p>위 질문은 두가지로 나누어서 볼 수 있다.</p>
+<p>1) 수집할 계정 수가 많은가</p>
+<p>2) 수집할 각 계정의 팔로워 수가 많은가</p>
+</li>
+<li><p>1)의 경우는 한번에 여러명의 계정을 수집해야 한다.</p>
+</li>
+<li><p>한편, 2)의 경우는 조금 더 어렵다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>위 조건들을 따지고, 어떤 방식으로 데이터 수집을 진행할지 선택해야 한다.</p>
+<blockquote>
+<p><strong>참고)</strong> 이후부터는 팔로잉/팔로워를 구분하지 않고 언급합니다.</p>
+</blockquote>
+<h2 id="“API-살-돈-없고-수집할-계정-수도-많고-엄청-많은-팔로워있는-계정도-있어요…”"><a href="#“API-살-돈-없고-수집할-계정-수도-많고-엄청-많은-팔로워있는-계정도-있어요…”" class="headerlink" title="“API 살 돈 없고, 수집할 계정 수도 많고, 엄청 많은 팔로워있는 계정도 있어요…”"></a>“API 살 돈 없고, 수집할 계정 수도 많고, 엄청 많은 팔로워있는 계정도 있어요…”</h2><p>위 가정들에서 어려운 상황들을 골라 가정해보자.</p>
+<p>API를 유료로 구매할 지원금도 없고, 수집해야하는 계정 수는 수백수천을 넘어 수십만을 향해가고, 전체적으로 팔로워가 엄청 많지는 않지만 수백 수천명의 팔로워는 흔하고 수십만명 팔로워를 가진 셀럽의 계정들을 수집해야한다고 가정해보자.</p>
+<p>문제를 하나씩 나눠서 해결해보자.</p>
+<h2 id="무료-API라도-쓸-것인가-vs-HTML을-긁을-것인가"><a href="#무료-API라도-쓸-것인가-vs-HTML을-긁을-것인가" class="headerlink" title="무료 API라도 쓸 것인가? vs HTML을 긁을 것인가?"></a>무료 API라도 쓸 것인가? vs HTML을 긁을 것인가?</h2><h3 id="API의-무료-Quota라도-사용해보자"><a href="#API의-무료-Quota라도-사용해보자" class="headerlink" title="API의 무료 Quota라도 사용해보자"></a>API의 무료 Quota라도 사용해보자</h3><p>API를 검색해보면 다음과 같이 Follower의 목록을 가져오는 API가 보인다.</p>
+<blockquote>
+<p>공식 링크: <a href="https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-followers-list">https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-followers-list</a></p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-153307.png" alt="Follower 목록을 가져오는 API"></p>
+<p>하지만 잘 읽어보면 문제가 있다. “Rate Limited? YES.”</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-153437.png" alt="15분에 15개 요청이라니... 누구코에 붙이라고 ㅠㅠ"></p>
+<p>15분에 겨우 15개, 즉 1분에 1개밖에 요청을 하지 못하는 것을 볼 수 있다.</p>
+<p>한번에 최대로 요청 가능한 수가 200개이니 1시간 = 60분에 12,000명의 정보를 가져올 수 있다. 하지만 만약 팔로워 수가 120만명인 유저 1사람이 있다? = 10시간을 투자해야 한다…</p>
+<p><strong>당연히, 이건 좀 아니다!</strong></p>
+<blockquote>
+<p>하지만 만약 수집하는 유저 수가 수백명 안쪽이고 평균 팔로워수도 수십-수백명이면 여전히 유효하고 가장 안전하고 엄밀한 방식이다.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q. 여러 계정을 만들어서 API Key를 많이많이 발급받으면 되지 않나요?</strong></p>
+<p>A. 충분히 가능하지만, 최근 트위터는 API Key 발급을 위해 상당히 많은 항목(연구 계획, 필요한 데이터 범위 등등)을 요구하고 심사 기간도 굉장히 오래 걸립니다.(1주+ 소요)</p>
+</blockquote>
+<p>그렇다면…</p>
+<p>인증이 필요해서 ➡️ 느린 속도(Quota limit)가 걸린다면,</p>
+<p>인증 없이 수집할 수 있다면 ➡️ 빠른 속도로 수집할 수 있겠다!</p>
+<h2 id="그렇다면-어떻게-해야-‘인증없이’-수집할-수-있을까"><a href="#그렇다면-어떻게-해야-‘인증없이’-수집할-수-있을까" class="headerlink" title="그렇다면, 어떻게 해야 ‘인증없이’ 수집할 수 있을까?"></a>그렇다면, 어떻게 해야 ‘인증없이’ 수집할 수 있을까?</h2><blockquote>
+<p> <a href="/2019/12/22/Crawling_Twitter_Following_2/">트위터에서 많은 팔로워를 크롤링하는 방법 2편: HTML 웹 크롤링을 해보자</a>으로 이어집니다.</p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/crawling/" rel="tag">crawling</a>, <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>, <a class="has-link-grey -link" href="/tags/twitter/" rel="tag">twitter</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/22/Crawling_Twitter_Following_2/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/12/20/DockerImage_for_KoreanNLP/">
+                <span class="level-item">한국어 NLP와 딥러닝을 위한 도커이미지 만들기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#어떤-상황에-처해있나-어떤-데이터가-필요한가-데이터가-얼마나-필요한가">
+        <span class="has-mr-6">1</span>
+        <span>어떤 상황에 처해있나? 어떤 데이터가 필요한가? 데이터가 얼마나 필요한가?</span>
+        </a></li><li>
+        <a class="is-flex" href="#“API-살-돈-없고-수집할-계정-수도-많고-엄청-많은-팔로워있는-계정도-있어요…”">
+        <span class="has-mr-6">2</span>
+        <span>“API 살 돈 없고, 수집할 계정 수도 많고, 엄청 많은 팔로워있는 계정도 있어요…”</span>
+        </a></li><li>
+        <a class="is-flex" href="#무료-API라도-쓸-것인가-vs-HTML을-긁을-것인가">
+        <span class="has-mr-6">3</span>
+        <span>무료 API라도 쓸 것인가? vs HTML을 긁을 것인가?</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#API의-무료-Quota라도-사용해보자">
+        <span class="has-mr-6">3.1</span>
+        <span>API의 무료 Quota라도 사용해보자</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#그렇다면-어떻게-해야-‘인증없이’-수집할-수-있을까">
+        <span class="has-mr-6">4</span>
+        <span>그렇다면, 어떻게 해야 ‘인증없이’ 수집할 수 있을까?</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

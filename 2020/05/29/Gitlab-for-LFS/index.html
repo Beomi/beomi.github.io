@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>부제: GitHub의 1GB 한계를 넘어 개인 Gitlab서버로 LFS 마음껏 쓰기</p>
+</blockquote>
+<h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>딥러닝 프로젝트를 하다보면 종종 마주치는 문제가 있다.</p>
+<p><strong>“어라? 이거 파일 어디다 뒀더라? (있긴 있는데 어딨는지 모르겠네)”</strong></p>
+<p><strong>“ipynb파일은 있는데 weight 파일이 없어… (다른 서버에 있나?)”</strong></p>
+<p><strong>“아 이거 코드 copy 하고 나서 수정할걸 ㅠㅠ”</strong></p>
+<p>ML/DL 프로젝트가 아니라 파이썬, js등으로 하던 웹 개발 프로젝트에서는 전혀 느껴보지 못했던 이슈였다. (사실 프로젝트의 시작이 <code>git init</code> 이었으니, 무슨 말이 더 필요할까.)</p>
+<p>하지만 데이터 분석에서는 ‘일단 결과를 보는게 중요해~’ 라는 악마의 속삭임에 넘어가는 경우가 종종 있다. ‘이거만 수정하면 될 것 같은데…’ 물론, 당연히 수정하고 나면 높은 확률로 <strong>망한다</strong>.</p>
+<a id="more"></a> 
+
+<p>그러고서는 실수로라도 <code>rm -rf ./checkpoints/</code>  같은 명령어가 들어있었다면 이전에 기껏 학습시켜둔 모델 파일을 통채로 날려버리는 경우도 허다하다.</p>
+<p>사실 이정도만 되어도 양반인데(다시 학습시키면 되니까), 만약 random seed를 고정하지 않고 학습시켰다면 그야말로 끔찍한, 논문은 썼는데 리비전하려니 재현이 안되는..! 상황이 연출된다.</p>
+<p>그렇다면 이런 질문이 나온다.</p>
+<blockquote>
+<p>“그거 그냥 전부 github에 올리면 되는거 아니에요?”</p>
+</blockquote>
+<p>네, 안됩니다! (단호박)</p>
+<p>우선 Github등 여러 git 서비스들은 자체적으로 하나의 Repo에 보통 1GB 용량 제한을 두고 있고, 이로 인해 모델 weight들을 올려서 관리한다는 것은 아주아주아주아주 작은 모델만 가능하다.</p>
+<p>특히나 모델같은 경우에는 pickle을 이용해 binary 파일로 관리하는데, 이런 binary 파일은 git에서는 통채로(99%) 파일이 바뀌는 것으로 트래킹이 되기 때문에 버전 관리에서 어마어마하게 큰 용량을 차지하게 된다.</p>
+<p>따라서 아래의 Git-LFS가 등장한다.</p>
+<h2 id="GIT-LFS-큰-파일의-히스토리를-git으로"><a href="#GIT-LFS-큰-파일의-히스토리를-git으로" class="headerlink" title="GIT-LFS, 큰 파일의 히스토리를 git으로."></a>GIT-LFS, 큰 파일의 히스토리를 git으로.</h2><p>Git-LFS는 git의 하나의 애드온이다. LFS: Large File Storage로, 소스코드가 아닌 여러 큰 애셋들(특히 바이너리 파일 등)을 관리하기 위해 등장했다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-24-01-JZHFp7.svg" alt="Git LFS icon"></p>
+<p>다만 git과는 별도로 동작하기 때문에 git lfs 서비스를 먼저 설치해야 한다.</p>
+<blockquote>
+<p><a href="https://git-lfs.github.com/">https://git-lfs.github.com/</a></p>
+<p>Github에서 제공하는 git lfs. OS에 맞게 받아서 설치해주자.</p>
+</blockquote>
+<p>설치한 뒤 아래 명령어를 <strong>한번만</strong> 터미널에서 입력하면 시스템 전체에서 <code>git lfs</code> 명령어를 사용할 수 있다.</p>
+<p>(간혹가다가 이걸 Repo단위로 오해하는 경우가 있는데, 이 명령어는 ‘시스템단위’의 명령어다.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git lfs install</span><br></pre></td></tr></table></figure>
+
+<p>그 이후에 <code>cd</code> 등을 통해 원하는 git으로 관리되는 프로젝트의 Root에 들어가 아래와 같이 원하는 확장자/이름을 포함하는 요소를 트래킹하도록 만든다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git lfs track <span class="string">"*.pkl"</span></span><br></pre></td></tr></table></figure>
+
+<p>위와같이 입력하면 <code>.pkl</code> 이라는 확장자를 가진 모든 파일이 트래킹 된다.</p>
+<p>git 프로젝트 최상단에서 입력해주면 하위 폴더를 비롯해 새로 생성되는 파일 역시 저 조건에 충족만 되면 Git lfs로 트래킹이 가능하다.</p>
+<h3 id="딥러닝-모델을-위한-Lfs-track"><a href="#딥러닝-모델을-위한-Lfs-track" class="headerlink" title="딥러닝 모델을 위한 Lfs track"></a>딥러닝 모델을 위한 Lfs track</h3><p>딥러닝 프로젝트를 할 때 주로 쓰는 Tensorflow, PyTorch 라이브러리에서 쓰는 모델 파일들의 확장자를 정리해 보았다. (제보 환영합니다!)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git lfs track <span class="string">"*.pkl"</span> <span class="comment"># 피클 </span></span><br><span class="line">git lfs track <span class="string">"*.model"</span> <span class="comment"># TF/Keras</span></span><br><span class="line">git lfs track <span class="string">"*.h5"</span> <span class="comment"># TF</span></span><br><span class="line">git lfs track <span class="string">"*.pb"</span> <span class="comment"># TF</span></span><br><span class="line">git lfs track <span class="string">"*.ckpt"</span> <span class="comment"># TF</span></span><br><span class="line">git lfs track <span class="string">"*.pt"</span> <span class="comment"># Pytorch</span></span><br><span class="line">git lfs track <span class="string">"*.pth"</span> <span class="comment"># Pytorch</span></span><br><span class="line">git lfs track <span class="string">"*.bin"</span> <span class="comment"># TF/PyTorch</span></span><br><span class="line">git lfs track <span class="string">"*.zip"</span> <span class="comment"># 데이터셋</span></span><br><span class="line">git lfs track <span class="string">"*.tar"</span> <span class="comment"># 데이터셋</span></span><br><span class="line">git lfs track <span class="string">"*.tar.gz"</span> <span class="comment"># 데이터셋</span></span><br><span class="line">git lfs track <span class="string">"*.targz"</span> <span class="comment"># 데이터셋</span></span><br></pre></td></tr></table></figure>
+
+<p>물론 모델 파라미터를 저장할 때 이상한 이름으로 저장하면 위에 해당하지 않겠지만, 일상적으로 저장하는 확장자들은 대부분 커버할 수 있다고 생각한다.</p>
+<h2 id="개인-서버의-필요성-LFS는-유료-서비스다"><a href="#개인-서버의-필요성-LFS는-유료-서비스다" class="headerlink" title="개인 서버의 필요성: LFS는 유료 서비스다."></a>개인 서버의 필요성: LFS는 유료 서비스다.</h2><p>물론 git들도 유료서비스이긴 하지만, 대부분 Public Repo에 대해서는 무료로 제공해주고 있다. 하지만 LFS는 무료 제공량이 있기는 하지만, <strong>굉장히 적다</strong>.</p>
+<p>아래는 <a href="https://help.github.com/en/github/setting-up-and-managing-billing-and-payments-on-github/upgrading-git-large-file-storage">github의 LFS 가격 안내 페이지</a>인데, Storage와 Bandwidth 각각 1GB까지만 무료인 것을 알 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-29-19-06-10-snWs7l.png" alt="Github Git LFS Storage. 저장/전송 각각 1G만 무료다."></p>
+<h2 id="사설-Git-Server를-만들자-Gitlab-docker-이미지"><a href="#사설-Git-Server를-만들자-Gitlab-docker-이미지" class="headerlink" title="사설 Git Server를 만들자: Gitlab docker 이미지!"></a>사설 Git Server를 만들자: Gitlab docker 이미지!</h2><p>Github은 가장 대중적인 오픈소스 커뮤니티이고 git 서버 서비스이지만, 아쉽게도 커스텀으로 설치하는 옵션은 Github Enterprise에만 지원한다. 따라서 차선책으로 Gitlab을 고려할 수 있다. </p>
+<blockquote>
+<p>Gitlab Docker image</p>
+<p><a href="https://docs.gitlab.com/omnibus/docker/">https://docs.gitlab.com/omnibus/docker/</a></p>
+</blockquote>
+<p>Gitlab은 친절하게 ‘모든 설정이 완료된’ Docker image로 서비스를 쓸 수 있도록 배포해준다.</p>
+<p>따라서 설치를 원하는 디렉토리에 들어가, 아래 명령어만 실행하면 설치가 끝난다.</p>
+<blockquote>
+<p>단, 앞선 부분에서 <code>이부분에_도메인을_넣으면됩니다</code> 대신 서버 IP에 연결된 도메인 이름(ex: beomi.github.io 등)을 넣어주어야 한다. 이부분이 이후 Gitlab에서 글로벌하게 사용하는 서버 주소가 되기 때문.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GITLAB_HOME=$(<span class="built_in">pwd</span>)</span><br><span class="line">sudo docker run --detach \</span><br><span class="line">  --hostname 이부분에_도메인을_넣으면됩니다 \</span><br><span class="line">  --env GITLAB_OMNIBUS_CONFIG=<span class="string">"gitlab_rails['lfs_enabled'] = true;"</span> \</span><br><span class="line">  --publish 30443:443 --publish 30080:80 --publish 30022:22 \</span><br><span class="line">  --name gitlab \</span><br><span class="line">  --restart always \</span><br><span class="line">  --volume <span class="variable">$GITLAB_HOME</span>/gitlab/config:/etc/gitlab \</span><br><span class="line">  --volume <span class="variable">$GITLAB_HOME</span>/gitlab/logs:/var/<span class="built_in">log</span>/gitlab \</span><br><span class="line">  --volume <span class="variable">$GITLAB_HOME</span>/gitlab/data:/var/opt/gitlab \</span><br><span class="line">  gitlab/gitlab-ce:latest</span><br></pre></td></tr></table></figure>
+
+<p>약간의 시간(5분)이 지난 뒤 <code>http://도메인이름:30080</code> 에 들어가면 초기 id/pw(관리자용)를 입력해 계정을 생성해 사용할 수 있다.</p>
+<blockquote>
+<p>분명히 공식 문서에서는 <code>GITLAB_OMNIBUS_CONFIG</code> 설정 없이도 git lfs가 기본으로 활성화되어있다고 말 하지만 정작 실행해보면 왜인지 LFS가 안되어있어서 수동으로 활성화 env를 넣어주었다.</p>
+</blockquote>
+<h2 id="나머지는-동일"><a href="#나머지는-동일" class="headerlink" title="나머지는 동일!"></a>나머지는 동일!</h2><p><code>git lfs track</code> 명령어를 통해 <code>.gitattribute</code>파일이 정상적으로 생성되고 이 파일이 git을 통해 잘 관리되고 있다면 이제 더이상의 문제는 없다!</p>
+<p>자연스럽게 <code>git add</code>와 <code>git commit -m</code> 으로 커밋을 완료해보자.</p>
+<h3 id="만약-Git-LFS만-업로드하고-싶다면"><a href="#만약-Git-LFS만-업로드하고-싶다면" class="headerlink" title="만약 Git LFS만 업로드하고 싶다면"></a>만약 Git LFS만 업로드하고 싶다면</h3><p><code>git</code> 대신 <code>git lfs</code> 명령어를 쓰면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git lfs push</span><br><span class="line"></span><br><span class="line"><span class="comment"># 땡기고 싶다면</span></span><br><span class="line">git lfs pull</span><br></pre></td></tr></table></figure>
+
+<h2 id="완성"><a href="#완성" class="headerlink" title="완성!"></a>완성!</h2><p>실제로 완성해서 쓰고 있는데 성능이 좋다. 인터넷을 기가비트(1G)로 쓰고 있어서 학교 서버 등에서 사용할 때에도 충분히 빠른 속도가 나오는 편.</p>
+<p>(아래는 Transformers 라이브러리를 이용한 간단한 예제들을 정리하는 레포다.)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-30-22-22-22-LnaCL4.png" alt="완성해서 실제로 쓰고 있는 Gitlab 서버"></p>
+<h2 id="30080-포트가-보기-싫다면-Reverse-Proxy를-사용해보세요"><a href="#30080-포트가-보기-싫다면-Reverse-Proxy를-사용해보세요" class="headerlink" title=":30080 포트가 보기 싫다면.. Reverse Proxy를 사용해보세요!"></a><code>:30080</code> 포트가 보기 싫다면.. Reverse Proxy를 사용해보세요!</h2><p>사실, 앞선 설명에서는 모두 <code>30080</code>, <code>30443</code> 처럼 HTTP/HTTPS/SSH를 위한 ‘이상한 포트’ 대역을 사용했지만, 위 스크린샷을 보면 <code>git.jblee.kr</code> 처럼 기본 포트만 사용하는 것을 볼 수 있다.</p>
+<h3 id="시놀로지-NAS에서-Reverse-proxy를-쓰는-방법"><a href="#시놀로지-NAS에서-Reverse-proxy를-쓰는-방법" class="headerlink" title="시놀로지 NAS에서 Reverse proxy를 쓰는 방법"></a>시놀로지 NAS에서 Reverse proxy를 쓰는 방법</h3><p>DSM에서는 몇번의 클릭만으로 아래와 같이 Reverse proxy를 만들어 쓸 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-30-23-07-16-S5o2ru.png" alt="시놀로지 Reverse Proxy 메뉴"></p>
+<p>‘추가’를 눌러 아래와 같이 원하는 도메인을 설정해 주면 된다. 외부에서 <code>http://git.jblee.kr:80</code>으로 들어오는 요청을 <code>http://localhost:30080</code> 으로 Proxy해준다. (프로토콜은 모두 HTTP로.)</p>
+<p>같은 방식으로 <code>https://git.jblee.kr:443</code> 을 <code>https://localhost:30443</code> 으로 Proxy 해주면 된다. (당연히 프로토콜은 모두 HTTPS로 한다. 그리고 HTTP/2를 활성화 시키는 것이 성능에 훨씬 더 유리하다.)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-30-23-08-13-QIFveF.png" alt="Reverse Proxy 설정: HTTP의 경우"></p>
+<h2 id="http-대신-안전한-https-를-사용하고-싶다면"><a href="#http-대신-안전한-https-를-사용하고-싶다면" class="headerlink" title="http 대신 안전한 https 를 사용하고 싶다면"></a><code>http</code> 대신 안전한 <code>https</code> 를 사용하고 싶다면</h2><h3 id="시놀로지-NAS에-설치한-경우-인증서-설정법"><a href="#시놀로지-NAS에-설치한-경우-인증서-설정법" class="headerlink" title="시놀로지 NAS에 설치한 경우 인증서 설정법"></a>시놀로지 NAS에 설치한 경우 인증서 설정법</h3><p>DSM의 ‘제어판’ - ‘보안’ - ‘인증서’ 메뉴에서 아래와 같이 ‘추가’를 눌러 새 주소에 대해 새로운 인증서를 받는다. </p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-30-23-02-12-17Kel3.png" alt="시놀로지 NAS 인증서 메뉴. 새롭게 추가한 인증서가 보인다."></p>
+<p>위 스크린샷의 ‘구성’을 누르면아래와 같이 시스템 서비스 별, 그리고 Reverse proxy 별로 다른 인증서를 지정할 수 있는데, 이 때 Reverse Proxy로 생성해 준 도메인을 눌러 새 인증서를 아래와 같이 매칭시켜주면 끝난다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-30-23-03-16-hgzNsE.png" alt="NAS 인증서 구성하기. &#39;인증서&#39; 드롭다운에서 새로 발급받은 인증서를 선택한다."></p>
+<h3 id="일반-리눅스-버전에-설치한-경우"><a href="#일반-리눅스-버전에-설치한-경우" class="headerlink" title="일반 리눅스 버전에 설치한 경우"></a>일반 리눅스 버전에 설치한 경우</h3><p><code>/etc/gitlab/gitlab.rb</code> 파일을 수정해야 한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it gitlab vim /etc/gitlab/gitlab.rb</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어로 도커 내부에 들어가 <code>gitlab.rb</code> 파일을 수정해준다.</p>
+<blockquote>
+<p>외부에서 직접 수정해줘도 되지만, 권한이 꼬이는 것을 방지하기 위해 docker exec를 통해 도커 내부에서 수정하는 것을 권장한다.</p>
+</blockquote>
+<p>해당 파일에서 <code>letsencrypt</code> 부분을 찾아 주석(<code>#</code>)을 해제해 주자. 가장 첫 줄은 <code>https:</code>로 시작하는 도메인 풀 주소를 적어주면 된다. (단 이때 비정규포트(ex: 30443)등은 지원하지 않는다. 그래서 Reverse proxy로 받은 주소를 적어줘야 한다.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 아래 주석 해제 후 값 변경 [필수]</span></span><br><span class="line">external_url <span class="string">"https://git.jblee.kr"</span> <span class="comment"># 꼭 https 로 시작하기</span></span><br><span class="line"><span class="comment"># 아래 주석 해제 [11이하버전은 필수, 이상은 기본값으로 true]</span></span><br><span class="line">letsencrypt[<span class="string">'enable'</span>] = <span class="literal">true</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># 메일로 갱신 알람을 받고 싶다면 적어주면 된다. [옵션]</span></span><br><span class="line">letsencrypt[<span class="string">'contact_emails'</span>] = [<span class="string">'foo@email.com'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>만약 매번 자동 갱신되는 것까지 고려한다면.. 사실 매번 리뉴얼 하는 것은 매우 귀찮으니, 이렇게 자동으로 리뉴얼되게 해 두는 것이 훨씬 쉽다.</p>
+<p><code>gitlab.rb</code> 파일 중 아래와 같이 주석 해제하고 설정해주면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">letsencrypt[<span class="string">'auto_renew'</span>] = <span class="literal">true</span></span><br><span class="line">letsencrypt[<span class="string">'auto_renew_hour'</span>] = 0</span><br><span class="line">letsencrypt[<span class="string">'auto_renew_minute'</span>] = 30</span><br><span class="line">letsencrypt[<span class="string">'auto_renew_day_of_month'</span>] = <span class="string">"*/20"</span></span><br></pre></td></tr></table></figure>
+
+<p>위 세팅으로는 매월 20일 0시 30분에 리뉴얼을 시도한다. Let’s Encrypt는 한번 갱신에 90일의 기간을 주기 때문에, 위와 같은 세팅으로 무한히 연장해서 쓸 수 있다.</p>
+<h2 id="Gitlab-버전을-업그레이드해야-한다면"><a href="#Gitlab-버전을-업그레이드해야-한다면" class="headerlink" title="Gitlab 버전을 업그레이드해야 한다면"></a>Gitlab 버전을 업그레이드해야 한다면</h2><p>만약 깃랩을 쓰다 보안/기능의 이슈로 업그레이드 해야한다면 아래 명령어로 쉽게 새 이미지를 받고 새로 띄울 수 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull gitlab&#x2F;gitlab-ce:latest</span><br><span class="line">docker stop gitlab</span><br><span class="line">docker rm gitlab</span><br><span class="line"># 그리고 나서 docker run ~~~</span><br></pre></td></tr></table></figure>
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Gitlab 도커이미지 안내 <a href="https://docs.gitlab.com/omnibus/docker/">https://docs.gitlab.com/omnibus/docker/</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/git/" rel="tag">git</a>, <a class="has-link-grey -link" href="/tags/git-lfs/" rel="tag">git-lfs</a>, <a class="has-link-grey -link" href="/tags/gitlab/" rel="tag">gitlab</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/07/01/Review-the-Interview/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">면접에서 나온 통계 질문 리뷰</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/02/26/Train-BERT-from-scratch-on-colab-TPU-Tensorflow-ver/">
+                <span class="level-item">Colab에서 TPU로 BERT 처음부터 학습시키기 - Tensorflow/Google ver.</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#들어가며">
+        <span class="has-mr-6">1</span>
+        <span>들어가며</span>
+        </a></li><li>
+        <a class="is-flex" href="#GIT-LFS-큰-파일의-히스토리를-git으로">
+        <span class="has-mr-6">2</span>
+        <span>GIT-LFS, 큰 파일의 히스토리를 git으로.</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#딥러닝-모델을-위한-Lfs-track">
+        <span class="has-mr-6">2.1</span>
+        <span>딥러닝 모델을 위한 Lfs track</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#개인-서버의-필요성-LFS는-유료-서비스다">
+        <span class="has-mr-6">3</span>
+        <span>개인 서버의 필요성: LFS는 유료 서비스다.</span>
+        </a></li><li>
+        <a class="is-flex" href="#사설-Git-Server를-만들자-Gitlab-docker-이미지">
+        <span class="has-mr-6">4</span>
+        <span>사설 Git Server를 만들자: Gitlab docker 이미지!</span>
+        </a></li><li>
+        <a class="is-flex" href="#나머지는-동일">
+        <span class="has-mr-6">5</span>
+        <span>나머지는 동일!</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#만약-Git-LFS만-업로드하고-싶다면">
+        <span class="has-mr-6">5.1</span>
+        <span>만약 Git LFS만 업로드하고 싶다면</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#완성">
+        <span class="has-mr-6">6</span>
+        <span>완성!</span>
+        </a></li><li>
+        <a class="is-flex" href="#30080-포트가-보기-싫다면-Reverse-Proxy를-사용해보세요">
+        <span class="has-mr-6">7</span>
+        <span>:30080 포트가 보기 싫다면.. Reverse Proxy를 사용해보세요!</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#시놀로지-NAS에서-Reverse-proxy를-쓰는-방법">
+        <span class="has-mr-6">7.1</span>
+        <span>시놀로지 NAS에서 Reverse proxy를 쓰는 방법</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#http-대신-안전한-https-를-사용하고-싶다면">
+        <span class="has-mr-6">8</span>
+        <span>http 대신 안전한 https 를 사용하고 싶다면</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#시놀로지-NAS에-설치한-경우-인증서-설정법">
+        <span class="has-mr-6">8.1</span>
+        <span>시놀로지 NAS에 설치한 경우 인증서 설정법</span>
+        </a></li><li>
+        <a class="is-flex" href="#일반-리눅스-버전에-설치한-경우">
+        <span class="has-mr-6">8.2</span>
+        <span>일반 리눅스 버전에 설치한 경우</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Gitlab-버전을-업그레이드해야-한다면">
+        <span class="has-mr-6">9</span>
+        <span>Gitlab 버전을 업그레이드해야 한다면</span>
+        </a></li><li>
+        <a class="is-flex" href="#References">
+        <span class="has-mr-6">10</span>
+        <span>References</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>NLP 튜토리얼: 라벨링 없이 트위터 유저들을 자동으로 나누어보기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-183122.png" alt="NLP 튜토리얼: 라벨링 없이 트위터 유저들을 자동으로 나누어보기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-04T15:00:00.000Z">2020-01-05</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/NLP/">NLP</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/NLP/Unsupervised/">Unsupervised</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                NLP 튜토리얼: 라벨링 없이 트위터 유저들을 자동으로 나누어보기
+            
+        </h1>
+        <div class="content">
+            <p>트위터에는 굉장히 다양한 유저들이 있다.</p>
+<p>그리고 트위터 유저들은 “BIO”라고 부르는 자기소개 페이지에 자신에 대한 정보를 적어둔다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-02-090649.png" alt="Github 트위터 공식 계정"></p>
+<p>위 스크린샷과 같이, 자신의 계정이 어떤 계정인지를 간단한 160자 내로  드러내는 것이 바로 BIO다.</p>
+<p>그렇다면, 이런 계정들이 ‘어떤’ 계정인지 BIO를 이용해 분류해 볼 수 있지 않을까?</p>
+<p>하지만 모든 유저를 우리가 손으로 라벨을 붙여 학습시키는 것은 힘들다.</p>
+<p>그렇다면 알아서 분류하려면 어떻게 해야할까?</p>
+<p>간단한 자연어 처리를 통해 라벨링 없이 유저를 클러스터링해보자.</p>
+<blockquote>
+<p>🌟 바로바로 실행하면서 따라올 수 있는 Google Colab 👨🏻‍💻👩🏻‍💻👇</p>
+<p><a href="https://colab.research.google.com/drive/1bgv3CHZDp2smIWXQwAUD3j5z8LAYbLVz">https://colab.research.google.com/drive/1bgv3CHZDp2smIWXQwAUD3j5z8LAYbLVz</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="미리보기-어떤-결과물이-나오나"><a href="#미리보기-어떤-결과물이-나오나" class="headerlink" title="미리보기: 어떤 결과물이 나오나?"></a>미리보기: 어떤 결과물이 나오나?</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-184502.png" alt="결과물 미리보기 - 마우스를 올리면 텍스트가 보인다"></p>
+<p>이번 튜토리얼이 끝날때, 위와 같이 각 유저의 트위터 프로필들 클러스터링 된 결과물을 2차원 공간에 차원축소를 통해 각각 다른 색의 동그라미로 보여주고, 각 동그라미 위에 마우스를 올리면 어떤 트위터 BIO였는지 보여주는 Plot을 완성한다.</p>
+<h2 id="유저를-분류한다-어떻게"><a href="#유저를-분류한다-어떻게" class="headerlink" title="유저를 분류한다? 어떻게?"></a>유저를 분류한다? 어떻게?</h2><p>분류, 즉 Classification 문제는 주로 라벨링을 통한 Supervised Learning 방법을 사용한다.</p>
+<p>하지만 앞서 언급한 것과 같이 라벨링이 필요하고, 더 높은 정확도를 얻기 위해서는 더 많은 데이터에 더 많은 라벨링(노가다)가 필요하다.</p>
+<p>한편 이와 대조되는 방법으로 Unsupervised Learning을 사용하기도 하는데, 데이터만 넣어서 어떻게든 뭔가 만들어내는 방식이기도 하다. </p>
+<p>이번 글에서는 NLP 사용의 기본적인 방법인 Word Vectorize인 <code>word2vec</code> 을 이용해본다.</p>
+<h2 id="Word2Vec"><a href="#Word2Vec" class="headerlink" title="Word2Vec"></a>Word2Vec</h2><p>Word2Vec은 단어를 N차원의 벡터로 만들어준다. (보통 300차원 이내를 쓴다.)</p>
+<p>Word2Vec 자체가 텍스트만 Tokenize해서 넣어주면 몇 가지 종류의 알고리즘을 통해 단어(토큰) 간의 상관관계를 찾아내고 서로 유사한 공간에 배치하도록 만들어진 Unsupervised Learning이다.</p>
+<blockquote>
+<p>상세한 원리는 <a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/08/word2vec/">Word2Vec으로 문장 분류하기 - Ratsgo’s blog</a>를 참고해보세요.</p>
+</blockquote>
+<h3 id="트위터-프로필로-Word2Vec을-학습시키자-NO"><a href="#트위터-프로필로-Word2Vec을-학습시키자-NO" class="headerlink" title="트위터 프로필로 Word2Vec을 학습시키자? NO!"></a>트위터 프로필로 Word2Vec을 학습시키자? NO!</h3><p>최근 NLP 트렌드는 Transfer Learning을 통한 성능의 개선이었다. 한정된 데이터가 아니라 수많은 데이터가 있다면 임베딩 공간이 좀 더 의미를 잘 부여받은 공간을 갖게된다는 이야기.</p>
+<p>Word2Vec같은 경우는 연산량이 많지 않아 데스크탑 CPU만으로도 몇만건의 데이터는 금방 학습이 끝나지만, 기존의 거대 데이터(위키 등)를 사용한 학습이 좀 더 높은 성능을 보인다고도 한다.</p>
+<p>한편, 학습된 Word2Vec 모델에 없는 ‘새로운 단어’가 등장할 경우에는 Unknown 단어의 벡터로 모두 매핑되기 때문에 한계가 있다.</p>
+<p>따라서 이번에는 네이버 댓글 약 100만개를 사용해 미리 학습시켜둔 Word2Vec 모델을 가져와 사용한다. (추가적인 학습은 진행하지 않는다!)</p>
+<blockquote>
+<p>아래 내용은 2020년 1월 3일 Google Colab 환경 기준입니다.</p>
+</blockquote>
+<h2 id="데이터-준비하기"><a href="#데이터-준비하기" class="headerlink" title="데이터 준비하기"></a>데이터 준비하기</h2><p>우선 어떤 데이터를 쓸지부터가 관건이다.</p>
+<p>하지만 걱정하지 마시라! 이미 모아둔 데이터를 받아서 써보자.</p>
+<h3 id="어떤-데이터를-사용하나"><a href="#어떤-데이터를-사용하나" class="headerlink" title="어떤 데이터를 사용하나?"></a>어떤 데이터를 사용하나?</h3><p>이번 튜토리얼에서는 트위터에서 네이버 뉴스를 링크한 트윗들을 크롤링한 데이터셋을 사용한다.</p>
+<p>아래 명령어를 Google Colab에서 입력하면 곧바로 사용할 수 있다.</p>
+<blockquote>
+<p>만약 일반 PC에서 진행중이라면 curl 앞의 <code>!</code> 만 생략하고 입력하면 된다.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">!curl gdrive.sh | bash -s 13fQZtkz4SSzVNcqh73SBqnUDw2mSDgzL</span><br><span class="line">!curl gdrive.sh | bash -s 1W8u9ZuEhKCkTbaGLzUF4YcF2F_hYeE1B</span><br><span class="line">!curl gdrive.sh | bash -s 1GffvAF3tBtSpjsblIdP1Tcv25XEyBewm</span><br><span class="line">!curl gdrive.sh | bash -s 103jom7lxjiqQptIRjrIdSjXR8jRqrlEd</span><br></pre></td></tr></table></figure>
+
+<p>위 다운로드를 모두 진행하면 트위터 유저 데이터 tsv파일 하나, 그리고 네이버 댓글로 학습시킨 word2vec 모델 파일이 다운로드 된다.</p>
+<p>데이터 내용은 다음과 같이 유저고유번호, 유저 프로필이름, 유저 로그인이름, 유저의 BIO가 들어있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_csv(<span class="string">'twitter_users.tsv'</span>, sep=<span class="string">'\t'</span>)</span><br><span class="line">df.head(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-185356.png" alt="트위터 유저 데이터"></p>
+<h3 id="Word2Vec-모델-불러오기"><a href="#Word2Vec-모델-불러오기" class="headerlink" title="Word2Vec 모델 불러오기"></a>Word2Vec 모델 불러오기</h3><p>Gensim에서 사용하는 Word2Vec 모델을 이용한다.</p>
+<p>아래 두 줄의 명령어로 기존에 학습된 word2vec 모델을 불러올 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> Word2Vec</span><br><span class="line"></span><br><span class="line">model = Word2Vec.load(<span class="string">'embedding.save'</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="추가-라이브러리-설치하기"><a href="#추가-라이브러리-설치하기" class="headerlink" title="추가 라이브러리 설치하기"></a>추가 라이브러리 설치하기</h2><p>앞서 언급했던 것 중 하나가 Word2Vec은 단어/토큰을 vector로 바꾼다는 것이었다.</p>
+<p>이를 위해서는 문장으로 이루어진 트위터 프로필 정보를 단어/토큰단위로 쪼개야 한다는 뜻이다.</p>
+<p>이를 위해 KoNLPy 라이브러리 중 Mecab을 사용한다.</p>
+<h3 id="KoNLPy-설치"><a href="#KoNLPy-설치" class="headerlink" title="KoNLPy 설치"></a>KoNLPy 설치</h3><p>KoNLPy는 pip를 통해 간단히 설치할 수 있다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!pip install -q konlpy</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>주의: KoNLPy는 JPipe를 사용해 Python 패키지이지만 java를 호출한다.</p>
+<p>따라서 Java 1.7 혹은 1.8이 설치되어있고 <code>java</code> 명령어로 실행 가능하도록 시스템이 설정되어있어야 한다.</p>
+</blockquote>
+<h3 id="Mecab-설치"><a href="#Mecab-설치" class="headerlink" title="Mecab 설치"></a>Mecab 설치</h3><p>KoNLPy중 가장 속도가 빠른 mecab은 아래 명령어를 통해 추가 설치를 진행해야 한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!bash &lt;(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)</span><br></pre></td></tr></table></figure>
+
+<h2 id="트위터-프로필을-토큰화하기-단어로-쪼개기"><a href="#트위터-프로필을-토큰화하기-단어로-쪼개기" class="headerlink" title="트위터 프로필을 토큰화하기 (단어로 쪼개기)"></a>트위터 프로필을 토큰화하기 (단어로 쪼개기)</h2><p>KoNLPy의 mecab을 이용해 트위터 프로필 문장을 명사들로 쪼개보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> konlpy.tag <span class="keyword">import</span> Mecab</span><br><span class="line"></span><br><span class="line">mecab = Mecab()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_tokens</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> [i <span class="keyword">for</span> i <span class="keyword">in</span> mecab.nouns(x) <span class="keyword">if</span> len(i) &gt; <span class="number">1</span>] <span class="keyword">if</span> x <span class="keyword">else</span> []</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">if</span> str(x) == <span class="string">'nan'</span>:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        print(e)</span><br><span class="line">        print(str(x))</span><br><span class="line">        <span class="keyword">raise</span> e</span><br></pre></td></tr></table></figure>
+
+<p>위 <code>get_token</code>  함수는 <code>x</code> 문자열을 받으면 문자열 목록을 반환하게 된다.</p>
+<p>단, 이때 한 단어는 2글자 이상으로 제한을 걸었다. (한 단어는 무의미한 경우가 많다.)</p>
+<h3 id="토큰화-함수-DataFrame에-적용하기"><a href="#토큰화-함수-DataFrame에-적용하기" class="headerlink" title="토큰화 함수 DataFrame에 적용하기"></a>토큰화 함수 DataFrame에 적용하기</h3><p>앞서 읽은 DataFrame 중 <code>user.description</code> 컬럼에 위 함수를 적용해주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'user_mecab'</span>] = df[<span class="string">'user.description'</span>].map(get_tokens)</span><br><span class="line">df[<span class="string">'user_mecab_len'</span>] = df[<span class="string">'user_mecab'</span>].map(len)</span><br></pre></td></tr></table></figure>
+
+<p>이후 토큰화된 문자의 개수로 필터링 하기 위해 길이 컬럼도 추가로 만들어주자.</p>
+<h3 id="명사수가-N개-이상인-프로필만-추출하기"><a href="#명사수가-N개-이상인-프로필만-추출하기" class="headerlink" title="명사수가 N개 이상인 프로필만 추출하기"></a>명사수가 N개 이상인 프로필만 추출하기</h3><p>빈 프로필, 혹은 엄청 짧은 프로필은 정보가 충분히 있다고 보기 어렵다.</p>
+<p>따라서 N개 이상의 단어로 이루어진 프로필만으로 제한을 걸어주자.</p>
+<p>앞서 만든 <code>user_mecab_len</code> 컬럼이 5 이상인 것만 남겨두자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bio_exists_df = df[df[<span class="string">'user_mecab_len'</span>] &gt;= <span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+
+<p>위 Dataframe을 살펴보면 아래와 같이 단어와 해당 길이가 나타난다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-190313.png" alt="토큰화된 유저 프로필"></p>
+<h2 id="문장의-벡터-Mean-각-단어의-벡터"><a href="#문장의-벡터-Mean-각-단어의-벡터" class="headerlink" title="문장의 벡터 = Mean(각 단어의 벡터)"></a>문장의 벡터 = Mean(각 단어의 벡터)</h2><p>단어의 벡터는 알지만, 문장의 벡터는 어떻게 표현할 수 있을까?</p>
+<p>이러한 질문의 답은, “문장의 벡터는 해당 문장의 단어들의 벡터 평균”이라고 볼 수 있다.</p>
+<blockquote>
+<p>다른/혹은 더 높은 성능을 위한 방법으로는, 문맥을 이해하는 BERT, 혹은 Doc2Vec와 같은 문장단위 임베딩, 혹은 Word2Vec의 Mean을 취한 뒤 TF-IDF를 취해주는 방법 등이 있다.</p>
+</blockquote>
+<p>따라서 아래와 같이 sentence vector를 얻는 함수를 만들어줄 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_sentence_mean_vector</span><span class="params">(morphs)</span>:</span></span><br><span class="line">    vector = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> morphs:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            vector.append(model.wv[i])</span><br><span class="line">        <span class="keyword">except</span> KeyError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> np.mean(vector, axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">except</span> IndexError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>마찬가지로 위에서 만들어온 DataFrame에 입혀주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bio_exists_df[<span class="string">'wv'</span>] = bio_exists_df[<span class="string">'user_mecab'</span>].map(get_sentence_mean_vector)</span><br></pre></td></tr></table></figure>
+
+<h2 id="트위터-프로필-문장-벡터로-클러스터링하기"><a href="#트위터-프로필-문장-벡터로-클러스터링하기" class="headerlink" title="트위터 프로필 문장 벡터로 클러스터링하기"></a>트위터 프로필 문장 벡터로 클러스터링하기</h2><p>클러스터링에도 여러 방법이 있지만, 이번에는 엄청 간단하고 빠르고 기본적인 KMeans를 써보자.</p>
+<p>이것 역시 sklearn에 구현된 것을 쓸 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">word_vectors = bio_exists_df.wv.to_list() </span><br><span class="line">num_clusters = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># K means 를 정의하고 학습시킨다.</span></span><br><span class="line">kmeans_clustering = KMeans( n_clusters = num_clusters )</span><br><span class="line">idx = kmeans_clustering.fit_predict( word_vectors )</span><br><span class="line">bio_exists_df[<span class="string">'category'</span>] = idx</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 사용하면 앞서 만든 Dataframe의 <code>wv</code> 컬럼을 이용한다.</p>
+<p>KMeans는 사용하기 간단하고 다른 것을 건드릴 필요도 없다. </p>
+<p>다만, 유일하게 <code>n_clusters</code> 하이퍼파라미터를 지정해주어야 하는데 이 클러스터 갯수를 어떻게 지정하느냐에 따라 클러스터링의 성능이 크게 달라지기 때문에 해당 숫자를 신중하게 결정하는 것이 좋다.</p>
+<blockquote>
+<p>사실 이것도 굉장히 empirical한 접근방법이지만, 데이터셋을 보고 어떤 숫자가 적절할지를 보는 것이 중요하다. 무조건 모델을 돌리기보다 어떤 데이터인지 아는게 더 중요하다.</p>
+</blockquote>
+<p>실제 유저 수는 아래와 같이 나타난다. 1번 클러스터가 제일 크지만, 이게 어떤 의미를 갖지는 않는다.</p>
+<p>오히려 각 클러스터에 어떤 유저들이 나타났는지가 더 중요한 것이다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-191944.png" alt="10개로 나눠진 카테고리별 유저 수"></p>
+<h2 id="차원-축소-amp-시각화"><a href="#차원-축소-amp-시각화" class="headerlink" title="차원 축소 &amp; 시각화"></a>차원 축소 &amp; 시각화</h2><p>앞서 트위터 프로필 문장을 300차원의 벡터로 만들었다.</p>
+<p>하지만 300차원은 컴퓨터 화면으로는 볼 수 없는 어마어마한 고차원이기 때문에, 2차원의 화면에 맞도록 2차원으로 차원축소를 진행해야 한다.</p>
+<h3 id="TSNE-차원축소"><a href="#TSNE-차원축소" class="headerlink" title="TSNE 차원축소"></a>TSNE 차원축소</h3><p>t-SNE는 시각화를 위한 차원축소에 자주 사용하는 알고리즘이다.</p>
+<p>이것 역시 sklearn에 구현되어있기 때문에, 보다 쉽게 사용할 수 있다.</p>
+<p>아래와 같이 Dataframe의 <code>wv</code> 컬럼을 맞춰주도록 하자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.manifold <span class="keyword">import</span> TSNE</span><br><span class="line"></span><br><span class="line">X = bio_exists_df[<span class="string">'wv'</span>].to_list()</span><br><span class="line">y = bio_exists_df[<span class="string">'category'</span>].to_list()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os.path</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line">tsne_filepath = <span class="string">'tsne3000.pkl'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># File Cache</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(tsne_filepath):</span><br><span class="line">    tsne = TSNE(random_state=<span class="number">42</span>)</span><br><span class="line">    tsne_points = tsne.fit_transform(X)</span><br><span class="line">    <span class="keyword">with</span> open(tsne_filepath, <span class="string">'wb+'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        pickle.dump(tsne_points, f)</span><br><span class="line"><span class="keyword">else</span>: <span class="comment"># Cache Hits!</span></span><br><span class="line">    <span class="keyword">with</span> open(tsne_filepath, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        tsne_points = pickle.load(f)</span><br><span class="line"></span><br><span class="line">tsne_df = pd.DataFrame(tsne_points, index=range(len(X)), columns=[<span class="string">'x_coord'</span>, <span class="string">'y_coord'</span>])</span><br><span class="line">tsne_df[<span class="string">'user_bio'</span>] = bio_exists_df[<span class="string">'user.description'</span>].to_list()</span><br><span class="line">tsne_df[<span class="string">'cluster_no'</span>] = y</span><br></pre></td></tr></table></figure>
+
+<p>결과물에는 <code>x</code>, <code>y</code> 2차원의 좌표값이 나오게 된다. (<code>tsne_df</code>)</p>
+<p>아래 샘플과 같이 300차원이 2차원으로 줄어든 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-192537.png" alt="2차원으로 축소된 트위터 프로필"></p>
+<h3 id="Bokeh로-2차원-Plotting"><a href="#Bokeh로-2차원-Plotting" class="headerlink" title="Bokeh로 2차원 Plotting"></a>Bokeh로 2차원 Plotting</h3><p>단순히 Matplotlib을 이용한 이미지 결과가 아니라 실제 내용물(트위터 프로필)을 확인할 수 있도록 <code>bokeh</code> 를 이용해 Interactive Plot을 그려보자.</p>
+<p>우선 bokeh가 Jupyter Notebook에서 동작할 수 있도록 여러 PY/JS들을 로딩해주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bokeh.plotting <span class="keyword">import</span> figure, show, output_notebook</span><br><span class="line"><span class="keyword">from</span> bokeh.models <span class="keyword">import</span> HoverTool, ColumnDataSource, value</span><br><span class="line"><span class="keyword">from</span> bokeh.palettes <span class="keyword">import</span> brewer</span><br><span class="line"></span><br><span class="line">output_notebook()</span><br></pre></td></tr></table></figure>
+
+<p>우리는 10개의 클러스터에 각각 다른 색을 입힐 것이기 때문에 아래와 같이 컬러를 만들어주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Get the number of colors we'll need for the plot.</span></span><br><span class="line">colors = brewer[<span class="string">"Spectral"</span>][len(tsne_df[<span class="string">'cluster_no'</span>].unique())]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a map between factor and color.</span></span><br><span class="line">colormap = &#123;i: colors[i] <span class="keyword">for</span> i <span class="keyword">in</span> tsne_df[<span class="string">'cluster_no'</span>].unique()&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a list of colors for each value that we will be looking at.</span></span><br><span class="line">colors = [colormap[x] <span class="keyword">for</span> x <span class="keyword">in</span> tsne_df[<span class="string">'cluster_no'</span>]]</span><br><span class="line"></span><br><span class="line">tsne_df[<span class="string">'color'</span>] = colors</span><br></pre></td></tr></table></figure>
+
+<p>이후 Bokeh가 인식하는 DataSource 객체를 만들어준다.</p>
+<p>이때, Pandas DataFrame을 <code>.to_dict(orient=&#39;list&#39;)</code> 를 사용하면 해당 Dataframe의 모든 컬럼정보가 들어갈 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Bokeh Datasouce 만들기</span></span><br><span class="line">plot_data = ColumnDataSource(</span><br><span class="line">    data=tsne_df.to_dict(orient=<span class="string">'list'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>그리고 실제 Plot을 그리기 위한 배경으로 650x650 사이즈의 공간을 만들어준다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Plot 만들기(배경)</span></span><br><span class="line">tsne_plot = figure(</span><br><span class="line">    title=<span class="string">'TSNE Twitter BIO Embeddings'</span>,</span><br><span class="line">    plot_width = <span class="number">650</span>,</span><br><span class="line">    plot_height = <span class="number">650</span>,</span><br><span class="line">    active_scroll=<span class="string">'wheel_zoom'</span>,</span><br><span class="line">    output_backend=<span class="string">"webgl"</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>output_backend=&quot;webgl&quot;,</code> 옵션을 사용하면 GPU가속을 통해 훨씬 부드러운 차트를 경험할 수 있다.</p>
+</blockquote>
+<p>이후 각각 요소에 마우스를 올릴 때 무엇을 보여줄지 Tooltip으로 <code>user_bio</code> 컬럼을 사용하도록 지정한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 해당 Hover 툴팁 만들기</span></span><br><span class="line">tsne_plot.add_tools(</span><br><span class="line">    HoverTool(</span><br><span class="line">        tooltips=<span class="string">'@user_bio'</span></span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>해당 Plot에 데이터 정보들을 넣어준다.</p>
+<p>Source를 입력하고 x,y 축을 넣어준 뒤, color정보를 컬럼명(<code>color</code> 컬럼)으로 넣어주면 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tsne_plot.circle(</span><br><span class="line">    source=plot_data,</span><br><span class="line">    x=<span class="string">'x_coord'</span>,</span><br><span class="line">    y=<span class="string">'y_coord'</span>,</span><br><span class="line">    line_alpha=<span class="number">0.3</span>, </span><br><span class="line">    fill_alpha=<span class="number">0.2</span>,</span><br><span class="line">    size=<span class="number">10</span>,</span><br><span class="line">    fill_color=<span class="string">'color'</span>,</span><br><span class="line">    line_color=<span class="string">'color'</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>그리고 귀찮은 선들을 지운뒤 화면에 보이도록 하면 결과가 나타난다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 각 값들 추가해주기 </span></span><br><span class="line">tsne_plot.title.text_font_size = value(<span class="string">'16pt'</span>)</span><br><span class="line">tsne_plot.xaxis.visible = <span class="literal">False</span></span><br><span class="line">tsne_plot.yaxis.visible = <span class="literal">False</span></span><br><span class="line">tsne_plot.grid.grid_line_color = <span class="literal">None</span></span><br><span class="line">tsne_plot.outline_line_color = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 짠!</span></span><br><span class="line">show(tsne_plot)</span><br></pre></td></tr></table></figure>
+
+<h2 id="결과-보기"><a href="#결과-보기" class="headerlink" title="결과 보기"></a>결과 보기</h2><p>위 코드를 모두 실행하면 아래와 같이 색깔별로 모인 유저 프로필들을 볼 수 있다.</p>
+<p>특히 뭉쳐있는 유저들을 살펴볼 경우, 굉장히 비슷한 말들이 적혀있고 주제도 비슷한 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-193226.png" alt="최종 결과물"></p>
+<p>그리고 각 클러스터별로 어떤 유저들이 모여있는지 살펴보면 아래와 같이 연예인 팬, 혹은 정치적 이야기, 혹은 자신의 관심사 등에 따른 집단이 그룹으로 분류되는 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-193548.png" alt="BTS Army"></p>
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><p>트위터 유저들 모두가 자신의 정보를 빼곡히 프로필에 작성하는 것은 아니다.</p>
+<p>하지만 자신의 관심사가 어떤 것인지에 대해, 그리고 이 계정이 어떤 목적을 위한 계정인지 드러나는 것을 간단하게 모아 살펴볼 수 있다.</p>
+<p>물론, 성능이 우리가 바라는 것처럼 어마어마하게 멋지게 나오지는 않지만, 무작정 Labeling을 하기 이전게 간단하게 이런 방식으로도 데이터를 재미있게 구경해볼 수 있다는 점에서는 의미가 있다고 생각한다.</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/clustering/" rel="tag">clustering</a>, <a class="has-link-grey -link" href="/tags/nlp/" rel="tag">nlp</a>, <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>, <a class="has-link-grey -link" href="/tags/tutorial/" rel="tag">tutorial</a>, <a class="has-link-grey -link" href="/tags/twitter/" rel="tag">twitter</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/01/29/Use-parquet-on-pandas/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Pandas에서 Parquet 사용하기 with Snappy/Gzip</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/12/31/Postmortem-2019/">
+                <span class="level-item">2019년 회고, 2년치 연말정산</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#미리보기-어떤-결과물이-나오나">
+        <span class="has-mr-6">1</span>
+        <span>미리보기: 어떤 결과물이 나오나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#유저를-분류한다-어떻게">
+        <span class="has-mr-6">2</span>
+        <span>유저를 분류한다? 어떻게?</span>
+        </a></li><li>
+        <a class="is-flex" href="#Word2Vec">
+        <span class="has-mr-6">3</span>
+        <span>Word2Vec</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#트위터-프로필로-Word2Vec을-학습시키자-NO">
+        <span class="has-mr-6">3.1</span>
+        <span>트위터 프로필로 Word2Vec을 학습시키자? NO!</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#데이터-준비하기">
+        <span class="has-mr-6">4</span>
+        <span>데이터 준비하기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#어떤-데이터를-사용하나">
+        <span class="has-mr-6">4.1</span>
+        <span>어떤 데이터를 사용하나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#Word2Vec-모델-불러오기">
+        <span class="has-mr-6">4.2</span>
+        <span>Word2Vec 모델 불러오기</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#추가-라이브러리-설치하기">
+        <span class="has-mr-6">5</span>
+        <span>추가 라이브러리 설치하기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#KoNLPy-설치">
+        <span class="has-mr-6">5.1</span>
+        <span>KoNLPy 설치</span>
+        </a></li><li>
+        <a class="is-flex" href="#Mecab-설치">
+        <span class="has-mr-6">5.2</span>
+        <span>Mecab 설치</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#트위터-프로필을-토큰화하기-단어로-쪼개기">
+        <span class="has-mr-6">6</span>
+        <span>트위터 프로필을 토큰화하기 (단어로 쪼개기)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#토큰화-함수-DataFrame에-적용하기">
+        <span class="has-mr-6">6.1</span>
+        <span>토큰화 함수 DataFrame에 적용하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#명사수가-N개-이상인-프로필만-추출하기">
+        <span class="has-mr-6">6.2</span>
+        <span>명사수가 N개 이상인 프로필만 추출하기</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#문장의-벡터-Mean-각-단어의-벡터">
+        <span class="has-mr-6">7</span>
+        <span>문장의 벡터 = Mean(각 단어의 벡터)</span>
+        </a></li><li>
+        <a class="is-flex" href="#트위터-프로필-문장-벡터로-클러스터링하기">
+        <span class="has-mr-6">8</span>
+        <span>트위터 프로필 문장 벡터로 클러스터링하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#차원-축소-amp-시각화">
+        <span class="has-mr-6">9</span>
+        <span>차원 축소 & 시각화</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#TSNE-차원축소">
+        <span class="has-mr-6">9.1</span>
+        <span>TSNE 차원축소</span>
+        </a></li><li>
+        <a class="is-flex" href="#Bokeh로-2차원-Plotting">
+        <span class="has-mr-6">9.2</span>
+        <span>Bokeh로 2차원 Plotting</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#결과-보기">
+        <span class="has-mr-6">10</span>
+        <span>결과 보기</span>
+        </a></li><li>
+        <a class="is-flex" href="#맺으며">
+        <span class="has-mr-6">11</span>
+        <span>맺으며</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

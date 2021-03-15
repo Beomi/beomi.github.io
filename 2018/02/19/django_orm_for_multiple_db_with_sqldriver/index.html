@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>DjangoORM에서 SQL Driver 지정해 Query &amp; Pandas DataFrame 얻어내기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/django_orm_for_multiple_db_with_sqldriver.png" alt="DjangoORM에서 SQL Driver 지정해 Query &amp; Pandas DataFrame 얻어내기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-02-18T15:00:00.000Z">2018-02-19</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/tips/">tips</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                DjangoORM에서 SQL Driver 지정해 Query &amp; Pandas DataFrame 얻어내기
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>장고의 매력적인 기능 중 하나는 ORM을 통해 SQL을 직접 작성하지 않아도 된다는 점입니다. 즉, 우리가 파이썬 코드를 작성하면 모델 매니저와 SQL Driver를 거쳐 실제로 SQL문으로 만들어주는 일을 장고가 대신해줍니다.</p>
+<p>그리고 장고가 DB를 바라보는 방법은 <code>settings.py</code>파일 내 <code>DATABASE</code>설정 통합니다. 그리고 <code>default</code>로 설정된 데이터베이스를 참고해 ORM을 제공합니다. 하지만 이점은 장고 프로젝트 하나에서 여러 데이터베이스를 바라보며 사용할 경우 문제가 발생합니다.</p>
+<a id="more"></a>
+
+<p>만약 단순하게 모델의 특정 클래스만을 특정 데이터베이스를 바라보게 하려면 다음과 같이 <code>settings.py</code>를 작성할 수 있습니다.</p>
+<p>장고의 데이터베이스가 아래와 같이 <code>default</code>와 <code>anotherdb</code>로 두개가 있다고 가정해 봅시다. <code>default</code>는 MySQL을, <code>anotherdb</code>는 MSSQL을 사용합니다. (SQL 문법이 비슷하지만 약간 다릅니다.)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">'default'</span>: &#123;</span><br><span class="line">        <span class="string">'ENGINE'</span>: <span class="string">'django.db.backends.mysql'</span>, <span class="comment"># MYSQL</span></span><br><span class="line">        <span class="string">'NAME'</span>: <span class="string">'MYSQLDB'</span>,</span><br><span class="line">        <span class="string">'HOST'</span>: <span class="string">'localhost'</span>,</span><br><span class="line">        <span class="string">'USER'</span>: <span class="string">'dbuser'</span>,</span><br><span class="line">        <span class="string">'PASSWORD'</span>: <span class="string">'dbpassword'</span>,</span><br><span class="line">        <span class="string">'OPTIONS'</span>: &#123;</span><br><span class="line">            <span class="string">'sql_mode'</span>: <span class="string">'STRICT_TRANS_TABLES'</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'anotherdb'</span>: &#123;</span><br><span class="line">        <span class="string">'ENGINE'</span>: <span class="string">'sql_server.pyodbc'</span>, <span class="comment"># MSSQL</span></span><br><span class="line">        <span class="string">'HOST'</span>: <span class="string">'1.23.4.56'</span>, </span><br><span class="line">        <span class="string">'USER'</span>: <span class="string">'anotheruser'</span>,</span><br><span class="line">        <span class="string">'PASSWORD'</span>: <span class="string">'anotherpassword'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이와 같은 경우 모델 클래스별로 다른 DB를 사용하도록 커스텀 데이터베이스 라우터를 만들어 줄 수 있습니다. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py 내</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DatabaseRouter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">db_for_read</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> getattr(model, <span class="string">"_DATABASE"</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">db_for_write</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> getattr(model, <span class="string">"_DATABASE"</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">allow_relation</span><span class="params">(self, obj1, obj2, **hints)</span>:</span></span><br><span class="line">        db_list = (<span class="string">'default'</span>)</span><br><span class="line">        <span class="keyword">return</span> obj1._state.db <span class="keyword">in</span> db_list <span class="keyword">and</span> obj2._state.db <span class="keyword">in</span> db_list</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">allow_migrate</span><span class="params">(self, db, app_label, model_name=None, **hints)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> db == <span class="string">'default'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">DATABASE_ROUTERS = [</span><br><span class="line">    DatabaseRouter(),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>그리고 <code>models.py</code>파일에서는 아래와 같이 <code>_DATABASE</code>속성을 넣어주는 방법으로 라우터를 이용할 수 있습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># someapp/models.py</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    _DATABASE = <span class="string">'anotherdb'</span> <span class="comment"># 없으면 자동으로 'default' Fallback</span></span><br><span class="line"></span><br><span class="line">    title = models.CharField(max_length=<span class="number">200</span>)</span><br><span class="line">    content = models.TextField()</span><br></pre></td></tr></table></figure>
+
+<p>이후 아래와 같이 <code>Post</code> 모델의 모델매니저를 통해 액세스 할 경우 <code>anotherdb</code>를 이용하게 됩니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queryset = Post.objects.all() <span class="comment"># anotherdb로 연결</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="문제"><a href="#문제" class="headerlink" title="문제"></a>문제</h2><p>하지만 문제가 발생하는 부분이 있습니다. 만약 Queryset을 통해 실제 동작하는 query와 params를 알아내 pandas에서 SQL Query를 읽어 DataFrame 객체로 바꾸는 경우에는 아래와 같이 <code>queryset.query</code>로 쿼리에 접근하게 됩니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> connections</span><br><span class="line"></span><br><span class="line">queryset = Post.objects.all() <span class="comment"># QuerySet</span></span><br><span class="line">query, params = queryset.query.sql_with_params()</span><br><span class="line"><span class="comment"># df는 Pandas의 DataFrame가 된다.</span></span><br><span class="line">df = pd.read_sql_query(query, connections[<span class="string">'anotherdb'</span>], params=params)</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 <code>Post</code> 모델의 속성중 <code>_DATABASE</code>를 통해 커스텀 데이터베이스 라우터로 <code>anotherdb</code>를 바라보도록 만들어주었지만 실제 쿼리를 출력해 볼 경우 MSSQL 쿼리 대신 MySQL 쿼리로 나오는 것을 볼 수 있습니다. 따라서 동작시 에러가 발생합니다.</p>
+<h2 id="해결법"><a href="#해결법" class="headerlink" title="해결법"></a>해결법</h2><p>쿼리셋을 만들고 query 객체에 접근한 뒤 <code>.sql_with_params()</code> 대신 <code>.as_sql()</code>메소드를 이용해 <code>compiler</code>옵션에 해당 데이터베이스의 SQLCompiler 클래스를 직접 전달해주거나 혹은 문자열로 경로를 지정해준 뒤, <code>connection</code>에 실제 사용할 데이터베이스 명칭(<code>DATABASES</code>의 키값, 없으면 <code>default</code>가 됩니다.)을 넣어줍니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">query, params = queryset.query.as_sql(compiler=<span class="string">'sql_server.pyodbc.compiler.SQLCompiler'</span>, connection=connections[<span class="string">'anotherdb'</span>])</span><br><span class="line">df = pd.read_sql_query(query, connections[<span class="string">'anotherdb'</span>], params=params)</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>df</code>에 정상적으로 데이터가 들어온 DataFrame 객체가 만들어집니다.</p>
+<h2 id="편하게-씁시다-함수-만들기"><a href="#편하게-씁시다-함수-만들기" class="headerlink" title="편하게 씁시다, 함수 만들기"></a>편하게 씁시다, 함수 만들기</h2><p>매번 저렇게 커넥션을 처리해주는 것도 사실 귀찮은 일입니다. 그래서 간단하게 <code>to_df</code>라는 함수를 만들어 세가지 인자를 넣으면 처리할 수 있도록 해줍시다.</p>
+<ul>
+<li><code>queryset</code>: 장고의 QuerySet 혹은 raw SQL(str)</li>
+<li><code>using</code>: <code>settings.py</code>에 등록한 DB이름(‘default’, ‘anotherdb’등)</li>
+<li><code>compiler</code>: 해당 DB의 SQLCompiler, <code>import</code>를 통해 가져온 실제 SQLCompiler 클래스 혹은 해당 경로의 문자열</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> df</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> connections</span><br><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> EmptyResultSet</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">to_df</span><span class="params">(queryset, using=None, compiler=None)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">if</span> type(queryset) == str: <span class="comment"># SQL이 문자열로 그대로 들어올 경우</span></span><br><span class="line">            query = queryset</span><br><span class="line">            params = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> using: <span class="comment"># 어떤 DB를 사용할지 지정한다면..</span></span><br><span class="line">                con = connections[using]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                con = connections[<span class="string">'default'</span>]</span><br><span class="line">            <span class="keyword">if</span> compiler: <span class="comment"># 어떤 SQLCompiler를 사용할지 지정한다면..</span></span><br><span class="line">                query, params = queryset.query.as_sql(compiler=compiler, connection=con)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                query, params = queryset.query.sql_with_params()</span><br><span class="line">    <span class="keyword">except</span> EmptyResultSet: <span class="comment"># 만약 쿼리셋의 결과가 비어있다면 빈 DataFrame 반환</span></span><br><span class="line">        <span class="keyword">return</span> pd.DataFrame()</span><br><span class="line">    <span class="keyword">if</span> using: <span class="comment"># 어떤 DB를 사용할지 지정했다면 해당 DB connection 이용</span></span><br><span class="line">        df = pd.read_sql_query(query, connections[using], params=params)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        df = pd.read_sql_query(query, connection, params=params)</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/02/26/PySpark-Read-Parquet-ignoreCorruptedFiles/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">PySpark: 손상된 parquet파일 무시하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/02/12/Add-packages-installed-with-pip-usermode/">
+                <span class="level-item">user mode로 설치한 pip 패키지 PATH에 등록하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

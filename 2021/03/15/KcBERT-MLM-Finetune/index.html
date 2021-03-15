@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>KcBERT MLM Finetune으로 Domain adaptation하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/nlp/">nlp</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                KcBERT MLM Finetune으로 Domain adaptation하기
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>BERT와 GPT등 여러 Transformer 기반의 Pretrained model을 통해 보다 쉬운 Transfer learning이 가능하다.</p>
+<p>게다가 우리에게는 Huggingface🤗 Transformers 라이브러리를 통해 훨씬 쉽게 downstream task에 여러 모델들을 적용하고/테스트 해 볼 수 있다.</p>
+<p>한편, 이와 같은 사전학습된 모델을 적용할 때, 기존 학습된 Corpus의 도메인(ex: 댓글)과 Downstream task에 사용하는 도메인(ex: 금융)이 일치하지 않을 경우 전반적으로 성능이 높지 않게 나오기도 한다.</p>
+<p>이뿐만 아니라, 특정 도메인에서 사용하는 Vocab이 Sub-word로 쪼개지는 이슈로 인해 전체적으로 Transformer model에 부하가 가는(학습이 잘 안되는) 상황도 생기게 된다.</p>
+<p>따라서 이번 튜토리얼에서는 Pretrained BERT모델 중 댓글로 학습한 KcBERT를 새로운 도메인 Corpus로 MLM 학습을 추가로 진행해본다.</p>
+<p>(용어로는 Domain Adaptive Pretraining이라고 부른다. aka DAPT)</p>
+<blockquote>
+<p>이 튜토리얼은 아래 Github gist와 Colab에서 직접 실행해볼 수 있습니다.</p>
+</blockquote>
+<p>Colab: <a href="https://colab.research.google.com/gist/Beomi/972c6442a9c15a22dfd1903d0bb0f577/2021-03-15-kcbert-mlm-finetune-with-petition-dataset.ipynb">https://colab.research.google.com/gist/Beomi/972c6442a9c15a22dfd1903d0bb0f577/2021-03-15-kcbert-mlm-finetune-with-petition-dataset.ipynb</a></p>
+<p>Github Gist: <a href="https://gist.github.com/Beomi/972c6442a9c15a22dfd1903d0bb0f577">https://gist.github.com/Beomi/972c6442a9c15a22dfd1903d0bb0f577</a></p>
+<a id="more"></a>
+
+<h2 id="꼭-DAPT를-해야할까-처음부터-학습하면-안되나"><a href="#꼭-DAPT를-해야할까-처음부터-학습하면-안되나" class="headerlink" title="꼭 DAPT를 해야할까? 처음부터 학습하면 안되나?"></a>꼭 DAPT를 해야할까? 처음부터 학습하면 안되나?</h2><p>사실 최근 컴퓨팅 파워 자체가 무척 많이 올라가면서 BERT-base정도 규모의 학습은(데이터셋 규모와 사용 가능한 컴퓨팅 파워에 따라 다르지만) TPUv3-8 기준 짧게는 1주, 길게는 한달 내외로 학습이 가능하다. </p>
+<p>원하는 도메인과 원하는 task에 해당하는 데이터셋이 수십GB만큼 있다면, 오히려 Pretrain from scratch를 하는 것이 더 좋을 수 있다. (<a href="/2020/02/26/Train-BERT-from-scratch-on-colab-TPU-Tensorflow-ver/">Colab에서 TPU로 BERT 처음부터 학습시키기 - Tensorflow/Google ver.</a> 글을 참고해보자.)</p>
+<p>하지만 실제로는 관련 도메인의 데이터셋을 GB단위로 구하는 것조차 매우 어렵다. 수집 뿐 아니라 데이터셋에 달린 권리의 문제 등 여러가지 이슈가 따라오기 때문.</p>
+<p>따라서 연구를 위해 구할 수 있는 최대한의 규모의 corpus를 제작하되, 기존에 학습된 PLM 모델을 통해 성능을 보다 레버리징 하는 것이 낫다.</p>
+<h2 id="옵션-Vocab을-바꿔서-성능을-높이자"><a href="#옵션-Vocab을-바꿔서-성능을-높이자" class="headerlink" title="(옵션) Vocab을 바꿔서 성능을 높이자"></a>(옵션) Vocab을 바꿔서 성능을 높이자</h2><p>BERT등 Transformer계열의 모델뿐만 아니라 대부분의 embedding이 사용되는 NLP 모델에서 공통적으로 보이는 한계 중 하나가 vocab의 한계, 그리고 주로 <code>[UNK]</code> 로 대표되는 OOV문제다.</p>
+<p>이를 해결하기 위해 BPE(CBPE/BBPE) 계열의 Sub-word tokenization이 제안되고 실제로도 높은 성능을 보여주지만, 근본적으로 특정 도메인에서 나타나는 단어들이 수많은 Subword로 쪼개져 Pretrain된 모델에서도 해당 단어의 representation이 제대로 나타나지 않는 현상을 보여준다.</p>
+<p>따라서 특정 모델에서는 <code>[unused01]</code> 와 같이 ‘미사용 토큰’을 만들어 downstream task에 finetuning을 진행할 때 해당 부분을 도메인에서 중요한 토큰으로 변환해서 사용할 수도 있다.</p>
+<p>이번 과정을 진행할 때 KcBERT 모델에서 사용하는 emoji중 일부를 원하는 도메인의 특정 단어들로 바꾸어 사용해도 성능이 오를 수 있다.</p>
+<h2 id="KcBERT-PLM-MLM-Finetune하기"><a href="#KcBERT-PLM-MLM-Finetune하기" class="headerlink" title="KcBERT PLM MLM Finetune하기"></a>KcBERT PLM MLM Finetune하기</h2><p>Pretrained KcBERT(base) 모델을 MLM task로 새 데이터셋에 추가적으로 학습을 시켜보자.</p>
+<h3 id="필요한-패키지-설치"><a href="#필요한-패키지-설치" class="headerlink" title="필요한 패키지 설치"></a>필요한 패키지 설치</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -q Korpora emoji soynlp kss transformers <span class="string">"datasets &gt;= 1.1.3"</span> <span class="string">"sentencepiece != 0.1.92"</span> protobuf</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Korpora: 예제 데이터셋 다운받기</li>
+<li>emoji: Unicode emoji 목록 받아오기</li>
+<li>soynlp: KcBERT에서 진행했던 것과 동일하게 데이터 클리닝을 위해 사용</li>
+<li>kss: 예제 데이터셋에서 문단을 문장단위로 분리하기</li>
+<li>transformers: MLM학습을 위해 사용<ul>
+<li>datasets, sentencepiece, protobuf는 transformers에서 필요</li>
+</ul>
+</li>
+</ul>
+<h3 id="예시-데이터셋-받고-정제하기"><a href="#예시-데이터셋-받고-정제하기" class="headerlink" title="예시 데이터셋 받고 정제하기"></a>예시 데이터셋 받고 정제하기</h3><p>이번 글에서는 Korean petitions dataset(국민청원 데이터셋)을 받아, 본문만 뽑아서 학습을 시켜본다.</p>
+<p>국민청원 데이터셋의 전체 크기는 약 43만건이 넘지만, 이 중에서 청원 동의 수가 1000건이 넘은 데이터만 필터링해서 사용해보자. (실제로는 전체를 사용해도 괜찮다.)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Korpora <span class="keyword">import</span> Korpora</span><br><span class="line"></span><br><span class="line">Korpora.fetch(<span class="string">'korean_petitions'</span>, root_dir=<span class="string">'./Korpora'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>위 코드로 데이터셋을 현재 폴더 내 <code>Korpora</code> 폴더에 다운받을 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> glob <span class="keyword">import</span> glob</span><br><span class="line"></span><br><span class="line">dataset = glob(<span class="string">'./Korpora/korean_petitions/petitions*'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>실제로 받아진 데이터셋은 <code>jsonl</code> 형식으로, Line-By-Line으로 된 json이다.</p>
+<p>pandas로 데이터셋을 읽어 <code>content</code> 컬럼만 뽑아서 사용해보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> tqdm.auto <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line">df = pd.concat([pd.read_json(i, lines=<span class="literal">True</span>) <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(dataset)])</span><br><span class="line">df.head()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/image-20210315155159078.png" alt="국민청원 데이터셋 샘플"></p>
+<p>데이터셋을 읽어 pandas dataframe으로 만들면 위와 같이 데이터를 볼 수 있다.</p>
+<p>우선 <code>num_agree</code>, 즉 청원 수가 1000 초과인 것만 남겨두자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">agreed_df = df[df[<span class="string">'num_agree'</span>] &gt; <span class="number">1000</span>]</span><br></pre></td></tr></table></figure>
+
+<p>이 과정을 거치면 데이터셋이 약 3700개로 줄어든다.</p>
+<p>그리고 KcBERT에서 사용하는 <code>clean</code> 함수를 그대로 가져오자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> emoji</span><br><span class="line"><span class="keyword">from</span> soynlp.normalizer <span class="keyword">import</span> repeat_normalize</span><br><span class="line"></span><br><span class="line">emojis = <span class="string">''</span>.join(emoji.UNICODE_EMOJI.keys())</span><br><span class="line">pattern = re.compile(<span class="string">f'[^ .,?!/@$%~％·∼()\x00-\x7Fㄱ-ㅣ가-힣<span class="subst">&#123;emojis&#125;</span>]+'</span>)</span><br><span class="line">url_pattern = re.compile(</span><br><span class="line">    <span class="string">r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]&#123;1,256&#125;\.[a-zA-Z0-9()]&#123;1,6&#125;\b([-a-zA-Z0-9()@:%_\+.~#?&amp;//=]*)'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clean</span><span class="params">(x)</span>:</span></span><br><span class="line">    x = pattern.sub(<span class="string">' '</span>, x)</span><br><span class="line">    x = url_pattern.sub(<span class="string">''</span>, x)</span><br><span class="line">    x = x.strip()</span><br><span class="line">    x = repeat_normalize(x, num_repeats=<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+<p>위 함수는 emoji를 살리고, URL을 제거하며, 한글과 영어, 그리고 일반적으로 사용하는 특수문자를 제외하고 모두 공백으로 치환한다.</p>
+<p>위 클리닝을 거친 <code>contents</code> 컬럼을 python list로 뽑아내자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">contents = agreed_df[<span class="string">'content'</span>].map(clean).to_list()</span><br></pre></td></tr></table></figure>
+
+<h3 id="KSS로-문장-분리"><a href="#KSS로-문장-분리" class="headerlink" title="KSS로 문장 분리"></a>KSS로 문장 분리</h3><p>위에서 추출한 각 본문은 문장별로 쪼개져 있지 않다. 따라서 KSS 라이브러리를 이용해 문장단위로 데이터를 분리해준다.</p>
+<p>분리해준 데이터는 <code>korean_petitions_safe.txt</code> 파일에 한 문장씩 써지고, 문서별 <code>\n\n</code> 으로 문서를 분리해줄 수 있다. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> kss <span class="keyword">import</span> split_sentences</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">'korean_petitions_safe.txt'</span>):</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'korean_petitions_safe.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> doc <span class="keyword">in</span> tqdm(contents):</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> split_sentences(doc, safe=<span class="literal">True</span>):</span><br><span class="line">                f.write(line+<span class="string">'\n'</span>)</span><br><span class="line">            f.write(<span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>문서를 분리해주면 BERT의 NSP task를 수행할 수 있다. 문서 분리가 이뤄지지 않으면 사실상 MLM만 학습이 이뤄진다.</p>
+</blockquote>
+<p>이렇게 문장을 분리해줘야 KcBERT의 max_length인 300자 이내로 문장들이 줄여진다.</p>
+<h3 id="Huggingface로-MLM-학습하기"><a href="#Huggingface로-MLM-학습하기" class="headerlink" title="Huggingface로 MLM 학습하기"></a>Huggingface로 MLM 학습하기</h3><p>Github에서 <code>run_mlm.py</code> 파일을 받아서 학습을 진행해주자.</p>
+<p>아래 코드는 <code>beomi/kcbert-base</code> 모델을 받아 vocab 수정 없이 위에서 만든 txt 파일을 기반으로 학습을 진행하는 명령어다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget -nc https://raw.githubusercontent.com/huggingface/transformers/4c32f9f26e6a84f0d9843fec8757e6ce640bb44e/examples/language-modeling/run_mlm.py</span><br><span class="line"></span><br><span class="line">python run_mlm.py \</span><br><span class="line">    --model_name_or_path beomi/kcbert-base \</span><br><span class="line">    --train_file korean_petitions_safe.txt \</span><br><span class="line">    --do_train \</span><br><span class="line">    --output_dir ./<span class="built_in">test</span>-mlm</span><br></pre></td></tr></table></figure>
+
+<p>실제로 실행시 아래와 같은 로그가 나타나며 Loss값이 잘 떨어지면서 학습이 정상적으로 이루어지는 것을 볼 수 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[...생략...]</span><br><span class="line">[INFO|trainer.py:837] 2021-03-15 05:39:33,828 &gt;&gt; ***** Running training *****</span><br><span class="line">[INFO|trainer.py:838] 2021-03-15 05:39:33,828 &gt;&gt;   Num examples &#x3D; 7159</span><br><span class="line">[INFO|trainer.py:839] 2021-03-15 05:39:33,828 &gt;&gt;   Num Epochs &#x3D; 3</span><br><span class="line">[INFO|trainer.py:840] 2021-03-15 05:39:33,828 &gt;&gt;   Instantaneous batch size per device &#x3D; 8</span><br><span class="line">[INFO|trainer.py:841] 2021-03-15 05:39:33,828 &gt;&gt;   Total train batch size (w. parallel, distributed &amp; accumulation) &#x3D; 8</span><br><span class="line">[INFO|trainer.py:842] 2021-03-15 05:39:33,828 &gt;&gt;   Gradient Accumulation steps &#x3D; 1</span><br><span class="line">[INFO|trainer.py:843] 2021-03-15 05:39:33,828 &gt;&gt;   Total optimization steps &#x3D; 2685</span><br><span class="line">&#123;&#39;loss&#39;: 2.7071, &#39;learning_rate&#39;: 4.068901303538175e-05, &#39;epoch&#39;: 0.56&#125;</span><br><span class="line"> 19% 500&#x2F;2685 [01:39&lt;07:14,  5.03it&#x2F;s][INFO|trainer.py:1408] 2021-03-15 05:41:13,197 &gt;&gt; Saving model checkpoint to .&#x2F;test-mlm&#x2F;checkpoint-500</span><br><span class="line">[INFO|configuration_utils.py:304] 2021-03-15 05:41:13,199 &gt;&gt; Configuration saved in .&#x2F;test-mlm&#x2F;checkpoint-500&#x2F;config.json</span><br><span class="line">[INFO|modeling_utils.py:817] 2021-03-15 05:41:14,457 &gt;&gt; Model weights saved in .&#x2F;test-mlm&#x2F;checkpoint-500&#x2F;pytorch_model.bin</span><br><span class="line">&#123;&#39;loss&#39;: 2.5856, &#39;learning_rate&#39;: 3.13780260707635e-05, &#39;epoch&#39;: 1.12&#125;</span><br><span class="line"> 37% 1000&#x2F;2685 [03:23&lt;05:34,  5.03it&#x2F;s][INFO|trainer.py:1408] 2021-03-15 05:42:57,398 &gt;&gt; Saving model checkpoint to .&#x2F;test-mlm&#x2F;checkpoint-1000</span><br><span class="line">[INFO|configuration_utils.py:304] 2021-03-15 05:42:57,399 &gt;&gt; Configuration saved in .&#x2F;test-mlm&#x2F;checkpoint-1000&#x2F;config.json</span><br><span class="line">[INFO|modeling_utils.py:817] 2021-03-15 05:42:58,615 &gt;&gt; Model weights saved in .&#x2F;test-mlm&#x2F;checkpoint-1000&#x2F;pytorch_model.bin</span><br><span class="line">&#123;&#39;loss&#39;: 2.5064, &#39;learning_rate&#39;: 2.206703910614525e-05, &#39;epoch&#39;: 1.68&#125;</span><br><span class="line"> 56% 1500&#x2F;2685 [05:07&lt;03:53,  5.07it&#x2F;s][INFO|trainer.py:1408] 2021-03-15 05:44:41,722 &gt;&gt; Saving model checkpoint to .&#x2F;test-mlm&#x2F;checkpoint-1500</span><br><span class="line">[INFO|configuration_utils.py:304] 2021-03-15 05:44:41,723 &gt;&gt; Configuration saved in .&#x2F;test-mlm&#x2F;checkpoint-1500&#x2F;config.json</span><br><span class="line">[INFO|modeling_utils.py:817] 2021-03-15 05:44:42,948 &gt;&gt; Model weights saved in .&#x2F;test-mlm&#x2F;checkpoint-1500&#x2F;pytorch_model.bin</span><br><span class="line">&#123;&#39;loss&#39;: 2.4143, &#39;learning_rate&#39;: 1.2756052141527003e-05, &#39;epoch&#39;: 2.23&#125;</span><br><span class="line">[...생략...]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>참고: MultiGPU환경에서는 자동으로 DDP로 학습이 이뤄지며, GPU 갯수에 비례하는 batch size로 학습이 이루어진다.</p>
+</blockquote>
+<blockquote>
+<p>참고: 학습이 완료된 뒤 <code>AttributeError: &#39;Trainer&#39; object has no attribute &#39;log_metrics&#39;</code> 라는 에러가 발생할 수 있다. 하지만 학습 자체는 정상적으로 이뤄진 것이기에 걱정하지 않아도 된다.</p>
+</blockquote>
+<h3 id="학습-완료된-파일들"><a href="#학습-완료된-파일들" class="headerlink" title="학습 완료된 파일들"></a>학습 완료된 파일들</h3><p>학습 과정에는 <code>./test-mlm/checkpoint-숫자/</code> 폴더 내에 각 step별 정보가 남는다.</p>
+<p>학습이 완료된 이후에는 <code>./test-mlm/</code> 폴더 내에 weight파일과 vocab, 그리고 여러 Huggingface 관련 config 파일들이 생긴다.</p>
+<p>Checkpoint 폴더를 제외한 나머지를 Huggingface Hub에 업로드해 새로운 모델로 사용할 수 있다.</p>
+<blockquote>
+<p>(참고링크) Huggingface에 모델 업로드하기: <a href="https://huggingface.co/transformers/model_sharing.html">https://huggingface.co/transformers/model_sharing.html</a></p>
+</blockquote>
+<h2 id="Reference-Links"><a href="#Reference-Links" class="headerlink" title="Reference/Links"></a>Reference/Links</h2><ul>
+<li>KcBERT: <a href="https://github.com/Beomi/KcBERT">https://github.com/Beomi/KcBERT</a></li>
+<li><a href="https://arxiv.org/abs/2004.10964">Don’t Stop Pretraining: Adapt Language Models to Domains and Tasks</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/bert/" rel="tag">bert</a>, <a class="has-link-grey -link" href="/tags/huggingface/" rel="tag">huggingface</a>, <a class="has-link-grey -link" href="/tags/kcbert/" rel="tag">kcbert</a>, <a class="has-link-grey -link" href="/tags/mlm/" rel="tag">mlm</a>, <a class="has-link-grey -link" href="/tags/transformers/" rel="tag">transformers</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/03/16/KcBERT-Downstream-Finetune/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">KcBERT Finetune with PyTorch-Lightning v1.3.0</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/12/04/Transformers4/">
+                <span class="level-item">BertForSequenceClassification on Transformers v4.0.0</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#들어가며">
+        <span class="has-mr-6">1</span>
+        <span>들어가며</span>
+        </a></li><li>
+        <a class="is-flex" href="#꼭-DAPT를-해야할까-처음부터-학습하면-안되나">
+        <span class="has-mr-6">2</span>
+        <span>꼭 DAPT를 해야할까? 처음부터 학습하면 안되나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#옵션-Vocab을-바꿔서-성능을-높이자">
+        <span class="has-mr-6">3</span>
+        <span>(옵션) Vocab을 바꿔서 성능을 높이자</span>
+        </a></li><li>
+        <a class="is-flex" href="#KcBERT-PLM-MLM-Finetune하기">
+        <span class="has-mr-6">4</span>
+        <span>KcBERT PLM MLM Finetune하기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#필요한-패키지-설치">
+        <span class="has-mr-6">4.1</span>
+        <span>필요한 패키지 설치</span>
+        </a></li><li>
+        <a class="is-flex" href="#예시-데이터셋-받고-정제하기">
+        <span class="has-mr-6">4.2</span>
+        <span>예시 데이터셋 받고 정제하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#KSS로-문장-분리">
+        <span class="has-mr-6">4.3</span>
+        <span>KSS로 문장 분리</span>
+        </a></li><li>
+        <a class="is-flex" href="#Huggingface로-MLM-학습하기">
+        <span class="has-mr-6">4.4</span>
+        <span>Huggingface로 MLM 학습하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#학습-완료된-파일들">
+        <span class="has-mr-6">4.5</span>
+        <span>학습 완료된 파일들</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Reference-Links">
+        <span class="has-mr-6">5</span>
+        <span>Reference/Links</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

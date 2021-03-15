@@ -1,0 +1,2864 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-3-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/07/12/understanding_js_scope_function_vs_arrow/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/understanding_js_scope_function_vs_arrow.png" alt="자바스크립트: function declaration와 Arrow Function의 this 스코프 차이">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-11T15:00:00.000Z">2017-07-12</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/javascript/">javascript</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/07/12/understanding_js_scope_function_vs_arrow/">자바스크립트: function declaration와 Arrow Function의 this 스코프 차이</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 포스팅은 ES6 JavaScript 대상입니다.</p>
+</blockquote>
+<p>자바스크립트가 ES6로 개정되며 새로 들어온 것 중 <code>Arrow Function</code>이라는 것이 있습니다. <code>() =&gt; {}</code>의 모양을 갖고 있고 동작하는 것도 비슷하게 보입니다.</p>
+<p>하지만 기존의 <code>function() {}</code> 함수형태를 1:1로 바로 변환할 수 있는 것은 아닙니다.</p>
+<h2 id="this-arguments의-바인딩이-다르다"><a href="#this-arguments의-바인딩이-다르다" class="headerlink" title="this, arguments의 바인딩이 다르다."></a><code>this</code>, <code>arguments</code>의 바인딩이 다르다.</h2><p><code>Arrow Function</code>은 <code>this</code> 바인딩을 갖지 않습니다. 기존의 <code>function</code>에서 <code>this</code>의 탐색 범위가 함수의 <code>{}</code> 안에서 찾은 반면 <code>Arrow Function</code>에서 <code>this</code>는 일반적인 인자/변수와 동일하게 취급됩니다. 따라서 아래와 같은 상황이 발생합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// function()&#123;&#125;방식으로 호출할 때</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">objFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Inside `objFunction`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    foo: <span class="number">25</span>,</span><br><span class="line">    bar: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Inside `bar`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">objFunction.call(&#123;<span class="attr">foo</span>: <span class="number">13</span>&#125;).bar(); <span class="comment">// objFunction의 `this`를 오버라이딩합니다.</span></span><br></pre></td></tr></table></figure>
+
+<p>위 결과는 아래와 같습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside <span class="string">`objFunction`</span>: <span class="number">13</span> <span class="comment">// 처음에 인자로 전달한 값을 받음</span></span><br><span class="line">Inside <span class="string">`bar`</span>: <span class="number">25</span> <span class="comment">// 자신이 있는 Object를 this로 인지해서 25를 반환</span></span><br></pre></td></tr></table></figure>
+
+<p>우리가 기대한 그대로 나옵니다. </p>
+<p>하지만 <code>Arrow Function</code>을 실행하면 이야기가 약간 달라집니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Arrow Function방식으로 호출할 때</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">objFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Inside `objFunction`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    foo: <span class="number">25</span>,</span><br><span class="line">    bar: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Inside `bar`:'</span>, <span class="keyword">this</span>.foo),</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">objFunction.call(&#123;<span class="attr">foo</span>: <span class="number">13</span>&#125;).bar(); <span class="comment">// objFunction의 `this`를 오버라이딩합니다.</span></span><br></pre></td></tr></table></figure>
+
+<p>위 코드의 결과는 아래와 같습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside <span class="string">`objFunction`</span>: <span class="number">13</span> <span class="comment">// 처음에 인자로 전달한 값을 받음</span></span><br><span class="line">Inside <span class="string">`bar`</span>: <span class="number">13</span> <span class="comment">// Arrow Function에서 this는 일반 인자로 전달되었기 때문에 이미 값이 13로 지정됩니다.</span></span><br></pre></td></tr></table></figure>
+
+<p>즉, Arrow Function 안의 <code>this</code>는 <code>objFunction</code>의 <code>this</code>가 됩니다.</p>
+<p>그리고 이 ArrowFunction은 <code>this</code>의 Scope를 바꾸고 싶지 않을 때 특히 유용합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ES5 function에서는 `this` Scope가 function안에 들어가면 변하기 때문에 새로운 변수를 만들어 씁니다.</span></span><br><span class="line"><span class="keyword">var</span> someVar = <span class="keyword">this</span>;</span><br><span class="line">getData(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  someVar.data = data;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 Arrow Function에서는 `this` Scope의 변화가 없기 때문에 `this`를 그대로 사용하면 됩니다.</span></span><br><span class="line">getData(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.data = data;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 Arrow Function에서는 <code>.bind</code> method와 <code>.call</code> method를 사용할 수 없습니다.</p>
+<p>즉, 비슷하게 보이지만 실제로 동작하는 것이 다르기 때문에 사용하는 때를 구별하는 것이 필요합니다.</p>
+<h2 id="Arrow-Function은-new로-호출할-수-없다"><a href="#Arrow-Function은-new로-호출할-수-없다" class="headerlink" title="Arrow Function은 new로 호출할 수 없다"></a>Arrow Function은 <code>new</code>로 호출할 수 없다</h2><p>ES6에서 함수는 <code>callable</code>한 것과 <code>constructable</code>한 것의 차이를 두고 있습니다.</p>
+<p>만약 어떤 함수가 constructable하다면 <code>new</code>로 만들어야 합니다. 반면 함수가 callable하다면 일반적인 함수처럼 <code>함수()</code>식으로 호출하는 것이 가능합니다.</p>
+<p><code>function newFunc() {}</code>와 <code>const newFunc = function() {}</code>와 같은 방식으로 만든 함수는 <code>callable</code>하며 동시에 <code>constructable</code>합니다. 하지만 Arrow Function(<code>() =&gt; {}</code>)은 <code>callable</code>하지만 <code>constructable</code>하지 <strong>않기</strong>때문에 호출만 가능합니다.</p>
+<p>ps. ES6의 <code>class</code>는 <code>constructable</code>하지만 <code>callable</code>하지 않습니다.</p>
+<h2 id="정리"><a href="#정리" class="headerlink" title="정리"></a>정리</h2><p>함수 정의 방식을 바꿔서 사용할 수 있는 경우는 다음과 같습니다.</p>
+<ul>
+<li><code>this</code>나 <code>arguments</code>를 사용하지 않는 경우</li>
+<li><code>.bind(this)</code>를 사용하는 경우</li>
+</ul>
+<p>함수 정의 방식을 바꿔서 사용할 수 <strong>없는</strong> 경우는 다음과 같습니다.</p>
+<ul>
+<li><code>new</code>등을 사용하는 constructable한 함수</li>
+<li><code>prototype</code>에 덧붙여진 함수나 method들(보통 <code>this</code>를 사용합니다.)</li>
+<li><code>arguments</code>를 함수의 인자로 사용한 경우</li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/07/10/Ubuntu-Locale-to-ko_KR/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/ubuntu_logo_512.png" alt="Ubuntu Locale 한글로 바꾸기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-09T15:00:00.000Z">2017-07-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/ubuntu/">ubuntu</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/07/10/Ubuntu-Locale-to-ko_KR/">Ubuntu Locale 한글로 바꾸기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드는 Ubuntu 12/14/16에 적용되는 가이드입니다.</p>
+</blockquote>
+<h2 id="Locale이란"><a href="#Locale이란" class="headerlink" title="Locale이란?"></a>Locale이란?</h2><p>Locale이란 세계 각 나라에서 가지고 있는 언어, 날짜, 시간 등에 관해 i18n(국제화)를 통해 같은 프로그램이더라도 OS별로 설정되어있는 것에 따라 어떤 방식으로 출력할지 결정하게 되는 것을 말합니다.</p>
+<p>Locale은 단순히 언어 번역뿐만 아니라 시간과 날짜등을 표시하는 형태도 결정하게 되는데요, 예를들어 한국에서 <code>2017년 7월 10일</code>이라고 표현한다면 미국에서 <code>07/10/2017</code>와 같은 형식으로 표현할 수도 있는 것이죠. 영국이라면 <code>10/07/2017</code>이라고 표현할 수 있는 것 처럼요.</p>
+<p>이와 같이 프로그래머가 한 코드에서 각 국가와 언어권에 맞도록 출력 형태를 결정하도록 OS에서 안내해 주는 것이 Locale입니다.</p>
+<h2 id="한국의-Locale"><a href="#한국의-Locale" class="headerlink" title="한국의 Locale"></a>한국의 Locale</h2><p>한국의 Locale은 보통 <code>ko_KR.UTF-8</code>로 사용합니다. 만약 많이 오래된 서버라면 <code>ko_KR.EUC-KR</code>일 수도 있어요.</p>
+<h2 id="Ubuntu의-기본-Locale"><a href="#Ubuntu의-기본-Locale" class="headerlink" title="Ubuntu의 기본 Locale"></a>Ubuntu의 기본 Locale</h2><p>만약 여러분이 AWS나 Vultr등의 외국 회사에서 제공하는 우분투 이미지를 사용하고 있다면 아마 기본 설정은 <code>en-US.UTF-8</code>일 가능성이 큽니다. 그리고 만약 여러분이 미국권에서 사용하는 형식에 익숙하다면 (그리고 프로그램에서도 Locale이슈가 없다면) 이 설정을 굳이 한글로 바꾸실 필요는 없습니다. 하지만 가끔 업체마다 Locale정보를 공란으로 둔 이미지를 제공하는 경우가 있습니다. 그런 경우 기본값으로 한국어 UTF-8을 이용하는 것은 나쁘지 않은 선택입니다.</p>
+<h2 id="Ubuntu에-Locale변경하기"><a href="#Ubuntu에-Locale변경하기" class="headerlink" title="Ubuntu에 Locale변경하기"></a>Ubuntu에 Locale변경하기</h2><p>우선 여러분의 우분투에 깔린 Locale을 확인하려면 아래와 같은 명령어를 입력하면 됩니다:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">locale</span><br></pre></td></tr></table></figure>
+
+<p>우분투에서 Locale을 변경하는 방법은 아래와 같습니다. 먼저 한글 패키지를 설치해 주세요.(이미 깔려있을수도 있습니다.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install language-pack-ko</span><br></pre></td></tr></table></figure>
+
+<p>그 다음으로는 <code>locale-gen</code>을 통해 Locale을 설치해 줍시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo locale-gen ko_KR.UTF-8</span><br></pre></td></tr></table></figure>
+
+<p>다음으로 <code>dpkg-reconfigure</code>을 이용하는 방법입니다. 아래와 같이 명령어를 쳐 주시고 나오는 화면에서 <code>ko_KR.UTF-8</code>을 스페이스로 선택(*모양이 뜨면 선택된 것입니다)후 엔터를 눌러 설정을 마무리 해 주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure locales</span><br></pre></td></tr></table></figure>
+
+<p>마지막으로 <code>update-locale</code>으로 시스템 LANG설정을 업데이트 해 줍시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo update-locale LANG=ko_KR.UTF-8 LC_MESSAGES=POSIX</span><br></pre></td></tr></table></figure>
+
+<p>이 방법을 사용하면 시스템에서 자동으로 LANG에 지정된 한국어 UTF-8로 Locale세팅을 마무리해 줍니다.</p>
+<p>다른 방법으로는 직접 시스템 파일을 수정해주는 방법이 있습니다.</p>
+<p><code>/etc/default/locale</code> 파일을 수정하는 것인데요, <code>nano</code>나 <code>vim</code>등으로 아래와 같이 내용을 수정해주시면 됩니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LANG=ko_KR.UTF-8</span><br><span class="line">LC_MESSAGES=POSIX</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="끝났어요"><a href="#끝났어요" class="headerlink" title="끝났어요!"></a>끝났어요!</h2><p>이 세 가지 방법 모두 시스템에 로그아웃 후 SSH로 재 접속시 적용됩니다. (서버를 Reboot하는 것도 괜찮습니다.)</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/07/07/Beautify-ZSH/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Beautify-ZSH.png" alt="멋진 Terminal 만들기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-06T15:00:00.000Z">2017-07-07</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/macos/">macos</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/07/07/Beautify-ZSH/">멋진 Terminal 만들기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드는 macOS를 위한 가이드입니다.</p>
+</blockquote>
+<p>맥을 개발용으로 사용하는 경우 터미널을 좀 더 편리하고 다양하게 사용하는 방법 중 기본 Shell인 <code>bash</code>대신 <code>zsh</code>을 사용하는 경우가 많습니다. 그리고 <code>oh-my-zsh</code>을 함께 사용해 더 많은 기능을 편리하게 깔수 있기도 합니다. 물론 <code>oh-my-zsh</code>의 기본 테마인 <code>robbyrussell</code>도 예쁘지만, 약간 아쉬운 점이 남기도 하죠. 좀 더 예쁘고 사용하고싶어지는 기분이 들도록 <code>agnoster</code>테마를 깔고 <code>Oceanic Next</code>색 테마를 입힌 후 터미널에서 사용하는 명령어가 제대로 쳤는지 확인해주는 <code>zsh-syntax-highlighting</code>를 깔아봅시다. 참, 터미널은 <code>iTerm2</code>라는 멋진 맥용 터미널을 먼저 깔아야 해요.</p>
+<blockquote>
+<p>앞으로 나오는 가이드는 이미 깐 경우 Pass해주시면 됩니다.</p>
+</blockquote>
+<h2 id="iTerm2-설치하기"><a href="#iTerm2-설치하기" class="headerlink" title="iTerm2 설치하기"></a><a href="https://www.iterm2.com/downloads.html">iTerm2</a> 설치하기</h2><div style="text-align: center;">
+<img src="/img/iTerm2_logo.jpg" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>우선 <a href="https://www.iterm2.com/downloads.html">iTerm2 다운로드 페이지</a>에 들어가서 iTerm2를 받아주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/iTerm2_download.png" alt="iTerm2 Download Page"></p>
+<p>Stable Releases중 최신 버전을 받아주세요. 다운 받은 후 압축을 풀면 iTerm2라는 맥 앱이 생길거에요. 맥 파인더에서 ‘응용 프로그램’으로 iTerm2를 옮겨주세요.</p>
+<h2 id="HomeBrew-설치하기"><a href="#HomeBrew-설치하기" class="headerlink" title="HomeBrew 설치하기"></a><a href="https://brew.sh/">HomeBrew</a> 설치하기</h2><div style="text-align: center;">
+<img src="/img/homebrew_logo.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>우분투의 APT와 비슷하게 프로그램 패키지를 관리해 주는 프로그램이 있습니다. 바로 <code>HomeBrew</code>라는 프로그램인데요, <code>brew</code>라는 명령어로 패키지를 관리할 수 있습니다.</p>
+<blockquote>
+<p>HomeBrew 공식 홈페이지는 <a href="https://brew.sh/">https://brew.sh/</a>입니다.</p>
+</blockquote>
+<p>아래 명령어를 터미널에 입력해주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Zsh-설치하기"><a href="#Zsh-설치하기" class="headerlink" title="Zsh 설치하기"></a>Zsh 설치하기</h2><div style="text-align: center;">
+<img src="/img/zsh.jpg" style="display:inline-block;max-height: 250px">
+</div>
+
+<p><code>zsh</code>은 <code>bash</code>에 추가적인 명령어를 추가하고 편의성을 개선한 새로운 쉘입니다. 한가지 예로 <code>git</code> 폴더 상태를 관리해주고 터미널에 상태를 나타내주는 점 등이 있습니다.</p>
+<p>zsh은 위에서 설치한 <code>brew</code>를 통해 설치할 수 있습니다. 아래 명령어를 터미널에 입력해 주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install zsh</span><br></pre></td></tr></table></figure>
+
+<h2 id="OhMyZsh-설치하기"><a href="#OhMyZsh-설치하기" class="headerlink" title="OhMyZsh 설치하기"></a>OhMyZsh 설치하기</h2><div style="text-align: center;">
+<img src="/img/ohmyzsh_logo.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p><code>oh-my-zsh</code>은 <code>zsh</code>을 좀 더 편리하게 이용하게 이용해주는 일종의 <code>zsh</code> 플러그인입니다. <code>oh-my-zsh</code>은 아래 명령어를 통해 설치할 수 있습니다. 터미널에 아래 명령어를 입력해주세요.</p>
+<blockquote>
+<p>OhMyZsh을 설치하면 기본 쉘을 <code>zsh</code>로 바꾸기 위해 맥 잠금해제 암호를 물어봅니다. 암호 입력시에는 입력해도 <code>*</code>같은 표시는 뜨지 않으니 그냥 입력하고 엔터를 눌러주세요!</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Oceanic-Next-iTerm-색-테마-입히기"><a href="#Oceanic-Next-iTerm-색-테마-입히기" class="headerlink" title="Oceanic Next iTerm 색 테마 입히기"></a><a href="https://github.com/mhartington/oceanic-next-iterm">Oceanic Next iTerm</a> 색 테마 입히기</h2><div style="text-align: center;">
+<img src="/img/oceanic_next_color_scheme.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p><code>oceanic-next-iterm</code>을 이용해 터미널의 색 테마를 바꿔봅시다. 우선 <a href="https://github.com/mhartington/oceanic-next-iterm/archive/master.zip">master.zip</a> 파일을 받아줍시다.</p>
+<p><code>master.zip</code>파일의 압축을 풀어주면 <code>Oceanic-Next.itermcolors</code>파일을 보실 수 있으실텐데요, 이 파일을 더블클릭으로 실행하면 iTerm2의 색 테마에 추가가 됩니다.</p>
+<div style="text-align: center;">
+<img src="/img/Oceanic-Next.itermcolors.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>iTerm2를 실행하고 맥 화면 상단 좌측의 사과 아이콘 옆 iTerm2를 누르고 나오는 메뉴 중 ‘Preferences…’를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Oceanic-Next.itermcolors2.png" alt=""></p>
+<p>이제 위 스크린샷처럼 Profiles &gt; Default &gt; Colors &gt; Color Presets… &gt; Oceanic-Next 로 차례대로 눌러주신 후 iTerm2를 껐다가 켜면 적용이 완료되어있을 거랍니다.</p>
+<h2 id="Agnoster-테마-설치하기"><a href="#Agnoster-테마-설치하기" class="headerlink" title="Agnoster 테마 설치하기"></a>Agnoster 테마 설치하기</h2><div style="text-align: center;">
+<img src="/img/agnoster.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>이제 우리 zsh의 테마를 위 스크린샷처럼 <code>Agnoster</code>테마로 바꿔줍시다!</p>
+<p>텍스트 편집기(vi, sublimetext3, atom등)로 <code>~/.zshrc</code>파일을 열어주세요.</p>
+<p>만약 <code>.zshrc</code>파일에 특별한 수정을 하지 않았다면 10번째줄 처럼 <code>ZSH_THEME</code>를 설정하는 코드가 보일거에요. 이 줄을 아래 스크린 샷처럼 바꿔주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZSH_THEME=<span class="string">"agnoster"</span></span><br></pre></td></tr></table></figure>
+
+<div style="text-align: center;">
+<img src="/img/agnoster.zshrc.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>이제 새 탭을 열면 Agnoster테마로 바뀐 쉘이 보일거에요! 하지만 이렇게 하면 폰트가 일부 깨진답니다. 아래 Ubuntu Mono Powerline폰트를 받아 설정을 진행해주세요.</p>
+<h2 id="Ubuntu-Mono-derivative-Powerline-폰트-설치-amp-설정하기"><a href="#Ubuntu-Mono-derivative-Powerline-폰트-설치-amp-설정하기" class="headerlink" title="Ubuntu Mono derivative Powerline 폰트 설치 &amp; 설정하기"></a>Ubuntu Mono derivative Powerline 폰트 설치 &amp; 설정하기</h2><div style="text-align: center;">
+<img src="/img/Ubuntu_Mono_derivative_Powerline.png" style="display:inline-block;max-height: 250px">
+</div>
+
+
+<p>우선 <a href="/others/Ubuntu_Mono_derivative_Powerline.ttf">Ubuntu_Mono_derivative_Powerline.ttf</a>를 다운받아 서체 설치를 진행해 주세요.</p>
+<p>서체 설치가 완료되면 iTerm2를 다시 실행해 주세요.</p>
+<blockquote>
+<p>주의: 서체 설치 전 iTerm2이 켜져있었다면 완전히 종료 후 다시 켜 주세요. 켜져있는 상태에서 설정에 들어간다면 설치한 폰트가 뜨지 않을 수 있습니다!</p>
+</blockquote>
+<div style="text-align: center;">
+<img src="/img/Oceanic-Next.itermcolors.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>위에서 Oceanic Next 테마를 설치한 것과 같이 위 스크린샷처럼 Preferences..에 들어가 주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/iTerm2_Ubuntu_Mono1.png" alt=""></p>
+<p>그리고 위 사진처럼 Profiles &gt; Default &gt; Text &gt; ChangeFont를 눌러주세요. 그러면 아래와 같은 창이 뜹니다. 시스템에 깔린 모든 폰트가 나오기 때문에 ‘고정폭’을 먼저 선택하고 폰트를 선택해 주세요.</p>
+<div style="text-align: center;">
+<img src="/img/iTerm2_Ubuntu_Mono2.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<h2 id="zsh-syntax-highlighting-설치하기"><a href="#zsh-syntax-highlighting-설치하기" class="headerlink" title="zsh-syntax-highlighting 설치하기"></a>zsh-syntax-highlighting 설치하기</h2><div style="text-align: center;">
+<img src="/img/zsh-syntax-highlighting.png" style="display:inline-block;max-height: 250px">
+</div>
+
+<p>이제 시스템의 <code>PATH</code>에 등록된 명령어들을 자동으로 Syntax HighLighting을 해주는 <code>zsh-syntax-highlighting</code>를 설치해 봅시다.</p>
+<p>아래 명령어 두줄을 터미널에 입력해 주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"source <span class="variable">$&#123;(q-)PWD&#125;</span>/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"</span> &gt;&gt; <span class="variable">$&#123;ZDOTDIR:-$HOME&#125;</span>/.zshrc</span><br></pre></td></tr></table></figure>
+
+<h2 id="수고하셨습니다-D"><a href="#수고하셨습니다-D" class="headerlink" title="수고하셨습니다 :D"></a>수고하셨습니다 :D</h2><p>이제 모두 끝났습니다!! iTerm2를 완전히 종료한 후 다시 실행해 보면 잘 작동되는 것을 보실 수 있으실거에요!</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/crawling_with_multiprocessing.png" alt="나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing!">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-04T15:00:00.000Z">2017-07-05</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/">나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing!</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>이전 가이드: <a href="/2017/04/20/HowToMakeWebCrawler-Notice-with-Telegram/">나만의 웹 크롤러 만들기(5): 웹페이지 업데이트를 알려주는 Telegram 봇</a></p>
+</blockquote>
+<h2 id="들어가기전"><a href="#들어가기전" class="headerlink" title="들어가기전.."></a>들어가기전..</h2><p>나만의 웹 크롤러 만들기 6번째 가이드는 크롤링을 병렬화를 통해 빠르게 진행하는 방법을 안내합니다.</p>
+<p>지금까지 만들어온 크롤러들은 모두 한번에 하나의 요청만을 처리하고 있습니다. 물론 지금까지 따라오셨다면 충분히 크롤러들을 여러분의 의도에 맞게 잘 수정해서 사용해보셨을거라 생각합니다.</p>
+<p>하지만 한 페이지만을 여유로운 시간을 갖고 크롤링하는 것이 아니라 여러 사이트 혹은 여러 페이지를 좀더 빠르게 긁어오는 방법에는 역시 N개를 띄우는 방법이 제일 낫다고 볼 수 있습니다.</p>
+<p>만약 100만개의 페이지가 있다면 1<del>25만/25만1</del>50만/50만1<del>75만/75만1</del>100만와 같이 4개로 쪼개서 돌린다면 더 빠르게 도는 것은 당연합니다.</p>
+<p>하지만 전달해주는 페이지의 목록이나 페이지 숫자에 직접 저 수들을 입력하는 것은 상당히 귀찮은 일이기도 하고, 크롤링이 ‘자동화’를 위한 것이라는 면에 반하는 측면도 있습니다. 따라서 우리는 Python 자체에 내장된 병렬화 모듈을 사용할 예정입니다.</p>
+<p>Python을 이용할 때 프로그램을 병렬적으로 처리하는 방법은 여러가지가 있습니다. 하지만 우리가 하는 일은 연산이 아니고 IO와 네트워크가 가장 큰 문제이기 때문에 <code>multiprocessing</code>을 사용합니다.</p>
+<blockquote>
+<p><code>threading</code> 모듈도 사용 가능합니다. 하지만 <code>multiprocessing</code>모듈을 추천합니다. <code>threading</code>모듈은 싱글 프로세스 안의 스레드에서 동작하지만 이로인해 GIL의 제약에 걸리는 경우가 생기기 때문에 성능 향상에 제약이 있습니다. (물론 우리는 CPU 연산보다 IO/네트워크로 인한 지연이 훨씬 크기 때문에 큰 차이는 없습니다.)</p>
+</blockquote>
+<h2 id="멀티프로세스란"><a href="#멀티프로세스란" class="headerlink" title="멀티프로세스란?"></a>멀티프로세스란?</h2><p>프로세스란 ‘실행 중인 프로그램’을 의미합니다. 간단하게 말해 멀티프로세스는 프로세스를 여러개 띄우는 것, 즉 프로그램을 여러개 실행시키는 것이라고 볼 수 있습니다.</p>
+<p>Python에는 멀티프로세싱 프로그램을 위한 모듈이 <code>multiprocessing</code>이라는 이름으로 내장되어 있습니다. </p>
+<p>가장 단순한 예시로, 임의의 숫자 리스트 (ex: <code>[20, 25, 30, 35]</code>)를 받고 그 자리의 피보나치 수를 구해주는 프로그램이 있다고 가정해 봅시다.</p>
+<p>만약 for문을 통해 리스트를 순회하며 계산한다면 아래와 같이 코드를 짤 수 있습니다.</p>
+<blockquote>
+<p>주의: 명백한 코드 실행 시간 차이를 보여주기 위한 느린 코드입니다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibo</span><span class="params">(n)</span>:</span> <span class="comment"># 회귀적 피보나치 함수</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fibo(n<span class="number">-1</span>) + fibo(n<span class="number">-2</span>)</span><br><span class="line"></span><br><span class="line">num_list = [<span class="number">31</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>]</span><br><span class="line">result_list = []</span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> num_list:</span><br><span class="line">    result_list.append(fibo(num))</span><br><span class="line"></span><br><span class="line">print(result_list)</span><br><span class="line">print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<p>실행을 해보면 다음과 같이 약 7s가 걸리는 것을 볼 수 있습니다. 너무 오래걸리네요.</p>
+<script type="text/javascript" src="https://asciinema.org/a/c6iRt6q82WDuFruFfcFlmmrjn.js" id="asciicast-c6iRt6q82WDuFruFfcFlmmrjn" async></script>
+
+<p>그렇다면 <code>multiprocessing</code>을 이용하면 어떨까요?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibo</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fibo(n<span class="number">-1</span>) + fibo(n<span class="number">-2</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_fibo</span><span class="params">(n)</span>:</span> <span class="comment"># 피보나치 결과를 확인합니다.</span></span><br><span class="line">    print(fibo(n))</span><br><span class="line"></span><br><span class="line">num_list = [<span class="number">31</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>]</span><br><span class="line">    </span><br><span class="line">pool = Pool(processes=<span class="number">4</span>) <span class="comment"># 4개의 프로세스를 사용합니다.</span></span><br><span class="line">pool.map(print_fibo, num_list) <span class="comment"># pool에 일을 던져줍니다.</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<p>실행을 해 봅시다!</p>
+<script type="text/javascript" src="https://asciinema.org/a/gwOTuBQgs11J6ckOlgIERAdF5.js" id="asciicast-gwOTuBQgs11J6ckOlgIERAdF5" async></script>
+
+<p>확실히 빨라진 모습을 볼 수 있습니다. 3s, 즉 절반정도로 줄어든 것을 확인 할 수 있습니다.</p>
+<h2 id="크롤링-병렬화-하기"><a href="#크롤링-병렬화-하기" class="headerlink" title="크롤링 병렬화 하기"></a>크롤링 병렬화 하기</h2><p>이번 가이드에서는 위에서 사용한 모듈인 <code>multiprocessing</code>을 이용해 진행합니다. 크롤링은 위에서 사용한 것처럼 연산집중적이지 않습니다. 그래서 크롤링하는 함수를 만들어두었다면 그 함수를 그대로 사용하시면 됩니다.</p>
+<p>이번 가이드에서는 첫번째 가이드에서 사용했던 함수를 약간 변형해 사용해 봅니다.</p>
+<h3 id="하나씩-크롤링-하기"><a href="#하나씩-크롤링-하기" class="headerlink" title="하나씩 크롤링 하기"></a>하나씩 크롤링 하기</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links</span><span class="params">()</span>:</span> <span class="comment"># 블로그의 게시글 링크들을 가져옵니다.</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data.append(title.get(<span class="string">'href'</span>))</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_content</span><span class="params">(link)</span>:</span></span><br><span class="line">    abs_link = <span class="string">'https://beomi.github.io'</span>+link</span><br><span class="line">    req = requests.get(abs_link)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    <span class="comment"># 가져온 데이터로 뭔가 할 수 있겠죠?</span></span><br><span class="line">    <span class="comment"># 하지만 일단 여기서는 시간만 확인해봅시다.</span></span><br><span class="line">    print(soup.select(<span class="string">'h1'</span>)[<span class="number">0</span>].text) <span class="comment"># 첫 h1 태그를 봅시다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    <span class="keyword">for</span> link <span class="keyword">in</span> get_links():</span><br><span class="line">        get_content(link)</span><br><span class="line">    print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<p>약 7.3s가 걸리는 것을 아래에서 확인해 볼 수 있습니다.</p>
+<script type="text/javascript" src="https://asciinema.org/a/WgPLMFdo60dedeMD7PO53uyNZ.js" id="asciicast-WgPLMFdo60dedeMD7PO53uyNZ" async></script>
+
+<h3 id="Multiprocessing으로-병렬-크롤링하기"><a href="#Multiprocessing으로-병렬-크롤링하기" class="headerlink" title="Multiprocessing으로 병렬 크롤링하기"></a>Multiprocessing으로 병렬 크롤링하기</h3><p>이제 좀더 빠른 크롤링을 위해 병렬화를 도입해 봅시다.</p>
+<p><code>multiprocessing</code>에서 <code>Pool</code>을 import 해 줍시다.</p>
+<p>그리고 pool에 <code>get_content</code>함수를 넣어 줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool <span class="comment"># Pool import하기</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links</span><span class="params">()</span>:</span> <span class="comment"># 블로그의 게시글 링크들을 가져옵니다.</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data.append(title.get(<span class="string">'href'</span>))</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_content</span><span class="params">(link)</span>:</span></span><br><span class="line">    abs_link = <span class="string">'https://beomi.github.io'</span>+link</span><br><span class="line">    req = requests.get(abs_link)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    <span class="comment"># 가져온 데이터로 뭔가 할 수 있겠죠?</span></span><br><span class="line">    <span class="comment"># 하지만 일단 여기서는 시간만 확인해봅시다.</span></span><br><span class="line">    print(soup.select(<span class="string">'h1'</span>)[<span class="number">0</span>].text) <span class="comment"># 첫 h1 태그를 봅시다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    pool = Pool(processes=<span class="number">4</span>) <span class="comment"># 4개의 프로세스를 사용합니다.</span></span><br><span class="line">    pool.map(get_content, get_links()) <span class="comment"># get_contetn 함수를 넣어줍시다.</span></span><br><span class="line">    print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<script type="text/javascript" src="https://asciinema.org/a/yITked7NP4bM7nPaAZM4CcIYF.js" id="asciicast-yITked7NP4bM7nPaAZM4CcIYF" async></script>
+
+<p>약 2.8초로 약 3~4배의 속도 향상이 있었습니다.</p>
+<h2 id="마무리-및-팁"><a href="#마무리-및-팁" class="headerlink" title="마무리 및 팁"></a>마무리 및 팁</h2><p>멀티프로세싱으로 크롤링을 할 때 유의할 점은 Pool을 생성시 <code>processes</code>의 개수가 많다고 빠르지는 않다는 점을 유의하셔야 합니다.</p>
+<p>두번째 parser.py파일을 실행 시 process를 4개인 경우 2.8s, 8개로 할 때 1.85s, 16개로 할 때 0.96s, 32개로 할 때 0.63s로 속도 향상이 두드러집니다. 하지만 64개로 할 때는 오히려 1.30s로 속도 지연이 발생합니다. 프로세스는 CPU코어(Hyper-Thread인 경우 2배) 개수의 2배(ex: 4코어 i5는 8개, 4코어8스레드인 i7은 16개)로 하면 가장 빠르지는 않지만 적당히 빠른 속도를 가져다줍니다.</p>
+<p>다음으로는 웹 사이트에서 이러한 공격적 크롤링을 차단할 수 있다는 문제입니다. 잘 관리되는 사이트의 경우 이와 같은 공격적 크롤링은 사실 시스템 관리자에게 있어서는 공격 시도와 같이 보일 수 있기 때문에 적당한 속도를 유지하며 <code>robots.txt</code>를 존중해주는 것이 중요합니다.</p>
+<p>무작정 빠르게 긁는다고 빠르지 않은 점에는 이 코드를 실행하는 컴퓨터의 네트워크 환경 자체가 제약이 되기도 합니다. 만약 핫스팟이나 테더링을 이용하거나 인터넷 속도에 제약을 받는 환경에서 이러한 작업을 돌린다면 오히려 네트워크쪽 문제로 인해 에러나 지연이 발생할 가능성이 높습니다. 이런 경우에는 <code>processes</code>개수를 2~4개로 맞춰서 크롤링을 진행하는 것이 최적의 속도를 이끌어낼 수도 있습니다.</p>
+<p>다음 가이드에서는 실제 명령어를 받아 사용자들의 정보를 저장하고 사용자들에게 실제로 유용한 정보(예: 글 제목과 링크)를 보내주는 내용으로 진행할 예정입니다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/07/04/Call-Sublime-from-Terminal/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/sublimetext.jpg" alt="서브라임텍스트 터미널에서 실행하기(macOS)">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-03T15:00:00.000Z">2017-07-04</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/macos/">macos</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/07/04/Call-Sublime-from-Terminal/">서브라임텍스트 터미널에서 실행하기(macOS)</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드는 macOS 용입니다.</p>
+</blockquote>
+<h2 id="들어가기-전"><a href="#들어가기-전" class="headerlink" title="들어가기 전"></a>들어가기 전</h2><h3 id="프로그램의-설치-경로"><a href="#프로그램의-설치-경로" class="headerlink" title="프로그램의 설치 경로"></a>프로그램의 설치 경로</h3><p>macOS에 프로그램을 설치하면 기본적으로 <code>/Users/유저이름/Library</code>(<code>~/Library</code>와 같음)에 위치합니다. 사용자의 Library에 저장되는 이 경로는 root 권한 없이도 응용프로그램을 추가하거나 제거하는 것이 가능합니다.</p>
+<h3 id="터미널에서-실행되는-경로-PATH"><a href="#터미널에서-실행되는-경로-PATH" class="headerlink" title="터미널에서 실행되는 경로, PATH"></a>터미널에서 실행되는 경로, <code>PATH</code></h3><p>대부분의 운영체제에서는 <code>PATH</code>가 있습니다. 그리고 이 <code>PATH</code>에 등록된 경로는 시스템 전역에서 호출 가능한 위치가 됩니다. 예를들어 <code>PATH</code>에 등록된 경로 중 <code>/usr/local/bin</code>폴더가 있었다면 아래와 같이 <code>python</code>명령어를 실행할 경우 <code>/usr/local/bin/python</code>에 있는 파이썬이 실행됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜ ~ <span class="built_in">which</span> python</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/python</span><br></pre></td></tr></table></figure>
+
+<p>그리고 기본적으로 <code>/usr/local/bin</code>폴더는 사용자 터미널의 PATH에 등록되어있습니다. 따라서 SublimeText3(혹은 2) 실행 프로그램을 <code>ln -s</code>명령어를 통해 <code>/usr/local/bin</code>폴더에 심볼릭 링크를 걸어줘야 합니다.</p>
+<blockquote>
+<p>심볼릭 링크란? 파일을 이동하지 않고 어떤 위치에 바로가기를 하나 더 만드는 것입니다. 윈도우의 바로가기 아이콘과 비슷하다고 생각하시면 됩니다.</p>
+</blockquote>
+<h2 id="SublimeText가-깔렸는지-확인하기"><a href="#SublimeText가-깔렸는지-확인하기" class="headerlink" title="SublimeText가 깔렸는지 확인하기"></a>SublimeText가 깔렸는지 확인하기</h2><p>최신 버전의 sublimetext는 3버전입니다. 하지만 2버전도 유사한 방식으로 사용할 수 있습니다.</p>
+<p>우선 아래 명령어를 터미널에 입력할 경우 실행이 되는지 확인해보세요.</p>
+<blockquote>
+<p>코드를 그대로 복사해서 사용하세요!</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SublimeText3 의 경우</span></span><br><span class="line">open /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl</span><br><span class="line"><span class="comment"># SublimeText2 의 경우</span></span><br><span class="line">open /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어를 쳐서 서브라임 텍스트 창이 뜬 경우 아래 가이드를 따라가 주시면 됩니다.</p>
+<h2 id="심볼릭-링크-등록하기"><a href="#심볼릭-링크-등록하기" class="headerlink" title="심볼릭 링크 등록하기"></a>심볼릭 링크 등록하기</h2><p>우리는 <code>subl</code>이라는 명령어로 서브라임 텍스트 프로그램을 실행할 계획입니다.</p>
+<p>터미널에 아래와 같은 명령어를 입력해 주세요.</p>
+<p>SublimeText3인 경우:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/<span class="built_in">local</span>/bin/subl</span><br></pre></td></tr></table></figure>
+
+<p>SublimeText2인 경우:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl /usr/<span class="built_in">local</span>/bin/subl</span><br></pre></td></tr></table></figure>
+
+<h2 id="모두-끝났습니다"><a href="#모두-끝났습니다" class="headerlink" title="모두 끝났습니다!"></a>모두 끝났습니다!</h2><p>이제 터미널에서 <code>subl</code>이라는 명령어를 통해 서브라임 텍스트를 실행할 수 있습니다 :)</p>
+<p>그냥 서브라임텍스트를 실행하려면</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subl</span><br></pre></td></tr></table></figure>
+
+<p>현 폴더를 열려면</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subl .</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 <code>subl</code>뒤에 파일/폴더등을 인자로 전달해 줄 수 있습니다.</p>
+<blockquote>
+<p>만약 위 방식으로 되지 않으신다면 <code>.zshrc</code>이나 <code>.bashrc</code>등의 파일에 아래와 같이 입력해 주세요.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> subl=<span class="string">"open -a /Applications/Sublime\ Text.app"</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/07/03/Use-Shift-Space-for-Change-Language-on-macOS/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/macOS-sierra.jpg" alt="macOS 환경설정에서 Shift Space로 한영 전환하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-02T15:00:00.000Z">2017-07-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/macos/">macos</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/07/03/Use-Shift-Space-for-Change-Language-on-macOS/">macOS 환경설정에서 Shift Space로 한영 전환하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드는 macOS 10.12 Sierra 기준입니다.</p>
+</blockquote>
+<p>맥을 사용하다 보면 한영 전환키가 계속 바뀌어 불편함을 느끼는 경우가 많습니다. 처음에 알게 된 전환키를 익숙하게 쓰고, 특히 여러 OS를 번갈아가며 사용할 때에는 언어 전환 키를 통일해 사용하는 것이 편리합니다.</p>
+<p>물론 맥의 키보드 환경설정에서는 기본적으로 사용자가 원하는 키보드 조합을 통해 언어 전환을 할 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/macOS-keyboard-1.png" alt=""></p>
+<p>우선 키보드 전환 설정으로 들어가봅시다. 환경설정에서 키보드로 들어가주세요.</p>
+<p>키보드로 들어가신 후 아래 빨간 네모대로 클릭을 해 주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/macOS-keyboard-2.png" alt=""></p>
+<p>여기서 마지막 네모를 더블클릭하고 키를 입력하면 언어 변경키를 지정할 수 있는데요, 더블클릭 후 <code>Shift+Space</code>를 누르면 아무런 반응이 일어나지 않는걸 보실 수 있습니다.</p>
+<p>하지만 사실은 가능합니다!</p>
+<p>입력키 변경(입력키 부분 더블클릭시 변경 가능)을 할 때 <code>fn + shift + space</code>를 이용하면 위 사진와 같이 <code>Shift+Space</code>조합으로 이전 언어로 변경하기 키가 사용가능하도록 바뀐 것을 볼 수 있습니다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/21/Activate-MS-AzurePass/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass.jpg" alt="MS AzurePass 등록하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-06-20T15:00:00.000Z">2017-06-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/azure/">azure</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/21/Activate-MS-AzurePass/">MS AzurePass 등록하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>시작 전 MS계정이 모두 만들어져 있다고 가정합니다.</p>
+</blockquote>
+<h2 id="MS-AzurePass-애저패스-란"><a href="#MS-AzurePass-애저패스-란" class="headerlink" title="MS AzurePass(애저패스)란?"></a>MS AzurePass(애저패스)란?</h2><p>마이크로소프트에서는 자사 클라우드 서비스 Azure의 프로모 코드인 AzurePass를 행사등에 따라 발급해 줍니다.</p>
+<p>무료 크레딧의 경우 30일의 제약이 있고 해외결제가 가능한 카드가 필요하지만 AzurePass를 통해 등록할 경우 카드가 필요하지 않습니다.</p>
+<p>AzurePass에서는 월 100달러(한국 12만원)의 크레딧을 3개월간 제공해 줍니다.</p>
+<h2 id="AzurePass-등록하기"><a href="#AzurePass-등록하기" class="headerlink" title="AzurePass 등록하기"></a>AzurePass 등록하기</h2><blockquote>
+<p>유의) 아래 과정은 MS계정 가입과는 별도입니다. 계정이 없다면 가입을 먼저 진행해주세요!</p>
+</blockquote>
+<p>애저패스를 등록하기 위해서는 애저 공식 사이트가 아닌 애저패스의 사이트에서 진행해야 합니다.</p>
+<ul>
+<li><ol>
+<li><a href="https://www.microsoftazurepass.com/">애저패스 공식 사이트</a>에 들어가 주세요.</li>
+</ol>
+</li>
+</ul>
+<p>공식 사이트에 들어가시면 아래와 같은 화면이 나옵니다. Start버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass/azurepass01-start.png" alt=""></p>
+<ul>
+<li><ol start="2">
+<li>스타트 버튼을 누르면 아래와 같은 화면이 나옵니다. 받으신 애저패스의 번호를 입력해 주신 후, 아래의 Claim Promo Code를 눌러주세요. </li>
+</ol>
+</li>
+</ul>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass/azurepass02-input-promo.png" alt=""></p>
+<ul>
+<li><ol start="3">
+<li>Claim PromoCode버튼을 누르면 아래와 같은 화면이 나옵니다. 잠시 기다려 주세요.</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass/azurepass03-processing.png" alt=""></p>
+<ul>
+<li><ol start="4">
+<li>PromoCode의 등록이 완료되면 애저패스 활성화 버튼이 나옵니다. <code>Activate</code>버튼을 눌러주세요.</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass/azurepass04-redeemed-activate.png" alt=""></p>
+<ul>
+<li><ol start="5">
+<li><code>Activate</code> 버튼을 누르면 나오는 등록 화면입니다. 사용자 정보, 전화번호를 입력 후 구독계약에 동의후 ‘등록’버튼을 눌러주세요.</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass/azurepass05-register.png" alt=""></p>
+<ul>
+<li><ol start="6">
+<li>잠시 기다려주신 후 아래 화면을 보시면 성공적으로 등록이 완료된 것이랍니다.</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azurepass/azurepass06-finished.png" alt=""></p>
+<ul>
+<li><ol start="7">
+<li>이제 <a href="https://portal.azure.com">Azure Portal</a>으로 이동해 작업을 계속하세요!</li>
+</ol>
+</li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure.jpg" alt="Deploy Django to MS Azure with Fabric3">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-06-09T15:00:00.000Z">2017-06-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/fabric/">fabric</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/">Deploy Django to MS Azure with Fabric3</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>한국어 버전은 <a href="/2017/06/09/Deploy-Django-to-MS-Azure/">Django MS Azure에 Fabric으로 배포하기</a>에서 보실 수 있습니다.</p>
+</blockquote>
+<blockquote>
+<p>This guide covers about deploying <a href="https://tutorial.djangogirls.org/en/">DjangoGirls Tutorial</a> to MS Azure Virtual machine(Ubuntu 16.04 LTS) with Fabric3.</p>
+</blockquote>
+<p>You’re probably participant in <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial Workshop</a> and you’ll be now on ‘deploy’ step on it. </p>
+<p>Today we’re going to deploy our django project to <a href="http://azure.com">Azure</a> which is provided with MS.</p>
+<p>If you didnt’ register your <code>AzurePass</code> yet, please precede this guide first: <a href="/2017/06/21/Activate-MS-AzurePass/">Register Azure and redeem AzurePass</a></p>
+<h2 id="If-Windows-Using-cmder"><a href="#If-Windows-Using-cmder" class="headerlink" title="(If Windows) Using cmder"></a>(If Windows) Using <code>cmder</code></h2><p>You can’t use linux commands like <code>git</code> or <code>ssh</code> on your <code>cmd</code>, so we’re going to use great shell program which named <code>cmder</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-18%2010.30.18.png" alt=""></p>
+<p>First, click this link:<a href="https://github.com/cmderdev/cmder/releases/download/v1.3.2/cmder.zip">cmder.zip</a> to download cmder. (It may take times.)</p>
+<p>Second, unzip downloaded <code>cmder.zip</code> file. (It’ll take some times too.) And then you got this!:</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/1-folder.PNG" alt=""></p>
+<p>Execute <code>cmder.exe</code> in this folder. If you execute <code>cmder.exe</code> as a first time you’ll be see Security Warning like this: just click <code>RUN</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/2-securityWarning.PNG" alt=""></p>
+<p>And one time more, if you execute cmder for the first time, there will be another warning like this: click first option, “Unblock and continue”.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/3-UnblockBinaries.PNG" alt=""></p>
+<p>It’ll take some times when you run cmder first time. This wouln’t appear next time, so please wait for a moment!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/4-firstlook.PNG" alt=""></p>
+<p>If you see this, you’re ready to use <code>cmder</code> NOW!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/5-final.PNG" alt=""></p>
+<p>If you’re following DjangoGirls Tutorial, you probably made folder named <code>djangogirls</code>. Let’s get into it.</p>
+<blockquote>
+<p><code>cd</code> is command to ender the folder! Let’s get into <code>djangogirls</code> folder with <code>cd djangogirls</code>.</p>
+</blockquote>
+<p>Let’s start deploy then.</p>
+<h2 id="Deploy-Azure-Virtual-machine"><a href="#Deploy-Azure-Virtual-machine" class="headerlink" title="Deploy Azure Virtual machine"></a>Deploy Azure Virtual machine</h2><p>You’ll see this screen if you logged in to <a href="https://portal.azure.com/">Azure Portal</a>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.39.54.png" alt="Azure Portal Dashboard"></p>
+<p>Let’s make Virtual machine with clicking <code>VirtualComputer(가상 컴퓨터)</code> button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.41.09.png" alt=""></p>
+<p>Now let’s add Virtual machine with ‘+Add’ button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.41.22.png" alt=""></p>
+<p>If you click <code>+ Add</code> button, you’ll see another options which provides many OS. But  we’re going to use <code>Ubuntu Server</code> today.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.41.53.png" alt=""></p>
+<p>If you clicked Ubuntu Server there’ll be server lists like this: we’ll use <code>Ubuntu Server 16.04 LTS</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.42.10.png" alt=""></p>
+<p>Then you’ll see <code>Create</code> button. Click it!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.42.24.png" alt=""></p>
+<p>You’ll see configure window when you click <code>Create</code> button. Fillout blanks like picture lower.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.43.45.png" alt=""></p>
+<blockquote>
+<p>Username should be <code>django</code> (surelly this is not critical but you may encounter issues.</p>
+</blockquote>
+<blockquote>
+<p>You may set your password on your own, but it shoud be longer/equal than 12. Please remember not to reset it later.</p>
+</blockquote>
+<blockquote>
+<p>Select locaiton on Korea Centeral or SouthEast Asia(which available one).</p>
+</blockquote>
+<p>Now we have to choose server size. We’ll setup just one django server so we’ll choose <code>DS1_V2</code>, the left one.</p>
+<blockquote>
+<p>Don’t worry, you won’t be charged :)</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.46.03.png" alt=""></p>
+<p>Next step you have to setup storage settings. Just select <code>Use managed disks</code> to ‘Yes’.</p>
+<p>And then click <code>Network Security Group(Firewall)</code> settings. After click on it, you’ll see pre-configured setting <code>SSH (TCP/22)</code>. We’re going to add <code>HTTP (TCP/80)</code></p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.47.06.png" alt=""></p>
+<p>Click <code>+ Inbound Rule add</code> Button, and fillout blanks like this and click OK button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.47.31.png" alt=""></p>
+<p>Now default settings are finished! Just click OK button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.47.57.png" alt=""></p>
+<p>And one more time, click confirm button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.18.png" alt=""></p>
+<p>And lastly, click confirm button more! I know you’re tired with confirm button, but this is process of Azure :)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.48.21.png" alt=""></p>
+<p>If you see your azure dashboard again like this, your server deployment is finished :)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.48.36.png" alt=""></p>
+<p>Please wait until your server is successfully installed! (This will take upto 5mins.)</p>
+<blockquote>
+<p>Your browser will redirected to your server info page when your server is successfully installed.</p>
+</blockquote>
+<h2 id="Get-Azure-Server-Configurations"><a href="#Get-Azure-Server-Configurations" class="headerlink" title="Get Azure Server Configurations"></a>Get Azure Server Configurations</h2><p>You can access to your server info with clicking server icon-which tells <code>Running</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.52.43.png" alt=""></p>
+<p>On this page you can see your server’s ‘Public IP Address’. <code>ip</code> is set of numbers which provides your computer access to internet. We can upload and deploy our django project through this ip.</p>
+<p>You can see this example server’s ip, <code>13.67.60.234</code>. Surelly we can access to our server with this numbers but we can’t remember easily with it.</p>
+<p>So we’re going to use <code>domain</code> like <code>djangogirls.com</code> to that <code>ip</code>.</p>
+<p>First of all, copy(CTRL+C) your virtual machine’s ip!</p>
+<h2 id="Get-free-domain-and-connect-to-Virtual-Machine"><a href="#Get-free-domain-and-connect-to-Virtual-Machine" class="headerlink" title="Get free domain and connect to Virtual Machine"></a>Get free domain and connect to Virtual Machine</h2><p>You may know about popular domains like <code>.com</code> or <code>.net</code>. But they are paid one(10 dollars per year) so we’re going to use free domain.</p>
+<p>Let’s go to <a href="http://dot.tk">Dot.tk</a>.</p>
+<p>This <a href="http://dot.tk">Dot.tk</a> provides <code>.tk</code> domains as free! I’ll check <code>djangogirls-seoul-tutorial-en.tk</code> as example. You should think of your own domain name and click <code>Check Availability</code>!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2013.05.00.png" alt=""></p>
+<p>Oh, it’s available! Just click ‘get it now’ button and add to cart.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.38.28.png" alt=""></p>
+<p>You’ll see this page when you clicked ‘checkout’ button. Just click ‘Use DNS’ button and input ip address of your virtual machine(azure) and click ‘Continue’.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2013.06.02.png" alt=""></p>
+<blockquote>
+<p>If you forgot ip address of your virtual machine, go to <a href="https://portal.azure.com">Azure portal</a> and check your machine’s ip again!</p>
+</blockquote>
+<p>You’ll see checkout page and you have to login. You can login with your social media account like Google or Facebook!</p>
+<blockquote>
+<p>Sometimes there are some errors(404 or others..) then you can restart from “Get free domain and connect to Virtual Machine” on this guide.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.40.52.png" alt=""></p>
+<p>If you successfully logined, you’ll see form to input your info, but you don’t have to fill it all. Just click Agress Terms and conditions and Conitnue button, your order will be finished!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.42.39.png" alt=""></p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.45.21.png" alt=""></p>
+<p>Great! You’ve just connect your own domain to your server!</p>
+<h2 id="Install-Fabric3"><a href="#Install-Fabric3" class="headerlink" title="Install Fabric3"></a>Install Fabric3</h2><p>Now your server is connected with <code>yourdomainname.tk</code> domain. But if you try to access to that address, you can see nothing at all. </p>
+<p>Because your server doesn’t have any django code and ofcourse, even django!</p>
+<p>We’ll upload and deploy our django project with just one command line through <code>Fabric3</code>.</p>
+<p>Let’s install <code>fabric3</code> on our computer. You can install <code>fabric3</code> with this command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fabric3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Remember: NOT <code>fabric</code> BUT <code>fabric3</code>! Don’t forget 3. <code>fabric</code> is python2 project.</p>
+</blockquote>
+<h2 id="Downlaod-fabfile-py-and-edit-deploy-json"><a href="#Downlaod-fabfile-py-and-edit-deploy-json" class="headerlink" title="Downlaod fabfile.py and edit deploy.json"></a>Downlaod <code>fabfile.py</code> and edit <code>deploy.json</code></h2><p>Download <a href="https://gist.github.com/Beomi/0cc830bd5cda029c277cba648386b28c/archive/0152df8617a63c6678b7b64c54892dc5b4ce19d8.zip">Fabfile for Django</a> and unzip it.</p>
+<p>You can see <code>deploy.json</code> and <code>fabfile.py</code> inside of it. Move 2 files into your django folder(where <code>manage.py</code> exists)</p>
+<p>Inside <code>deploy.json</code>, we can edit our server(virtual machine) info.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"REPO_URL"</span>:<span class="string">"Your Github Repository URL"</span>,</span><br><span class="line">  <span class="attr">"PROJECT_NAME"</span>:<span class="string">"DjangoProject folder's name(where settings.py exists)"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_HOST"</span>:<span class="string">"Your domain(ex: djangogirls-seoul-tutorial-en.tk )"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_USER"</span>:<span class="string">"django"</span>,</span><br><span class="line">  <span class="attr">"STATIC_ROOT"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"STATIC_URL"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"MEDIA_ROOT"</span>:<span class="string">"media"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Change <code>REPO_URL</code>, <code>PROJECT_NAME</code>, <code>REMOTE_HOST</code>. Other values are already setup for djangogirls tutorial we followed.</p>
+<blockquote>
+<p>Every values must be in “”!</p>
+</blockquote>
+<h2 id="Upload-and-deploy-code-thorugh-Fabric3"><a href="#Upload-and-deploy-code-thorugh-Fabric3" class="headerlink" title="Upload and deploy code thorugh Fabric3"></a>Upload and deploy code thorugh Fabric3</h2><p>We can use fabric through <code>fab</code> command. Like this: <code>fab new_server</code>, <code>fab deploy</code>, <code>fab create_superuser</code>. This commands will execute commands on remote server(azure virtual machine which we made)</p>
+<p>When you use fabric for new server, just type this command and execute: <code>fab new_server</code>. this will install python3, apache2, and mod_wsgi to run django.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab new_server</span><br></pre></td></tr></table></figure>
+
+<p>When you edit django code and committed &amp; pushed to github, then use <code>fab deploy</code> command. This will fetch latest code on github and migrate db.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab deploy</span><br></pre></td></tr></table></figure>
+
+<p>When you want to create superuser, just execute <code>fab create_superuser</code> and there’ll be creating superuser prompt.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab create_superuser</span><br></pre></td></tr></table></figure>
+
+<h2 id="Whoa"><a href="#Whoa" class="headerlink" title="Whoa!"></a>Whoa!</h2><p>You’ve just upload and deploy <strong>REAL</strong> working web service on Azure! Congratulation!</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/09/Deploy-Django-to-MS-Azure/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure.jpg" alt="Django MS Azure에 Fabric으로 배포하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-06-08T15:00:00.000Z">2017-06-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/fabric/">fabric</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/09/Deploy-Django-to-MS-Azure/">Django MS Azure에 Fabric으로 배포하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>If you looking for English version, goto <a href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/">Deploy Django to MS Azure with Fabric3</a>.</p>
+</blockquote>
+<blockquote>
+<p>이번 가이드에서는 <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial</a>를 Fabric으로 Azure 가상 컴퓨터(Ubuntu16.04LTS)에 올리는 과정을 다룹니다.</p>
+</blockquote>
+<p>지금 이 글을 읽고 있는 분들은 아마 장고걸즈 워크숍에 참가해 <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial</a>을 따라가다 이제 <code>배포</code>를 해볼 단계에 도착하셨을거에요.</p>
+<p>오늘 우리가 만들어본(만들고 있는) Django 프로젝트를 MS가 서비스하는 <a href="http://azure.com">Azure(애저)</a>에 배포해보는 시간을 가져볼거에요.</p>
+<p>만약 여러분이 <code>AzurePass</code>를 아직 계정에 등록하지 않았다면, <a href="/2017/06/21/Activate-MS-AzurePass/">Azure 가입하고 AzurePass 등록하기</a>를 먼저 진행해 주세요.</p>
+<h2 id="윈도우의-경우-cmder-설치하기"><a href="#윈도우의-경우-cmder-설치하기" class="headerlink" title="(윈도우의 경우) cmder 설치하기"></a>(윈도우의 경우) <code>cmder</code> 설치하기</h2><p>윈도우에서는 <code>git</code>와 <code>ssh</code>등의 명령어를 <code>cmd</code>에서 바로 사용할 수 없어요. 그래서 우리는 <code>cmder</code>라는 멋진 프로그램을 사용할 거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-18%2010.30.18.png" alt=""></p>
+<p>우선 <a href="https://github.com/cmderdev/cmder/releases/download/v1.3.2/cmder.zip">cmder.zip</a>을 클릭해 cmder를 받아주세요. (84MB정도라 시간이 조금 걸릴거에요.)</p>
+<p>다운받은 <code>cmder.zip</code> 파일의 압축을 풀어주세요.(이것도 시간이 조금 걸릴거에요.) 그러면 다음과 같은 내용이 보일거에요. </p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/1-folder.PNG" alt=""></p>
+<p>여기 있는 <code>cmder.exe</code> 파일을 실행해주세요. 실행하면 아래와 같은 Security Warning이 뜰 수 있어요. <code>RUN</code>을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/2-securityWarning.PNG" alt=""></p>
+<p>만약 여러분이 cmder를 처음 실행하신다면 아래와 같은 워닝이 뜰거에요. 제일 첫번째 옵션인 “Unblock and continue”를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/3-UnblockBinaries.PNG" alt=""></p>
+<p>첫 실행시 아래 화면에서 약간 시간이 걸릴 수 있어요. 다음번 실행부터는 뜨지 않을테니 잠시만 기다려주세요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/4-firstlook.PNG" alt=""></p>
+<p>아래 화면이 뜨면 여러분이 멋진 cmder를 쓸 준비를 마친거랍니다!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/5-final.PNG" alt=""></p>
+<p>장고걸즈 튜토리얼을 따라오는 중이시라면 <code>djangogirls</code>라는 폴더를 만드셨을거에요.</p>
+<blockquote>
+<p>폴더로 이동하는 명령어가 <code>cd</code>입니다! <code>cd djangogirls</code>라고 입력해주세요.</p>
+</blockquote>
+<p>이제 배포를 진행해볼게요.</p>
+<h2 id="Azure-가상컴퓨터-만들기"><a href="#Azure-가상컴퓨터-만들기" class="headerlink" title="Azure 가상컴퓨터 만들기"></a>Azure 가상컴퓨터 만들기</h2><p><a href="https://portal.azure.com/">Azure Portal</a>에 들어가 로그인 하시면 아래와 같은 화면을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.07.02.png" alt="Azure Portal 초기 대시보드"></p>
+<p>이제 대시보드 왼쪽의 메뉴에서 <code>가상 컴퓨터</code>를 눌러보시면 아래와 같은 화면이 나옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.10.34.png" alt=""></p>
+<p>이제 가상 컴퓨터를 추가해봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.11.19.png" alt=""></p>
+<p><code>+ 추가</code> 버튼을 눌러주시면 아래와 같은 수많은 선택지가 나오는데요, 우리는 그 중에서 <code>Ubuntu Server</code>(우분투 서버)를 사용할거랍니다. <code>Ubuntu Server</code>를 클릭해주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.12.02.png" alt=""></p>
+<p>우분투 서버를 클릭하면 아래와 같이 서버 버전들이 나옵니다. 우리는 오늘 <code>Ubuntu Server 16.04 LTS</code>를 사용할거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.13.01.png" alt=""></p>
+<p>우분투 서버 16.04를 선택하고 나면 아래와 같이 <code>만들기</code> 버튼이 나올거에요. 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.14.29.png" alt=""></p>
+<p>만들기 버튼을 누르면 아래 사진처럼 기본 사항을 설정하는 창이 나올거에요. 내용을 화면 사진 그대로 채워주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.16.28.png" alt=""></p>
+<blockquote>
+<p>사용자 이름은 가이드 다음부분에서 이용할 <code>django</code>로 하셔야 합니다.</p>
+</blockquote>
+<blockquote>
+<p>암호는 각자 사용하는 암호를 입력하시면 되는데요, 12자리 이상을 요구하기 때문에 약간 어려우실 수 있어요!</p>
+</blockquote>
+<blockquote>
+<p>위치는 대한민국 중부/남부로 해주세요. (안되는 경우 아시아 남동부로 해주세요!)</p>
+</blockquote>
+<p>이제 서버의 크기를 골라야 하는데요, 오늘 우리는 장고 서버만을 띄울 것이기 때문에 가장 왼쪽에 있는 <code>DS1_V2</code>를 이용할거에요.</p>
+<blockquote>
+<p>AzurePass를 등록하면 돈을 지불하지 않아도 되니 걱정하지 마세요!</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.19.53.png" alt=""></p>
+<p>이제 다음으로 넘어가면 저장소 설정을 해야 해요. 이부분에서는 ‘관리 디스크 사용’을 ‘예’로 클릭해주세요.</p>
+<p>그 다음으로는 아래쪽의 <code>네트워크 보안 그룹(방화벽)</code>을 클릭해 주세요. 클릭하시면 아래와 같이 <code>SSH (TCP/22)</code>만 인바운드 규칙에 들어가 있는 것을 확인할 수 있어요. 우리는 여기서 <code>HTTP (TCP/80)</code>을 추가해 줄 거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.22.01.png" alt=""></p>
+<p><code>+ 인바운드 규칙 추가</code> 버튼을 눌러주시고 사진과 같이 칸을 채워주시고 확인 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.24.23.png" alt=""></p>
+<p>이제 설정이 모두 끝났어요! 아래쪽의 <code>확인</code>버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.24.54.png" alt=""></p>
+<p>다시 한번 확인 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.18.png" alt=""></p>
+<p>이제 정말로 다음 <code>확인</code>버튼만 누르면 서버 설치가 끝나요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.53.png" alt=""></p>
+<p>이제 조금만 기다려주시면 서버 설치가 끝난답니다!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.28.15.png" alt=""></p>
+<blockquote>
+<p>아이콘의 설명이 <code>Creating</code>에서 <code>Running</code>으로 바뀌면 설치가 끝난거에요.</p>
+</blockquote>
+<h2 id="Azure-설정-확인하기"><a href="#Azure-설정-확인하기" class="headerlink" title="Azure 설정 확인하기"></a>Azure 설정 확인하기</h2><p>Running으로 바뀐 아이콘을 클릭해주시면 아래 화면으로 들어올 수 있어요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.30.25.png" alt=""></p>
+<p>애저에서 가상컴퓨터가 생기면 <code>공용 IP 주소</code>라는걸 하나 갖게 된답니다. <code>ip</code>라는 것은 서버나 컴퓨터가 인터넷에 접속할 수 있게 해주는 일련의 번호인데요, 우리는 이 <code>ip</code>를 통해 우리 장고 프로젝트를 서버에 올리는 작업을 진행할 수 있어요.</p>
+<p>지금 화면에 보이는 가상컴퓨터의 ip는 <code>52.231.30.148</code>인데요, 이렇게 숫자로만 되어있으면 우리는 기억하기가 어려워요.</p>
+<p>그래서 <code>djangogirls.com</code>와 같이 사람이 이해하고 외우기도 쉬운 <code>도메인</code>을 저 <code>ip</code>주소에 붙여줄거에요.</p>
+<p>자, 우선 여러분의 가상 컴퓨터의 ip를 복사(Ctrl+C / CMD+C)해두세요!</p>
+<h2 id="무료-도메인-얻어-가상컴퓨터에-연결하기"><a href="#무료-도메인-얻어-가상컴퓨터에-연결하기" class="headerlink" title="무료 도메인 얻어 가상컴퓨터에 연결하기"></a>무료 도메인 얻어 가상컴퓨터에 연결하기</h2><p><code>.com</code>, <code>.net</code>와 같이 유명한 도메인은 돈을 주고 사야한답니다.(1년에 만원정도 나가요) 하지만 우리는 오늘 무료 도메인을 연결해 볼 거에요.</p>
+<p>우선 <a href="http://dot.tk/">Dot.tk</a>로 들어오세요.</p>
+<p>이 Dot.tk에서는 <code>.tk</code> 도메인을 무료로 제공하고 있어요. 우선 <code>djangogirls-seoul-tutorial</code>이라는 이름으로 찾아볼게요. 값을 입력하고 <code>Check Availability</code>를 눌러주세요!</p>
+<blockquote>
+<p>여러분은 여러분이 원하는 주소를 검색해보세요! (ex: myfirstdjango 등등)</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.36.35.png" alt=""></p>
+<p>오, 다행히 주소가 남아있어요. 이제 <code>Get it now!</code>버튼을 눌러 장바구니에 담아볼게요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.38.28.png" alt=""></p>
+<p>장바구니에 담은 도메인을 <code>Checkout</code>버튼을 눌러주면 아래 화면으로 넘어올거에요. <code>Use DNS</code>버튼을 눌러주신 후에 IP address 칸에 아까 애저 가상컴퓨터의 ip를 입력해주신 후 <code>Continue</code>를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.39.27.png" alt=""></p>
+<p><code>Continue</code>를 누르면 로그인 화면이 나와요. 구글이나 페이스북의 소셜 로그인을 이용할 수 있어요!</p>
+<blockquote>
+<p>페이스북은 가끔 오류가 나기도 해요. 그럴때는 구글이나 MS Live계정으로 다시한번 시도해주세요.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.40.52.png" alt=""></p>
+<p>로그인이 완료되면 아래와 같이 자신의 정보를 입력하는 부분이 나와요. 꼭 다 채울필요는 없어요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.42.39.png" alt=""></p>
+<p>주문 거래 동의 체크상자를 클릭한 후 계속 버튼을 누르면 주문이 완료된답니다! 좋아요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.45.21.png" alt=""></p>
+<h2 id="Fabric3-설치하기"><a href="#Fabric3-설치하기" class="headerlink" title="Fabric3 설치하기"></a>Fabric3 설치하기</h2><p>이제 여러분의 서버는 <code>여러분이입력한이름.tk</code>라는 인터넷 주소로 연결되었어요.</p>
+<p>하지만 아직 여러분의 서버에는 아무것도 설치되어있지 않아요. 물론 장고도 설치되어있지 않아요.</p>
+<p>이제 <code>Fabric3</code>이라는 멋진 자동화 도구를 통해 명령어 한 줄로(마치 startapp처럼) 진짜 서버에 배포하는 멋진 작업을 해볼거에요!</p>
+<p>우선 여러분의 가상환경에 <code>fabric3</code>을 설치해줘야 해요. <code>fabric3</code>은 아래 명령어를 통해 설치할 수 있어요.</p>
+<blockquote>
+<p><code>fabric</code>이 아니라 <code>fabric3</code>입니다! 3을 빼먹지 마세요. 그냥 <code>fabric</code>은 파이썬2용이랍니다.</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fabric3</span><br></pre></td></tr></table></figure>
+
+<h2 id="deploy-json-수정하기"><a href="#deploy-json-수정하기" class="headerlink" title="deploy.json 수정하기"></a><code>deploy.json</code> 수정하기</h2><p>이제 <a href="https://gist.github.com/Beomi/0cc830bd5cda029c277cba648386b28c/archive/0152df8617a63c6678b7b64c54892dc5b4ce19d8.zip">Fabfile for Django</a>를 클릭해 압축파일을 받아 풀어주세요.</p>
+<p>안에 <code>deploy.json</code>와 <code>fabfile.py</code>가 보일거에요. 이 두 파일을 여러분의 장고 폴더(<code>manage.py</code>파일이 있는 곳)안에 넣어주세요.</p>
+<p><code>deploy.json</code>파일 안에는 우리 서버의 정보를 적어넣을 수 있어요. </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"REPO_URL"</span>:<span class="string">"깃헙Repo주소"</span>,</span><br><span class="line">  <span class="attr">"PROJECT_NAME"</span>:<span class="string">"프로젝트폴더(settings.py가있는 폴더)의 이름(ex: mysite)"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_HOST"</span>:<span class="string">"여러분이 만든 도메인주소(ex: djangogirls-seoul-tutorial.tk )"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_USER"</span>:<span class="string">"django"</span>,</span><br><span class="line">  <span class="attr">"STATIC_ROOT"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"STATIC_URL"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"MEDIA_ROOT"</span>:<span class="string">"media"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>파일에 있는 <code>REPO_URL</code>, <code>PROJECT_NAME</code>, <code>REMOTE_HOST</code> 부분을 채워주세요. 나머지 값은 우리가 따라한 튜토리얼에서 이미 설정되어있어요.</p>
+<blockquote>
+<p>모든 값은 “큰 따옴표” 안에 들어가야 한다는 것을 주의하세요!</p>
+</blockquote>
+<h2 id="Fabric으로-서버에-올리기"><a href="#Fabric으로-서버에-올리기" class="headerlink" title="Fabric으로 서버에 올리기"></a>Fabric으로 서버에 올리기</h2><p>Fabric을 사용하기 위한 명령어는 <code>fab</code>이라는 명령어입니다. 이 <code>fab</code>뒤에 <code>new_server</code>, <code>deploy</code>, <code>createsuperuser</code>등을 덧붙여 실제로 원격 서버에 명령을 내리는거에요.</p>
+<p>서버에 처음 올릴 때는 <code>fab new_server</code> 명령어를 이용하세요. 파이썬3 설치부터 Apache2설치와 <code>mod_wsgi</code>설치까지 완료해준답니다. </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab new_server</span><br></pre></td></tr></table></figure>
+
+<p>만약 여러분이 장고 소스를 수정(커밋&amp;푸시)후 서버에 올리고 싶으시다면 <code>fab deploy</code> 명령어를 이용하세요. 장고 앱을 새로 실행해주고 <code>manage.py migrate</code>, <code>manage.py collectstaticfiles</code>등의 명령을 서버에 실행해 준답니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab deploy</span><br></pre></td></tr></table></figure>
+
+<p>우리가 진행하는 튜토리얼에서는 슈퍼유저 만들기 항목이 있어요. 여러분의 컴퓨터에서는 <code>manage.py createsuperuser</code>를 통해 만들었지만 서버에 띄운 장고에 슈퍼유저를 만들어 주려면 <code>fab create_superuser</code>를 이용해주세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab create_superuser</span><br></pre></td></tr></table></figure>
+
+<h2 id="짜잔"><a href="#짜잔" class="headerlink" title="짜잔!"></a>짜잔!</h2><p>여러분은 이제 Azure에 올라간 <strong>진짜</strong> 웹 서비스 하나를 만들었어요! 이제 여러분은 장고로 웹 서비스를 만드는 것의 처음부터 끝까지를 모두 알게되었어요! 축하합니다 :D</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/01/Add-Sentry-to-Django/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Django/sentry.jpg" alt="배포한 Django 서비스 Exception Sentry로 받아보기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-05-31T15:00:00.000Z">2017-06-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/01/Add-Sentry-to-Django/">배포한 Django 서비스 Exception Sentry로 받아보기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 포스팅은 <code>wsgi</code>기반으로 동작하는 <code>django</code>서비스를 대상으로 합니다.</p>
+</blockquote>
+<p>Django 서비스를 실제 서버에 배포하면 보안을 위해 프로젝트 폴더의 <code>settings.py</code>파일 안의 <code>DEBUG</code>항목을 <code>False</code>로 두고 배포합니다. 이렇게 디버그모드를 끌 경우 장고에서 기본적인 보안을 제공해 줍니다. 그러나 만약 View나 Model에서 Exception이 발생했을 경우 클라이언트에 흰색의 500에러 화면만을 띄워줍니다.</p>
+<p>이 경우 개발자에게도 장고의 에러 화면을 보여주지 않습니다. 따라서 Exception이 발생할 경우 개발자(혹은 운영자)에게 에러를 전송할 필요가 있습니다. <code>wsgi</code> 기반으로 서버를 구동할 경우 에러로그는 Apache2나 NginX등의 웹서버의 접근/에러로그가 있으며 Wsgi의 에러로그로 두가지가 있습니다.</p>
+<p>장고서버의 경우에는 Wsgi의 에러로그에 로그를 쌓습니다. 그러나, Django 프로젝트에 <code>LOGGERS</code> 설정값을 추가해줘야 하며 에러 트래킹을 따로 설정해줘야 합니다.</p>
+<p>이때 사용할 수 있는 것이 Sentry와 같은 서비스입니다.</p>
+<blockquote>
+<p>이번 가이드는 <a href="https://docs.sentry.io/clients/python/integrations/django/">Sentry for Django</a>를 기반으로 진행합니다.</p>
+</blockquote>
+<h2 id="Sentry-설치하기"><a href="#Sentry-설치하기" class="headerlink" title="Sentry 설치하기"></a>Sentry 설치하기</h2><p>우선 <code>raven</code>을 설치해 줍니다. </p>
+<blockquote>
+<p><code>raven</code>은 Sentry를 위한 Python패키지입니다. </p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install raven --upgrade</span><br></pre></td></tr></table></figure>
+
+<h2 id="Sentry-settings-py에-설정하기"><a href="#Sentry-settings-py에-설정하기" class="headerlink" title="Sentry settings.py에 설정하기"></a>Sentry <code>settings.py</code>에 설정하기</h2><p>장고 프로젝트의 <code>settings.py</code>파일 안 <code>INSTALLED_APPS</code>에 아래 줄을 추가해줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    <span class="comment"># 기존 앱 가장 아래에 추가해주세요.</span></span><br><span class="line">    <span class="string">'raven.contrib.django.raven_compat'</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이제 Sentry용 환경변수를 추가해 줍시다. 아래 <code>DSN_URL</code>은 Sentry에 로그인 하신 후 <a href="https://docs.sentry.io/clients/python/integrations/django/#setup">Sentry for Django</a>의 코드 부분을 복사하면 알 수 있습니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py 파일 import문 아래에 raven을 import해주세요.</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> raven</span><br><span class="line"></span><br><span class="line"><span class="comment"># import아래 환경변수를 설정해주세요. 이 URL은 위 Sentry for Django에서 바로 찾을 수 있습니다.</span></span><br><span class="line">DSN_URL = <span class="string">'https://sampleurl1234141534samplesample:somemoreurl12341235dfaetr@sentry.io/123456'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 기타 설정들(생략...)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># settings.py 파일 가장 아래에 RAVEN_CONFIG를 추가해주세요.</span></span><br><span class="line">RAVEN_CONFIG = &#123;</span><br><span class="line">    <span class="string">'dsn'</span>: <span class="string">'&#123;&#125;'</span>.format(DSN_URL), <span class="comment"># DSN_URL을 위에 적어주셔야 동작합니다.</span></span><br><span class="line">    <span class="string">'release'</span>: raven.fetch_git_sha(BASE_DIR), <span class="comment"># Django가 Git으로 관리되는 경우 자동으로 커밋 버전에 따른 트래킹을 해줍니다.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Sentry-wsgi-py에-설정하기"><a href="#Sentry-wsgi-py에-설정하기" class="headerlink" title="Sentry wsgi.py에 설정하기"></a>Sentry <code>wsgi.py</code>에 설정하기</h2><p>이제 장고 프로젝트 폴더 안의 <code>wsgi.py</code> 파일을 아래와 같이 수정해봅시다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.wsgi <span class="keyword">import</span> get_wsgi_application</span><br><span class="line"><span class="keyword">from</span> raven.contrib.django.raven_compat.middleware.wsgi <span class="keyword">import</span> Sentry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 이 부분은 여러분의 장고 프로젝트 이름을 쓰세요..</span></span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"장고프로젝트이름.settings"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># get_wsgi_application을 Sentry()로 감싸주세요.</span></span><br><span class="line">application = Sentry(get_wsgi_application())</span><br></pre></td></tr></table></figure>
+
+<p>자, 이제 Sentry 사용을 위한 기본적인 설정이 끝났습니다. 여러분의 서비스를 다시 원래 서버에 배포해보세요.</p>
+<h2 id="Exception이-발생하면"><a href="#Exception이-발생하면" class="headerlink" title="Exception이 발생하면.."></a>Exception이 발생하면..</h2><p>이제 여러분이 잡아주지 않은 Exception이 발생할 경우 아래와 같이 이메일이 옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Django/sentry_mail.jpeg" alt="sentry django integrity error log mail"><br><br>이메일의 Issue 링크를 클릭하면 아래와 같이 에러로그 페이지가 나옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Django/sentry_web.png" alt="Sentry django integrity error log web page"></p>
+<h2 id="조금-더-알아보기"><a href="#조금-더-알아보기" class="headerlink" title="조금 더 알아보기"></a>조금 더 알아보기</h2><p>이번 포스팅에서는 장고의 Wsgi에서 발생하는 에러(Exception)을 Sentry 미들웨어를 통해 관리합니다. 그러나 유저에게 500페이지를 보여주는것은 여전합니다.</p>
+<p>만약 여러분이 미리 잡아준 상황을 Sentry로 보내고 싶으시다면 <a href="https://docs.sentry.io/clients/python/integrations/django/#integration-with-logging">Sentry를 logging와 함께 쓰기</a>를 참고하세요.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/page/5/">이전</a>
+        </div>
+        <div class="pagination-next">
+            <a class="is-flex-grow has-text-black-ter" href="/page/7/">다음</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/">1</a></li>
+            
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/5/">5</a></li>
+            
+            <li><a class="pagination-link is-current" href="/page/6/">6</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/7/">7</a></li>
+            
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
+            
+        </ul>
+    </nav>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/profile_beomi.jpg" alt="Junbum Lee">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Junbum Lee
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Beomi&#39;s tech blog
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Seoul, KR</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/beomi">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/DataCollection/">
+            <span class="level-start">
+                <span class="level-item">DataCollection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DataCollection/Twitter/">
+            <span class="level-start">
+                <span class="level-item">Twitter</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/">
+            <span class="level-start">
+                <span class="level-item">DevEnv</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DataScience/">
+            <span class="level-start">
+                <span class="level-item">DataScience</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DeepLearning/">
+            <span class="level-start">
+                <span class="level-item">DeepLearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Ubuntu/">
+            <span class="level-start">
+                <span class="level-item">Ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Django/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/">
+            <span class="level-start">
+                <span class="level-item">DjangoTDDStudy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/MacOS/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/NLP/">
+            <span class="level-start">
+                <span class="level-item">NLP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/NLP/LanguageModel/">
+            <span class="level-start">
+                <span class="level-item">LanguageModel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/NLP/Unsupervised/">
+            <span class="level-start">
+                <span class="level-item">Unsupervised</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Postmortem/">
+            <span class="level-start">
+                <span class="level-item">Postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Python/Celery/">
+            <span class="level-start">
+                <span class="level-item">Celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/Fabric/">
+            <span class="level-start">
+                <span class="level-item">Fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Tech/">
+            <span class="level-start">
+                <span class="level-item">Tech</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Translation/">
+            <span class="level-start">
+                <span class="level-item">Translation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/aws/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/azure/">
+            <span class="level-start">
+                <span class="level-item">azure</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/blog/">
+            <span class="level-start">
+                <span class="level-item">blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/blog/github/">
+            <span class="level-start">
+                <span class="level-item">github</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/django/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/django/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/flask/sqlalchemy/">
+            <span class="level-start">
+                <span class="level-item">sqlalchemy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/javascript/webpack/">
+            <span class="level-start">
+                <span class="level-item">webpack</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/life/">
+            <span class="level-start">
+                <span class="level-item">life</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/machinelearning/">
+            <span class="level-start">
+                <span class="level-item">machinelearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/machinelearning/seminar/">
+            <span class="level-start">
+                <span class="level-item">seminar</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/macos/">
+            <span class="level-start">
+                <span class="level-item">macos</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/macos/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/nlp/">
+            <span class="level-start">
+                <span class="level-item">nlp</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/nlp/languagemodel/">
+            <span class="level-start">
+                <span class="level-item">languagemodel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/postmortem/">
+            <span class="level-start">
+                <span class="level-item">postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">25</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/python/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/celery/">
+            <span class="level-start">
+                <span class="level-item">celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/dataanalysis/">
+            <span class="level-start">
+                <span class="level-item">dataanalysis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/pyspark/">
+            <span class="level-start">
+                <span class="level-item">pyspark</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/react/">
+            <span class="level-start">
+                <span class="level-item">react</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/react/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/tips/githubpages/">
+            <span class="level-start">
+                <span class="level-item">githubpages</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ubuntu/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/vlang/">
+            <span class="level-start">
+                <span class="level-item">vlang</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

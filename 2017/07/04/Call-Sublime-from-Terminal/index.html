@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>서브라임텍스트 터미널에서 실행하기(macOS) - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/sublimetext.jpg" alt="서브라임텍스트 터미널에서 실행하기(macOS)">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-03T15:00:00.000Z">2017-07-04</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/macos/">macos</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                서브라임텍스트 터미널에서 실행하기(macOS)
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드는 macOS 용입니다.</p>
+</blockquote>
+<h2 id="들어가기-전"><a href="#들어가기-전" class="headerlink" title="들어가기 전"></a>들어가기 전</h2><h3 id="프로그램의-설치-경로"><a href="#프로그램의-설치-경로" class="headerlink" title="프로그램의 설치 경로"></a>프로그램의 설치 경로</h3><p>macOS에 프로그램을 설치하면 기본적으로 <code>/Users/유저이름/Library</code>(<code>~/Library</code>와 같음)에 위치합니다. 사용자의 Library에 저장되는 이 경로는 root 권한 없이도 응용프로그램을 추가하거나 제거하는 것이 가능합니다.</p>
+<h3 id="터미널에서-실행되는-경로-PATH"><a href="#터미널에서-실행되는-경로-PATH" class="headerlink" title="터미널에서 실행되는 경로, PATH"></a>터미널에서 실행되는 경로, <code>PATH</code></h3><p>대부분의 운영체제에서는 <code>PATH</code>가 있습니다. 그리고 이 <code>PATH</code>에 등록된 경로는 시스템 전역에서 호출 가능한 위치가 됩니다. 예를들어 <code>PATH</code>에 등록된 경로 중 <code>/usr/local/bin</code>폴더가 있었다면 아래와 같이 <code>python</code>명령어를 실행할 경우 <code>/usr/local/bin/python</code>에 있는 파이썬이 실행됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜ ~ <span class="built_in">which</span> python</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/python</span><br></pre></td></tr></table></figure>
+
+<p>그리고 기본적으로 <code>/usr/local/bin</code>폴더는 사용자 터미널의 PATH에 등록되어있습니다. 따라서 SublimeText3(혹은 2) 실행 프로그램을 <code>ln -s</code>명령어를 통해 <code>/usr/local/bin</code>폴더에 심볼릭 링크를 걸어줘야 합니다.</p>
+<blockquote>
+<p>심볼릭 링크란? 파일을 이동하지 않고 어떤 위치에 바로가기를 하나 더 만드는 것입니다. 윈도우의 바로가기 아이콘과 비슷하다고 생각하시면 됩니다.</p>
+</blockquote>
+<h2 id="SublimeText가-깔렸는지-확인하기"><a href="#SublimeText가-깔렸는지-확인하기" class="headerlink" title="SublimeText가 깔렸는지 확인하기"></a>SublimeText가 깔렸는지 확인하기</h2><p>최신 버전의 sublimetext는 3버전입니다. 하지만 2버전도 유사한 방식으로 사용할 수 있습니다.</p>
+<p>우선 아래 명령어를 터미널에 입력할 경우 실행이 되는지 확인해보세요.</p>
+<blockquote>
+<p>코드를 그대로 복사해서 사용하세요!</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SublimeText3 의 경우</span></span><br><span class="line">open /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl</span><br><span class="line"><span class="comment"># SublimeText2 의 경우</span></span><br><span class="line">open /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어를 쳐서 서브라임 텍스트 창이 뜬 경우 아래 가이드를 따라가 주시면 됩니다.</p>
+<h2 id="심볼릭-링크-등록하기"><a href="#심볼릭-링크-등록하기" class="headerlink" title="심볼릭 링크 등록하기"></a>심볼릭 링크 등록하기</h2><p>우리는 <code>subl</code>이라는 명령어로 서브라임 텍스트 프로그램을 실행할 계획입니다.</p>
+<p>터미널에 아래와 같은 명령어를 입력해 주세요.</p>
+<p>SublimeText3인 경우:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/<span class="built_in">local</span>/bin/subl</span><br></pre></td></tr></table></figure>
+
+<p>SublimeText2인 경우:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl /usr/<span class="built_in">local</span>/bin/subl</span><br></pre></td></tr></table></figure>
+
+<h2 id="모두-끝났습니다"><a href="#모두-끝났습니다" class="headerlink" title="모두 끝났습니다!"></a>모두 끝났습니다!</h2><p>이제 터미널에서 <code>subl</code>이라는 명령어를 통해 서브라임 텍스트를 실행할 수 있습니다 :)</p>
+<p>그냥 서브라임텍스트를 실행하려면</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subl</span><br></pre></td></tr></table></figure>
+
+<p>현 폴더를 열려면</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subl .</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 <code>subl</code>뒤에 파일/폴더등을 인자로 전달해 줄 수 있습니다.</p>
+<blockquote>
+<p>만약 위 방식으로 되지 않으신다면 <code>.zshrc</code>이나 <code>.bashrc</code>등의 파일에 아래와 같이 입력해 주세요.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> subl=<span class="string">"open -a /Applications/Sublime\ Text.app"</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing!</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/07/03/Use-Shift-Space-for-Change-Language-on-macOS/">
+                <span class="level-item">macOS 환경설정에서 Shift Space로 한영 전환하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

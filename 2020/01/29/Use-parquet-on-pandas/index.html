@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Pandas에서 Parquet 사용하기 with Snappy/Gzip - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-174825.jpg" alt="Pandas에서 Parquet 사용하기 with Snappy/Gzip">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-28T15:00:00.000Z">2020-01-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/DataScience/">DataScience</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Pandas에서 Parquet 사용하기 with Snappy/Gzip
+            
+        </h1>
+        <div class="content">
+            <p>Pandas나 PySpark등을 사용하다보면 <code>*.csv</code> 포맷으로는 만족하지 못하는 경우가 많다.</p>
+<p>예를들어..</p>
+<ul>
+<li><p>Data Type이 저장되지 않는다.</p>
+</li>
+<li><p>너무 많은 데이터는 저장해도 CSV의 이점(엑셀로 열어볼 수 있다)을 살리지 못한다.</p>
+</li>
+<li><p>특정 Column만 선택하는 것이 불가능하다. (= 전체 파일을 항상 모두 열어야 한다)</p>
+</li>
+<li><p>용량이 상대적으로 작지만 크다 (압축을 하지 않은 경우)</p>
+</li>
+<li><p>(종종) Escaping이 잘 되지 않은 경우에는 파일 Parsing이 깨진다.</p>
+</li>
+<li><p>한글이 들어간 csv의 경우 “MS Excel”에서는 BOM이 없으면 UTF-8을 제대로 인식하지 못한다. (한편, euc-kr 인코딩은 잘 읽는다.)</p>
+</li>
+</ul>
+<p>등등.. 여러가지 이슈가 있다.</p>
+<p>그렇다면, 어떤 형식을 써야 할까?</p>
+<a id="more"></a>
+
+<h2 id="그럼-어떤-포맷을-써야-하나"><a href="#그럼-어떤-포맷을-써야-하나" class="headerlink" title="그럼 어떤 포맷을 써야 하나?"></a>그럼 어떤 포맷을 써야 하나?</h2><p>원본 데이터를 곧바로 가져다 사용하는 경우(= Athena, RedShift, BigQuery, DB 등이 데이터소스가 아닌 경우)에는 보통 <code>csv</code>, <code>json</code>, <code>parquet</code> 이 세가지 형식이 가장 범용적이다.</p>
+<p>그 중에서도 특히 csv와 json을 자주 사용한다.</p>
+<p>작은 데이터의 경우 csv를, API에서는 json을 제공하는 경우가 많다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-174439.png" alt="csv vs json vs parquet 비교표 &lt;br&gt;https://garrens.com/blog/2017/10/09/spark-file-format-showdown-csv-vs-json-vs-parquet/"></p>
+<p>위에서 볼 수 있듯 파일 형식에 따라 표현할 수 있는 방식이 다르다.</p>
+<p>하지만 결론은 대부분 “Parquet 파일을 써라!” 인 경우가 많다.</p>
+<h2 id="Snappy-압축으로-Parquet-파일-사용하기"><a href="#Snappy-압축으로-Parquet-파일-사용하기" class="headerlink" title="Snappy 압축으로 Parquet 파일 사용하기"></a>Snappy 압축으로 Parquet 파일 사용하기</h2><p>Parquet형식은 Pandas에서 기본 옵션으로 <code>Snappy</code> 압축을 사용한다.</p>
+<p>Snappy 압축은 google에서 개발한 ‘적당히 빠르고 적당히 압축 잘되는’ 라이브러리이고, 대용량의 데이터를 ‘빠르게 읽고 쓰는데 적합한, 하지만 용량 축소는 잘 되는’ 아주 멋진 압축 방식이다.</p>
+<p>한편, 기본 옵션인 Snappy 압축을 이용해 parquet파일을 쓰기 위해 새로운 DataFrame을 만들어 저장하려고 해도 보통의 경우 에러에 부딛힌다.</p>
+<p>아래와 같은 간단한 코드를 실행한다고 가정해 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame()</span><br><span class="line">df.to_parquet(<span class="string">'sample.parquet'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Docker로 <code>continuumio/anaconda3:2019.10</code> 에서 ipython 쉘에서 실행시 아래와 같은 에러가 발생한다. 아래 에러는 Parquet 파일을 사용하기 위해서는 <code>pyarrow</code> 혹은 <code>fastparquet</code> 패키지가 필요하다는 경고다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-175433.png" alt="parquet 파일 저장에 실패한 모습"></p>
+<p>아래 명령어를 통해 <code>fastparquet</code> 패키지를 설치해주자.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fastparquet</span><br></pre></td></tr></table></figure>
+
+<p>한편, 위 명령어를 입력하면 상황에 따라 다르지만 아래와 같은 에러가 발생한다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-175632.png" alt="GCC에러"></p>
+<p>위 에러는 <code>gcc</code> 명령어를 사용할 수 없어서 생긴 문제로, 아래 명령어로 빌드 관련 패키지를 설치하면 문제를 해결할 수 있다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install -y build-essential</span><br><span class="line">pip install fastparquet</span><br></pre></td></tr></table></figure>
+
+<p>이제 다시 <code>df.to_parquet()</code> 를 실행하면 아래와 같이 정상적으로 설치가 되는 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-175931.png" alt="FastParquet 설치 성공 및 parquet파일 정상 저장"></p>
+<blockquote>
+<p>혹시 <code>libsnappy</code> 파일 관련해 에러가 발생하고 설치가 실패할 경우 아래 명령어로 <code>libsnappy-dev</code> 를 설치해준 뒤 <code>fastparquet</code> 설치를 다시 시도하면 성공한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install -y libsnappy-dev</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="Gzip-압축으로-Parquet-파일-사용하기"><a href="#Gzip-압축으로-Parquet-파일-사용하기" class="headerlink" title="Gzip 압축으로 Parquet 파일 사용하기"></a>Gzip 압축으로 Parquet 파일 사용하기</h2><p>Snappy 압축이 좋기는 하지만 위와 같이 빌드 관련한 의존 패키지도 설치해야하고(꽤 무겁다), 때로는 의존성 라이브러리도 이슈가 종종 있어 사용하기 까다로운 측면이 있다.</p>
+<p>따라서 시스템에서 보통 기본적으로 잘 지원하는 <code>gzip</code> 형식을 이용하기도 한다.</p>
+<blockquote>
+<p>압축률은 gzip &gt; snappy이며, 압축 속도는 gzip &lt; snappy로 약간의 차이는 있다.</p>
+</blockquote>
+<p>이때는 별다른 설치 없이 DataFrame 저장시에 <code>compression</code> 옵션만 제공하면 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame()</span><br><span class="line">df.to_parquet(<span class="string">'sample.parquet'</span>, compression=<span class="string">'gzip'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>아래와 같이 아무런 에러도 없이 한번에 저장이 잘 되는 것을 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-180635.png" alt="gzip으로 dataframe 저장하기"></p>
+<h2 id="데이터-읽기"><a href="#데이터-읽기" class="headerlink" title="데이터 읽기"></a>데이터 읽기</h2><p>한편, 어떤 압축 방식(Gzip/Snappy/Uncompressed)을 사용하든 파일을 읽는 방식은 동일하다.</p>
+<p>이때는 압축 방식을 알아서 유추해서 풀기 때문에 별도의 옵션을 주지 않아도 된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_parquet(<span class="string">'sample.parquet'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>또한, 특정 컬럼만 읽으려고 한다면 아래와 같이 <code>columns</code> 인자를 전달하면 파일 전체 대신 해당 컬럼만 읽어서 DataFrame을 생성한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_parquet(<span class="string">'sample.parquet'</span>, columns=[<span class="string">'a'</span>, <span class="string">'b'</span>])</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/pandas/" rel="tag">pandas</a>, <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/02/03/Lookup-HopsWorks/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">데이터 분석 파이프라인 풀세트, HopsWorks 설치기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/01/05/Clustering_Twitter_Users/">
+                <span class="level-item">NLP 튜토리얼: 라벨링 없이 트위터 유저들을 자동으로 나누어보기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#그럼-어떤-포맷을-써야-하나">
+        <span class="has-mr-6">1</span>
+        <span>그럼 어떤 포맷을 써야 하나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#Snappy-압축으로-Parquet-파일-사용하기">
+        <span class="has-mr-6">2</span>
+        <span>Snappy 압축으로 Parquet 파일 사용하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#Gzip-압축으로-Parquet-파일-사용하기">
+        <span class="has-mr-6">3</span>
+        <span>Gzip 압축으로 Parquet 파일 사용하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#데이터-읽기">
+        <span class="has-mr-6">4</span>
+        <span>데이터 읽기</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

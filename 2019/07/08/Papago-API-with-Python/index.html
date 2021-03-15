@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>pypapago 개발기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-08-064243.png" alt="pypapago 개발기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-07T15:00:00.000Z">2019-07-08</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                pypapago 개발기
+            
+        </h1>
+        <div class="content">
+            <h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>아래 내용을 통해 개발한 <code>pypapago</code> 는 현재 pypi에 올라가 있어 아래 명령어로 설치해 바로 사용할 수 있습니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -U pypapago</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>2019.07.09일자 기준 최신버전은 <code>0.1.1.1</code> 입니다.</p>
+</blockquote>
+<p>Github Repo: <a href="https://github.com/Beomi/pypapago">https://github.com/Beomi/pypapago</a></p>
+<a id="more"></a>
+
+<h2 id="파파고-번역"><a href="#파파고-번역" class="headerlink" title="파파고 번역?"></a>파파고 번역?</h2><p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-08-064325.png" alt="image-20190708154324468"></p>
+<p>네이버에서는 <a href="https://papago.naver.com/">Papago</a> 라는 이름으로 ML 기반과 사전 기반 두가지 방식의 번역과 언어 감지 등 여러가지 서비스를 제공한다. 한편 해당 서비스는 <a href="https://papago.naver.com/">파파고 공식 사이트</a>에서 실제로 사용할 수 있지만 API를 이용해서 사용할 수도 있기 때문에, 개발자들이 API Key만 신청하면 한 번에 5천자, 그리고 하루에 1만자 이내로만 요청할 수 있다는 제한이 있다. (무료로 사용하는 경우)</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-09-143847.png" alt="image-20190709233846881"></p>
+<p>한편 <a href="https://papago.naver.com">papago.naver.com</a>에서 제공하는 웹 페이지 상에서의 번역은 추가적인 제한이 없기 때문에, 해당 웹 페이지를 파싱해서 어떤 API Call을 하고 있는지 뜯어보면 보다 많은 요청을 자유롭게 할 수 있지 않을까 싶었다.</p>
+<h2 id="AJAX-XHR-Request-뜯어보기"><a href="#AJAX-XHR-Request-뜯어보기" class="headerlink" title="AJAX(XHR) Request 뜯어보기"></a>AJAX(XHR) Request 뜯어보기</h2><p>파파고에 번역할 문장을 집어넣고 ‘번역’ 버튼을 누를 때 이뤄지는 HTTP 요청을 크롬 개발자 도구로 살펴보면 다음과 같다.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-09-144153.png" alt="image-20190709234152264"></p>
+<p>실제로 <code>translatedText</code> 라는 키에 결과값이 잘 들어오는 것을 볼 수 있다.</p>
+<p>한편 그렇다면 HTTP 요청을 보내는 방식이 어떻게 이뤄지는지 확인이 필요하다.</p>
+<p>가장 먼저 살펴보는 것은 API Call이 어떤 URL(HOST)와 어떤 Method로 요청이 이뤄지는지 보는 것.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-09-144352.png" alt="image-20190709234351546"></p>
+<p>위 스샷을 살펴보면 <code>https://papago.naver.com/apis/n2mt/translate</code> 주소에 <code>POST</code> 방식으로 HTTP 요청을 보내고 있다는 것을 볼 수 있다.</p>
+<p><code>POST</code> 방식으로 보내는 HTTP 요청은 주로 <code>&lt;form&gt;</code> 내부의 FormData와 함께 보내는 경우가 많다. 따라서 아래쪽의 Form Data 항목을 살펴보면 다음과 같다.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-09-144311.png" alt="image-20190709234311481"></p>
+<p>하지만 우리가 입력한 “I am GROOT”라는 문장은 위 FormData 어디에서도 살펴볼 수가 없다. 어떻게 된 것일까?</p>
+<h2 id="Base64-Encode-amp-Decode"><a href="#Base64-Encode-amp-Decode" class="headerlink" title="Base64 Encode &amp; Decode"></a>Base64 Encode &amp; Decode</h2><p>위와 같이 암호화된 것 처럼 보이는 데이터를 <code>base64</code> 로 디코딩을 해 보았다.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-09-144643.png" alt="image-20190709234642650"></p>
+<p>결과는 위와 같이 “I am GROOT”라는 부분이 잘 나오는 것을 볼 수 있다. 한편 앞쪽에 나와있는 이상한 문자열은 정체를 알 수 없었다.</p>
+<p>따라서 우리가 실제로 조정하는 것이 필요한 <code>source</code>, <code>target</code>, <code>text</code>를 남기고 앞쪽은 base64로 인코딩 된 값을 그대로 가져왔다. (패키지 소스코드의 <code>SECRET_KEY</code> 부분.  사실은 secret이 아니다.)</p>
+<h2 id="코드로-만들어보자"><a href="#코드로-만들어보자" class="headerlink" title="코드로 만들어보자"></a>코드로 만들어보자</h2><h3 id="Basic-setup"><a href="#Basic-setup" class="headerlink" title="Basic setup"></a>Basic setup</h3><p>가장 기초적인 방법은 크롬에서 실제로 요청하는 HTTP를 그대로 따라하는 방법이다.</p>
+<p><code>Translator</code> Class를 생성할 때 기초적인 헤더들을 설정해 주고, 앞서 살펴보았던 요청에 필요한 base64로 인코딩 된 값들을 넣어준다. </p>
+<p>Github: <a href="https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L14-L33">https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L14-L33</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Translator</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Main Translator Class</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, regex_pattern=None, headers=None)</span>:</span></span><br><span class="line">        self.regex_pattern = re.compile(regex_pattern <span class="keyword">or</span> <span class="string">'[가-힣]+'</span>)</span><br><span class="line">        self.headers = headers <span class="keyword">or</span> &#123;</span><br><span class="line">            <span class="string">'device-type'</span>: <span class="string">'pc'</span>,</span><br><span class="line">            <span class="string">'origin'</span>: <span class="string">'https://papago.naver.com'</span>,</span><br><span class="line">            <span class="string">'accept-encoding'</span>: <span class="string">'gzip, deflate, br'</span>,</span><br><span class="line">            <span class="string">'accept-language'</span>: <span class="string">'ko'</span>,</span><br><span class="line">            <span class="string">'authority'</span>: <span class="string">'papago.naver.com'</span>,</span><br><span class="line">            <span class="string">'pragma'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">            <span class="string">'user-agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko)\</span></span><br><span class="line"><span class="string">                           Chrome/75.0.3770.100 Safari/537.36'</span>,</span><br><span class="line">            <span class="string">'content-type'</span>: <span class="string">'application/x-www-form-urlencoded; charset=UTF-8'</span>,</span><br><span class="line">            <span class="string">'accept'</span>: <span class="string">'application/json'</span>,</span><br><span class="line">            <span class="string">'cache-control'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">            <span class="string">'x-apigw-partnerid'</span>: <span class="string">'papago'</span>,</span><br><span class="line">            <span class="string">'referer'</span>: <span class="string">'https://papago.naver.com/'</span>,</span><br><span class="line">            <span class="string">'dnt'</span>: <span class="string">'1'</span>,</span><br><span class="line">        &#125;</span><br><span class="line">        self.SECRET_KEY = <span class="string">'rlWxMKMcL2IWMPV6ImUwMWMwZWFkLWMyNDUtNDg2YS05ZTdiLWExZTZmNzc2OTc0MyIsImRpY3QiOnRydWUsImRpY3REaXNwbGF5Ijoz'</span></span><br><span class="line">        self.QUERY_KEY = <span class="string">'0,"honorific":false,"instant":false,"source":"&#123;source&#125;","target":"&#123;target&#125;","text":"&#123;query&#125;"&#125;&#125;'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="String-Type의-base64-값-만들기"><a href="#String-Type의-base64-값-만들기" class="headerlink" title="String Type의 base64 값 만들기"></a>String Type의 base64 값 만들기</h3><p>앞서 사용한 <code>self.QUERY_KEY</code> 의 경우는 아직 UTF-8이기 때문에 base64로 인코딩 된 <code>str</code> 결과물이 필요하다.</p>
+<p>이때 단순히 encode를 하면 type이 <code>str</code>이 아니라 <code>byte</code>타입이기 때문에 문제가 생긴다. (String와 Byte를 합칠 수 없다고 TypeError가 발생한다.)</p>
+<p>Github: <a href="https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L35-L42">https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L35-L42</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">string_to_base64</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Generate Base64 Encoded string</span></span><br><span class="line"><span class="string">    :param s: Origin Text (UTF-8)</span></span><br><span class="line"><span class="string">    :return: B64 encoded text (B64, still UTF-8 string)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">return</span> base64.b64encode(s.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>따라서 위와 같이 <code>.decode(&#39;utf-8&#39;)</code> 으로 다시한번 바꾸어주는 과정이 필요하다.</p>
+<h3 id="HTTP-요청-보내기"><a href="#HTTP-요청-보내기" class="headerlink" title="HTTP 요청 보내기"></a>HTTP 요청 보내기</h3><p>위와 같이 준비가 끝나면 실제 HTTP 요청으로 보내는 것이 필요하다.</p>
+<p>API Host도 알고, Method와 내용물도 알고 있으니 간단하게 보내기만 하면 된다.</p>
+<p>Github: <a href="https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L44-L61">https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L44-L61</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">translate</span><span class="params">(self, query, source=<span class="string">'en'</span>, target=<span class="string">'ko'</span>, verbose=False)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Main Translate function</span></span><br><span class="line"><span class="string">    :param query: Original Text to translate</span></span><br><span class="line"><span class="string">    :param source: Source(Original) text language [en, ko]</span></span><br><span class="line"><span class="string">    :param target: Target text language [en, ko]</span></span><br><span class="line"><span class="string">    :param verbose: Return verbose json data. Default: False</span></span><br><span class="line"><span class="string">    :return: Translated text</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">'data'</span>: self.SECRET_KEY + self.string_to_base64(</span><br><span class="line">            self.QUERY_KEY.format(source=source, target=target, query=query)</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">    response = requests.post(<span class="string">'https://papago.naver.com/apis/n2mt/translate'</span>, headers=self.headers, data=data)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> verbose:</span><br><span class="line">        <span class="keyword">return</span> response.json()[<span class="string">'translatedText'</span>]</span><br><span class="line">    <span class="keyword">return</span> response.json()</span><br></pre></td></tr></table></figure>
+
+<p>실제로 <code>query</code>, <code>source</code>, <code>target</code> 을 우리가 바꾸어 사용하기 때문에 해당하는 값들을 넣어주고,  API 요청이 이뤄질때 실제로 넘어오는 결과값은 굉장히 길고 디테일한 정보를 담고있다. 이런 정보도 사용할 수 있도록 <code>verbose</code> 옵션을 통해 Raw json을 받을 수 있는 옵션도 넣어준다.</p>
+<h3 id="Bulk-Parallel로-실행하기"><a href="#Bulk-Parallel로-실행하기" class="headerlink" title="Bulk/Parallel로 실행하기"></a>Bulk/Parallel로 실행하기</h3><p>한편 번역기를 사용할 때 한번에 하나가 아니라 여러개를 실행해야 하는 경우도 있다.</p>
+<p>이런 경우를 위해 <code>multiprocessing</code> 을 사용해 기본적으로는 cpu코어 수(하이퍼스레딩은 2배)만큼 Worker를 띄워 사용하도록 설정해두고, 커스텀으로 worker 수를 지정할 수 있도록 옵션을 넣어준다.</p>
+<blockquote>
+<p>실제로 worker를 30개를 넣으면 25배+로 빨라진다. WOW.</p>
+</blockquote>
+<p>Github: <a href="https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L63-L80">https://github.com/Beomi/pypapago/blob/0.1.1.1/pypapago/translator.py#L63-L80</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bulk_translate</span><span class="params">(self, queries, source=<span class="string">'en'</span>, target=<span class="string">'ko'</span>, workers=None, verbose=False)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Call Translate function in parallel</span></span><br><span class="line"><span class="string">    :param queries: List of query texts</span></span><br><span class="line"><span class="string">    :param source: Source(Original) text language [en, ko]</span></span><br><span class="line"><span class="string">    :param target: Target text language [en, ko]</span></span><br><span class="line"><span class="string">    :param workers: Python multiprocessing workers. Default: vCPU cores</span></span><br><span class="line"><span class="string">    :param verbose: Return verbose json data. Default: False</span></span><br><span class="line"><span class="string">    :return: List of translated texts</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">with</span> Pool(workers <span class="keyword">or</span> cpu_count()) <span class="keyword">as</span> pool:</span><br><span class="line">        result = list(tqdm(pool.imap(</span><br><span class="line">            func=partial(self.translate, source=source, target=target, verbose=verbose),</span><br><span class="line">            iterable=queries</span><br><span class="line">        ), total=len(queries)))</span><br><span class="line">        pool.close()</span><br><span class="line">        pool.join()</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p>그리고 Bulk로 작업을 하는 경우에는 보통의 경우 얼마나 진행되었는지 알고싶은 것이 당연하기 때문에 <code>imap</code> 와 <code>tqdm</code> 을 사용해 Progress bar를 화면(Jupyter Notebook도 지원함!)에 나타나도록 만들어주었다.</p>
+<p>(아래는 Google colab에서 pypapago를 이용해 몇천개 번역을 worker 30개로 돌릴때 화면에 나타나는 모습)</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-07-09-150439.png" alt="image-20190710000439238"></p>
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><p>간단하게 써보려고 하다가 파파고 API의 요청건수가 가볍게 넘어버려서 (ㅠㅠ) + Google번역기 패키지가 자꾸 에러를 뿜어서 라는 두가지 이유로 인해 만들어보았다.</p>
+<p>오랫만에 작업한 pypi 패키징이라 살짝 헷갈리기도 해서 <code>0.1.0</code> 배포 후 <code>0.1.1</code> 로 긴급 패치(의존성을 <code>setup.py</code> 에 넣는 것 잊음)를 했지만 정작 오타가 있어서 <code>0.1.1.1</code>이라는 이상한 버전으로 올리게 되었다는 이야기.</p>
+<p>pypi 패키징 하는 부분도 간단하게 정리가 필요할 것 같다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/10/20/Learning-VLang/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">V Lang 톺아보기[1]: 첫 만남</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/04/DLCAT2nd/">
+                <span class="level-item">DLCAT#2 참석 후기 &amp; 정리</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#TL-DR">
+        <span class="has-mr-6">1</span>
+        <span>TL;DR</span>
+        </a></li><li>
+        <a class="is-flex" href="#파파고-번역">
+        <span class="has-mr-6">2</span>
+        <span>파파고 번역?</span>
+        </a></li><li>
+        <a class="is-flex" href="#AJAX-XHR-Request-뜯어보기">
+        <span class="has-mr-6">3</span>
+        <span>AJAX(XHR) Request 뜯어보기</span>
+        </a></li><li>
+        <a class="is-flex" href="#Base64-Encode-amp-Decode">
+        <span class="has-mr-6">4</span>
+        <span>Base64 Encode & Decode</span>
+        </a></li><li>
+        <a class="is-flex" href="#코드로-만들어보자">
+        <span class="has-mr-6">5</span>
+        <span>코드로 만들어보자</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Basic-setup">
+        <span class="has-mr-6">5.1</span>
+        <span>Basic setup</span>
+        </a></li><li>
+        <a class="is-flex" href="#String-Type의-base64-값-만들기">
+        <span class="has-mr-6">5.2</span>
+        <span>String Type의 base64 값 만들기</span>
+        </a></li><li>
+        <a class="is-flex" href="#HTTP-요청-보내기">
+        <span class="has-mr-6">5.3</span>
+        <span>HTTP 요청 보내기</span>
+        </a></li><li>
+        <a class="is-flex" href="#Bulk-Parallel로-실행하기">
+        <span class="has-mr-6">5.4</span>
+        <span>Bulk/Parallel로 실행하기</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#맺으며">
+        <span class="has-mr-6">6</span>
+        <span>맺으며</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

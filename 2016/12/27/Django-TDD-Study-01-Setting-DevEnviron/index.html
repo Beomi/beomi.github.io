@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>[DjangoTDDStudy] #01: 개발환경 세팅하기(Selenium / ChromeDriver) - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/old_post/big-logo.png" alt="[DjangoTDDStudy] #01: 개발환경 세팅하기(Selenium / ChromeDriver)">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-12-26T15:00:00.000Z">2016-12-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DjangoTDDStudy/">DjangoTDDStudy</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DjangoTDDStudy/Python/">Python</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                [DjangoTDDStudy] #01: 개발환경 세팅하기(Selenium / ChromeDriver)
+            
+        </h1>
+        <div class="content">
+            <h1 id="Web을-직접-테스트한다고"><a href="#Web을-직접-테스트한다고" class="headerlink" title="Web을 직접 테스트한다고?"></a>Web을 직접 테스트한다고?</h1><p>웹 서비스를 개발하는 과정에서 꼭 필요한 것이 있다. 바로 실제로 기능이 동작하는지 테스트 하는 것.<br>이 테스트를 개발자가 직접 할 수도 있고, 혹은 전문적으로 테스트만 진행하는 QA팀에서 진행할 수도 있다.<br>하지만 위의 두 방법은 ‘사람이 직접 해야한다’는 공통점이 있다. 이걸 자동화 할 수 있다면 어떨까?</p>
+<h2 id="Selenium-설치하기"><a href="#Selenium-설치하기" class="headerlink" title="Selenium 설치하기"></a>Selenium 설치하기</h2><p>Selenium은 위의 질문에 대한 답변을 준다. 사람이 하기 귀찮은 부분을 자동화!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.19.12.png" alt=""></p>
+<p>우선 Selenium을 설치해주자.<br>(단, Python3가 설치되어있다는 상황을 가정하며, Virtualenv / Pyvenv등의 가상환경 사용을 권장한다. 이 게시글에서는 tdd_study라는 이름의 가상환경을 이용한다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install selenium</span><br></pre></td></tr></table></figure>
+
+<p>PIP가 설치되어있다면 위 명령어 한줄만으로 Selenium이 설치된다.<br>Selenium의 설치가 완료되었다면, 우선 ChromeDriver를 받아준다.</p>
+<h2 id="ChromeDriver-설치하기"><a href="#ChromeDriver-설치하기" class="headerlink" title="ChromeDriver 설치하기"></a>ChromeDriver 설치하기</h2><p>Selenium은 기본적으로 Firefox 드라이버를 내장하고있다. 이 ‘Driver’들은 시스템에 설치된 브라우저들을 자동으로 동작하게 하는 API를 내장하고 있고, 우리는 각 브라우저별 드라이버를 다운받아 쉽게 이용할 수 있다.</p>
+<p>현재 Selenium은 대다수의 모던 웹브라우저들(Chrome, Firefox, IE, Edge, Phantomjs, etc.)을 지원하고 있기 때문에, 일상적으로 사용하는 크롬드라이버를 사용하기로 했다.<br>(만약 Headless Browser를 이용해야 한다면 <a href="http://phantomjs.org/">Phantomjs</a>를 이용해보자.)</p>
+<p>크롬드라이버는 <a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">크로미움의 ChromeDriver</a>에서 최신 버전으로 받을 수 있고, 이번 스터디에서는 Chrome v54에서 v56까지를 지원하는 ChromeDriver 2.27버전을 이용하려 한다.</p>
+<p>크롬드라이버는 어떤 파일을 설치하는 것이 아니라, Binary가 내장되어있는 하나의 실행파일이라고 보면 된다.</p>
+<p>만약 MAC OS나 Linux계열을 사용한다면, 크롬드라이버를 받은 후 그 파일을 PATH에 등록해 주자.</p>
+<p>예시)<br>위 사이트에서 받은 파일의 이름이 chromedriver 이고 받은 경로가<br>/Users/beomi/bin 이라면,<br>사용하는 쉘(bash / zsh등)의 RC파일(유저 홈 디렉토리의 .bashrc / .zshrc)의 제일 아래에</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$&#123;PATH&#125;:~&#x2F;bin</span><br></pre></td></tr></table></figure>
+
+<p>위의 코드를 적고 저장한 후, 쉘을 재실행해준다.(터미널을 껐다가 켜주자.)</p>
+<p>이렇게 하고나면, 아래 실습시 크롬드라이버의 위치를 지정하지 않고 파일 이름만으로 이용 할 수 있다는 장점이 있다.</p>
+<h2 id="Django-설치하기"><a href="#Django-설치하기" class="headerlink" title="Django 설치하기"></a>Django 설치하기</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.20.45.png" alt=""></p>
+<p>Django는 앞으로 우리가 스터디에 사용할 WebFramework다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install django</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어로 역시 쉽게 설치 가능하다.<br>(2016.12.27기준 1.10.4가 최신버전이며, 1.10.x버전으로 스터디를 진행할 예정이다.)</p>
+<p>pip로 Django가 설치되고 나면 django-admin 이라는 명령어를 쉘에서 사용할 수 있다.</p>
+<h1 id="실습"><a href="#실습" class="headerlink" title="실습"></a>실습</h1><h3 id="0-설치-잘-되었는지-확인해-보기"><a href="#0-설치-잘-되었는지-확인해-보기" class="headerlink" title="0. 설치 잘 되었는지 확인해 보기"></a>0. 설치 잘 되었는지 확인해 보기</h3><p>쉘에서</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip list --format&#x3D;columns</span><br></pre></td></tr></table></figure>
+
+<p>라는 명령어를 쳤을 때 아래 스샷과 같이 Django와 selenium이 보인다면 정상적으로 설치가 진행 된 것이다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.22.02.png" alt=""></p>
+<p>설치가 잘 되었다면 다음으로 진행해 보자.</p>
+<h3 id="1-Selenium-이용해보기"><a href="#1-Selenium-이용해보기" class="headerlink" title="1. Selenium 이용해보기"></a>1. Selenium 이용해보기</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">browser = webdriver.Chrome(<span class="string">'chromedriver'</span>)</span><br><span class="line"><span class="comment"># chromedriver가 Python파일과 같은 위치에 있거나, 혹은 OS의 PATH에 등록되어 쉘에서 실행 가능한 경우 위와같이 한다.</span></span><br><span class="line"><span class="comment"># 혹은 browser = webdriver.Chrome('/path/to/chromedriver')의 절대경로로 해도 된다.</span></span><br><span class="line">browser.get(<span class="string">'http://localhost:8000'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> <span class="string">'Django'</span> <span class="keyword">in</span> browser.title</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 Chrome 브라우저를 작동시키는 WebDriver를 이용해 새 크롬 창을 띄우고 <code>http://localhost:8000</code>이라는 url로 들어간 후 브라우저의 title에 ‘Django’라는 글자가 들어가 있는지를 확인(Assert)해준다.</p>
+<p>현재 상황에서는 django웹서버를 실행하지 않았기 때문에 당연하게도 AssertionError가 난다.</p>
+<h3 id="2-Django-서버-띄우기"><a href="#2-Django-서버-띄우기" class="headerlink" title="2. Django 서버 띄우기"></a>2. Django 서버 띄우기</h3><p>이제 Django서버를 띄워보자. </p>
+<p>Django는 django-admin이라는 명령어를 통해 기본적인 뼈대가 구성된 프로젝트 폴더 하나를 만들어 준다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ django-admin startproject tdd_study_proj</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어를 치면 다음과 같은 폴더 구조를 가진 프로젝트 폴더가 생긴다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.25.13.png" alt=""></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(tdd_study) ➜  tdd_study_proj tree</span><br><span class="line">.</span><br><span class="line">├── manage.py</span><br><span class="line">└── tdd_study_proj</span><br><span class="line">    ├── __init__.py</span><br><span class="line">    ├── settings.py</span><br><span class="line">    ├── urls.py</span><br><span class="line">    └── wsgi.py</span><br><span class="line"></span><br><span class="line">1 directory, 5 files</span><br></pre></td></tr></table></figure>
+
+<p>(유의: tree명령어는 Mac OS에서 HomeBrew를 통해 설치한 패키지다. 자신의 쉘에서 동작하지 않는다고 문제가 있는건 아니다.)</p>
+<p>위 파일 구조를 보면 tdd_study_proj라는 큰 폴더(현재위치) 안에 manage.py파일과 현재위치 폴더이름과 같은 tdd_study_proj라는 프로젝트 폴더가 생겨있다.</p>
+<p>이 상태에서 장고에 내장된 테스트 웹서버를 구동해 보자. 테스트용 웹서버는 runserver 라는 명령어로 실행할 수 있고, CTRL-C로 작동을 멈추게 할 수 있다.<br>manage.py파일이 있는 곳에서 아래의 명령어를 쳐주자.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py runserver</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어를 치면 아래와 같이 테스트 서버가 <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> 에서 실행되고 있다.<br>(참고: 127.0.0.1 주소는 localhost와 동일합니다. 즉, 127.0.0.1:8000은 localhost:8000입니다.)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.34.26.png" alt=""></p>
+<p>위 URL로 들어갔을 때 아래와 같은 화면이 나온다면 Django가 정상적으로 설치되었고, 테스트 웹서버도 정상적으로 구동중인 것이다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.36.09.png" alt=""></p>
+<h3 id="3-다시한번-테스트"><a href="#3-다시한번-테스트" class="headerlink" title="3. 다시한번 테스트!"></a>3. 다시한번 테스트!</h3><p>Django서버가 켜져있는 상태로 둔 후, 새 쉘(혹은 cmd)창을 켜서 실습1. Selenium 이용해보기에서 만든 파일을 manage.py파일이 있는 폴더에 <code>selenium_test.py</code>라는 이름으로 만들어 주자.</p>
+<pre><code class="py"><span class="comment"># selenium_test.py</span>
+
+<span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver
+
+browser = webdriver.Chrome(<span class="string">'chromedriver'</span>)
+browser.get(<span class="string">'http://localhost:8000'</span>)
+
+<span class="keyword">assert</span> <span class="string">'Django'</span> <span class="keyword">in</span> browser.title</code></pre>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2016-12-27%2001.45.10.png" alt=""></p>
+<p>이제는 에러가 나지 않고 테스트가 아무말(아무 에러)없이 끝나는걸 볼 수 있다 :)</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/12/28/TelegramBot-with-Celery/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Celery로 TelegramBot 알림 보내기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/27/Django-TDD-Study-02-Using-UnitTest/">
+                <span class="level-item">[DjangoTDDStudy] #02: UnitTest 이용해 기능 테스트 하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

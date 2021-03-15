@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>[DjangoTDDStudy] #02: UnitTest 이용해 기능 테스트 하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/old_post/unit-test.jpg" alt="[DjangoTDDStudy] #02: UnitTest 이용해 기능 테스트 하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-12-26T15:00:00.000Z">2016-12-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DjangoTDDStudy/">DjangoTDDStudy</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DjangoTDDStudy/Python/">Python</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                [DjangoTDDStudy] #02: UnitTest 이용해 기능 테스트 하기
+            
+        </h1>
+        <div class="content">
+            <h1 id="최소기능-앱"><a href="#최소기능-앱" class="headerlink" title="최소기능 앱"></a>최소기능 앱</h1><p>TDD를 하는데 있어 가장 기본은 당연히 테스트코드를 짜는 것이다. 하지만 그 전에 먼저, 테스트 시나리오를 작성해야 한다. 예를들어, “인터넷 쇼핑몰에 들어간 후, 상품을 검색하고, 상품을 선택하고, 장바구니에 담고, 카트에 간 후, 결제를 한다.”라는 시나리오도 가능하다.</p>
+<p>그리고, 이 시나리오를 충족하면서 가장 간단한 기능으로만 구성되지만 실제로 ‘동작’하는 앱을 만드는 것이다.</p>
+<p>일단 이 최소기능 앱을 만들기 전에 우리 코드를 약간 바꿔보자.</p>
+<h1 id="Python-기본-라이브러리-unittest"><a href="#Python-기본-라이브러리-unittest" class="headerlink" title="Python 기본 라이브러리: unittest"></a>Python 기본 라이브러리: unittest</h1><p>지금까지는 selenium의 webdriver만을 직접 이용해왔지만, 만약 테스트 할 내용이 단순히 인터넷 창 하나를 띄우는것이 아니라 여러가지로 테스트를 늘려야 한다면 이전시간에 짠 코드는 딱히 도움이 되지는 않을 듯 하다.</p>
+<p>그리고, 열려진 브라우저를 일일히 닫아주는 것도 상당히 귀찮다. 그러니까 unittest를 이용해 보자.</p>
+<p>방금까지 사용한 <code>functional_tests.py</code>파일을 아래와 같이 바꿔보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># functional_tests.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> unittest</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NewVisitorTest</span><span class="params">(unittest.TestCase)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setUp</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.browser = webdriver.Chrome(<span class="string">'chromedriver'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tearDown</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.browser.quit()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_can_start_a_list_and_retrieve_it_later</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.browser.get(<span class="string">'http://localhost:8000'</span>)</span><br><span class="line"></span><br><span class="line">        self.assertIn(<span class="string">'To-Do'</span>, self.browser.title)</span><br><span class="line">        self.fail(<span class="string">'Finished the Test'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    unittest.main(warning=<span class="string">'ignore'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>위 코드중 마지막의 <code>if __name__==&#39;__main__&#39;</code>은, 이 파이썬 코드가 다른 파이썬 파일에서 import 되어 사용되지 않고 <code>python functional_tests.py</code>라고 직접 실행한 경우에만 아래 코드를 실행한다.</p>
+<p>만약 위 파일이 <code>import functional_tests</code>의 방식으로 import되었다면 위 코드의 <code>__name__</code>은 functional_tests가 된다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> some_thing</span><br><span class="line"><span class="comment"># __name__ 은 some_thing</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> abc</span><br><span class="line"><span class="comment"># __name__ 은 abc</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> some_thing <span class="keyword">as</span> st</span><br><span class="line"><span class="comment"># __name__ 은 st</span></span><br></pre></td></tr></table></figure>
+
+<p>이와 같은 <code>__name__</code>을 가진다.</p>
+<p>다시한번 위 코드를 살펴보면, NewVisitorTest 클래스는 unittest라이브러리의 TestCase클래스를 상속받고 내장함수는 setUp, teatDown, test_can_start_a_list_and_retrieve_it_later가 있다.</p>
+<p>unittest.main()을 통해 실행되면 ~~Test라는 class들이 모두 테스트 클래스로 지정되고 실행되는데, 이 클래스 안에 있는 <code>test_</code>로 시작하는 함수 하나하나가 테스트 함수로 인식된다. (만약 <code>test_</code>로 시작하지 않으면 테스트 코드라고 인식하지 않는다.)</p>
+<p>또한, 테스트 함수 하나하나가 실행되기 전에 setUp이 실행되고 테스트 함수가 끝날때 마다 tearDown이 실행된다.</p>
+<h1 id="암묵적-대기-명시적-대기"><a href="#암묵적-대기-명시적-대기" class="headerlink" title="암묵적 대기 / 명시적 대기"></a>암묵적 대기 / 명시적 대기</h1><p>셀레늄이 URL에 들어가 페이지 로딩이 끝날때까지 기다렸다가 동작하기는 하지만, 완벽하지는 않기때문에 (ajax call로 DOM을 재구성하는 경우 등) 얼마정도 우리가 지정한 element가 나올때까지 기다리게 할 수 있다.</p>
+<p>바로 implicit_wait()이라는 암시적 대기를 주는 것이다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># functional_tests.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> unittest</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NewVisitorTest</span><span class="params">(unittest.TestCase)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setUp</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.browser = webdriver.Chrome(<span class="string">'chromedriver'</span>)</span><br><span class="line">        self.browser.implicit_wait(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tearDown</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.browser.quit()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_can_start_a_list_and_retrieve_it_later</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.browser.get(<span class="string">'http://localhost:8000'</span>)</span><br><span class="line"></span><br><span class="line">        self.assertIn(<span class="string">'To-Do'</span>, self.browser.title)</span><br><span class="line">        self.fail(<span class="string">'Finished the Test'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    unittest.main(warning=<span class="string">'ignore'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>browser에 implicit_wait을 3초로 두었다.<br>그런데, 이 implicit_wait은 이 테스트 코드 전체 행동에 영향을 준다. 즉, 어떤 동작을 하기 전에 일단 3초는 허용하고 본다는 것이다.</p>
+<p>그래서 좀 더 복잡한 코드의 경우에는 명시적 대기를 줘야만 한다.</p>
+<p>아래는 selenium의 공식 문서 <a href="http://www.seleniumhq.org/docs/04_webdriver_advanced.jsp">webdriver_advanced</a>의 코드를 일부 변형한 것이다.(Driver/URL)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.ui <span class="keyword">import</span> WebDriverWait <span class="comment"># v2.4.0 이상</span></span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> EC <span class="comment"># v2.26.0 이상</span></span><br><span class="line"></span><br><span class="line">browser = webdriver.Chrome(<span class="string">'chromedriver'</span>)</span><br><span class="line">browser.get(<span class="string">"http://localhost:8000"</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    element = WebDriverWait(browser, <span class="number">10</span>).until(EC.presence_of_element_located((By.ID, <span class="string">"myDynamicElement"</span>)))</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    browser.quit()</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 브라우저는 0.5초마다 ‘myDynamicElement’라는 ID를 가진 요소가 존재하는지를 체크한다. 만약 10초 내로 나타난다면 정상적으로 진행되고, 나타나지 않으면 TimeoutException을 내뱉는다.</p>
+<h3 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h3><p>하지만 selenium문서에서는 이 코드는 implicit_wait와 크게 다르지 않다고 한다. 좀더 공부가 필요할 듯 하다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/12/27/Django-TDD-Study-01-Setting-DevEnviron/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">[DjangoTDDStudy] #01: 개발환경 세팅하기(Selenium / ChromeDriver)</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/26/Django-TDD-Study-00-Starting-Study/">
+                <span class="level-item">[DjangoTDDStudy] #00: 스터디를 시작하며</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

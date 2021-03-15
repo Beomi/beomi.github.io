@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Autoenv로 편리한 개발하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/use-autoenv.jpg" alt="Autoenv로 편리한 개발하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-15T15:00:00.000Z">2017-07-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/macos/">macos</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Autoenv로 편리한 개발하기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 가이드는 macOS를 대상으로 합니다.</p>
+</blockquote>
+<p>프로젝트를 여러가지를 동시에 진행하고 프로젝트에서 사용하는 개발환경이 다양해지다 보니 사용하게 되는 도구들이 많습니다.</p>
+<p>Python에서는 <code>virtualenv</code>, <code>pyenv</code>등이 대표적이고 Node.js에서는 <code>nvm</code>이나 <code>n</code>등이 대표적인 사례입니다.</p>
+<p>즉 시스템에 전역으로 설치되어있는 것과 다른 버전 혹은 다른 패키지들이 설치된 가상환경에서 개발을 진행해 각 프로젝트별로 다른 환경에서 개발을 진행합니다.</p>
+<p>하지만 이러한 도구들을 사용하기 위해서는 프로젝트를 실행하기 전 특별한 명령어들(ex: <code>workon venv_name</code>등)을 사용해야 합니다.</p>
+<p>Autoenv는 이러한 명령어들을 각 프로젝트 폴더 진입시 자동으로 실행할 수 있도록 도와줍니다.</p>
+<h2 id="Autoenv가-작동하는-방법"><a href="#Autoenv가-작동하는-방법" class="headerlink" title="Autoenv가 작동하는 방법"></a>Autoenv가 작동하는 방법</h2><p>Autoenv는 시스템의 <code>cd</code>명령어를 바꿔, 폴더 안에 진입한 후 폴더 안에 <code>.env</code>파일이 있는지를 탐색하고 만약 <code>.env</code>파일이 있으면 그 파일을 한줄한줄 사람이 터미널에 치듯 실행새줍니다.</p>
+<p>예를 들어, <code>hello</code>라는 폴더 안의 <code>.env</code>에 아래와 같이 되어있다고 가정해 봅시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env파일</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Hello World!"</span></span><br></pre></td></tr></table></figure>
+
+<p>이후 이 <code>hello</code>폴더에 진입할 때마다 <code>Hello World!</code>가 출력됩니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~ $ <span class="built_in">cd</span> hello</span><br><span class="line">Hello World!</span><br><span class="line">~/hello $</span><br></pre></td></tr></table></figure>
+
+<p>이처럼 여러가지 방법으로 이용할 수 있습니다. </p>
+<h2 id="Autoenv-설치하기"><a href="#Autoenv-설치하기" class="headerlink" title="Autoenv 설치하기"></a>Autoenv 설치하기</h2><p>Autoenv는 다음 두 절차를 통해 쉽게 설치할 수 있습니다.</p>
+<p>우선 <code>brew</code>로 설치해 줍시다. (HomeBrew는 <a href="http://brew.sh">brew.sh</a>에서 설치할 수 있습니다.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install autoenv</span><br></pre></td></tr></table></figure>
+
+<p>다음으로는 autoenv 실행 스크립트를 <code>.zshrc</code>나 <code>.bash_profile</code> 파일의 끝부분에 적어줍시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .zshrc 나 .bash_profile 의 파일 가장 끝</span></span><br><span class="line"><span class="built_in">source</span> /usr/<span class="built_in">local</span>/opt/autoenv/activate.sh</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>만약 아직 ZSH을 설치하지 않았다면 <a href="/2017/07/07/Beautify-ZSH/">멋진 Terminal 만들기</a>을 읽어보세요!</p>
+</blockquote>
+<h2 id="유의사항"><a href="#유의사항" class="headerlink" title="유의사항"></a>유의사항</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-16%2017.44.52.png" alt=""></p>
+<p><code>.env</code>파일 설정 후 첫 폴더 진입시 <code>.env</code>파일을 신뢰하고 실행할지 않을 지에 대한 동의가 나타납니다. 이 부분은 <code>.env</code>파일이 악의적으로 변경되었을때 사용자에게 알리기 위해서 있기 때문에 즐거운 마음으로 Y를 눌러줍시다.</p>
+<h2 id="SSH키파일-등록하기"><a href="#SSH키파일-등록하기" class="headerlink" title="SSH키파일 등록하기"></a>SSH키파일 등록하기</h2><p>SSH키파일을 <code>.bash_profile</code>등에 등록해 터미널이 켜질때마다 불러오는 방법도 있지만, 그 대신 <code>ssh-add</code>명령어를 통해 직접 현재 터미널에만 제한적으로 불러오는 방법이 있습니다. </p>
+<p>만약 <code>~/.ssh</code>폴더 안에 <code>my_key_file.pem</code>이라는 키 파일들이 있다면 아래와 같이 <code>.env</code>를 구성할 수 있습니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env파일</span></span><br><span class="line">ssh-add ~/.ssh/my_key_file.pem</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 구성하면 폴더에 진입시마다 아래와 같이 키 파일이 등록된다는 것을 확인할 수 있습니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~ $ <span class="built_in">cd</span> project</span><br><span class="line">Identity added: /Users/beomi/.ssh/my_key_file.pem (/Users/beomi/.ssh/my_key_file.pem)</span><br><span class="line">~/project $</span><br></pre></td></tr></table></figure>
+
+<h2 id="Python-가상환경-관리하기"><a href="#Python-가상환경-관리하기" class="headerlink" title="Python 가상환경 관리하기"></a>Python 가상환경 관리하기</h2><h3 id="venv를-사용할-경우"><a href="#venv를-사용할-경우" class="headerlink" title="venv를 사용할 경우"></a>venv를 사용할 경우</h3><p>파이썬 3.4이후부터 내장된 venv를 이용한 경우 다음과 같이 <code>.env</code>를 구성할 수 있습니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env파일</span></span><br><span class="line"><span class="built_in">source</span> ./가상환경폴더이름/bin/activate</span><br></pre></td></tr></table></figure>
+
+<h3 id="virtualenv를-이용할-경우"><a href="#virtualenv를-이용할-경우" class="headerlink" title="virtualenv를 이용할 경우"></a>virtualenv를 이용할 경우</h3><p>venv와 동일합니다. 아래와 같이 <code>.env</code>를 구성해 주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env파일</span></span><br><span class="line"><span class="built_in">source</span> ./가상환경폴더이름/bin/activate</span><br></pre></td></tr></table></figure>
+
+<h3 id="virtualenv-wrapper를-이용중인-경우"><a href="#virtualenv-wrapper를-이용중인-경우" class="headerlink" title="virtualenv-wrapper를 이용중인 경우"></a>virtualenv-wrapper를 이용중인 경우</h3><p><code>workon</code>명령어를 그대로 사용할 수 있습니다. 아래와 같이 <code>.env</code>를 설정해 주세요. (저는 이 방법을 사용하고 있습니다.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env파일</span></span><br><span class="line">workon 가상환경이름</span><br></pre></td></tr></table></figure>
+
+<h3 id="Pyenv를-이용중인-경우"><a href="#Pyenv를-이용중인-경우" class="headerlink" title="Pyenv를 이용중인 경우"></a>Pyenv를 이용중인 경우</h3><p>pyenv에서는 <code>local</code>이라는 명령어를 통해 기본적으로 폴더별 Python 버전을 관리해 줍니다. 따라서 <code>.env</code>를 통해 Global설정을 하는 경우를 제외하면 사용하지 않는 것을 추천합니다.</p>
+<h2 id="Node-js-개발환경-관리하기"><a href="#Node-js-개발환경-관리하기" class="headerlink" title="Node.js 개발환경 관리하기"></a>Node.js 개발환경 관리하기</h2><h3 id="n을-사용할-경우"><a href="#n을-사용할-경우" class="headerlink" title="n을 사용할 경우"></a>n을 사용할 경우</h3><p>node버전을 관리해 주는 <code>n</code>은 <code>sudo</code>권한을 필요로 합니다. 시스템 전역에서 사용하는 node의 버전을 변경하기 때문입니다. 그래서 패스워드를 입력해 주는 과정이 필요할 수 있습니다. <code>.env</code>파일을 아래와 같이 만들어 주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo n latest <span class="comment"># 버전은 사용 환경에 맞게 입력해 주세요.</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="마무리"><a href="#마무리" class="headerlink" title="마무리"></a>마무리</h2><p>사실 Python을 주력 언어로 사용하다 보니 다른 언어들에 대해 언급은 적은 측면이 있습니다. 하지만 Autoenv 자체가 굉장히 심플한 스크립트로 이루어져 있기 때문에 필요에 맞춰 바꾸어 사용하는 것도 방법중 하나라고 생각합니다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/08/25/DjangoCBV-queryset-vs-get_queryset/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Django CBV: queryset vs get_queryset() 삽질기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/07/12/understanding_js_scope_function_vs_arrow/">
+                <span class="level-item">자바스크립트: function declaration와 Arrow Function의 this 스코프 차이</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

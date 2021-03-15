@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Django에 Social Login와 Email유저 함께 이용하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-08-Setup-SocialAuth-for-Django/social_login.png" alt="Django에 Social Login와 Email유저 함께 이용하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-03-21T15:00:00.000Z">2017-03-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Django에 Social Login와 Email유저 함께 이용하기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p><code>django-custom-user</code>와 <code>social-auth-app-django</code>(구 <code>python-social-auth</code>)를 이용해 이메일 기반 유저와 소셜 로그인으로 로그인 한 유저를 하나처럼 사용하는 방법입니다.</p>
+</blockquote>
+<blockquote>
+<p>장고에 소셜 로그인을 붙이는 가이드는 <a href="/2017/02/08/Setup-SocialAuth-for-Django/">Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지</a> 포스팅에서 찾으실 수 있습니다.</p>
+</blockquote>
+<h1 id="Django-SocialLogin-Email-as-User"><a href="#Django-SocialLogin-Email-as-User" class="headerlink" title="Django + SocialLogin + Email as User"></a>Django + SocialLogin + Email as User</h1><p>웹 서비스를 제공할 때 여러가지 로그인 방법을 구현할 수 있습니다. 아이디/패스워드 기반의 방식, 페이스북과 구글등의 OAuth를 이용한 소셜 로그인 방식 등이 있습니다.</p>
+<p>장고 프로젝트를 만들 때 <code>django-custom-user</code>등의 패키지를 이용하면 이메일 주소를 Unique Key로 사용해 이메일 주소로 로그인을 할 수 있도록 만들어 줍니다.</p>
+<blockquote>
+<p><code>django-custom-user</code>에 관한 문서는 <a href="https://github.com/jcugat/django-custom-user#django-custom-user">Django Custom User GitHub</a>에서 확인하실 수 있습니다.</p>
+</blockquote>
+<p>하지만, <code>social-auth-app-django</code>를 통해 유저를 생성 할 경우 OAuth Provider에 따라 다른 User를 생성합니다. 즉, 같은 이메일 주소를 가지고 있는 유저라 하더라도 페이스북을 통해 로그인 한 유저와 구글을 통해 로그인 한 유저는 다르게 다뤄진다는 뜻입니다.</p>
+<blockquote>
+<p>사실 이메일 주소를 신뢰하지 않고 Provier마다 다른 유저로 생성하는 것이 기본으로 되어있는 이유는 Oauth Provier의 신뢰 문제입니다. 모든 Oauth Provier가 가입한 유저의 Email의 실 소유권을 확인하지는 않기 때문입니다.</p>
+</blockquote>
+<p>이를 해결하고 같은 이메일을 통해 로그인한 유저는 모두 같은 유저로 취급하기 위해서는 장고 프로젝트 폴더의 <code>settings.py</code>파일 안에서 <code>social-auth-app-django</code>의 Pipeline설정을 변경해 줘야 합니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">SOCIAL_AUTH_PIPELINE = (</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.social_details'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.social_uid'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.auth_allowed'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.social_user'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.user.get_username'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.associate_by_email'</span>,  <span class="comment"># &lt;--- 이 줄이 핵심입니다.</span></span><br><span class="line">    <span class="string">'social_core.pipeline.user.create_user'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.associate_user'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.load_extra_data'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.user.user_details'</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>SOCIAL_AUTH_PIPELINE</code>은 <code>settings.py</code>내에는 기본적으로 지정이 해제되어있습니다. 따라서 변수가 없는 경우 위 코드 전체를 <code>settings.py</code>파일 끝에 덧붙이시면 됩니다.</p>
+<blockquote>
+<p>참고: <a href="http://python-social-auth.readthedocs.io/en/latest/use_cases.html#associate-users-by-email">Python Social Auth: Associate users by Email</a></p>
+</blockquote>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/03/28/Use-GoogleDrive-as-Image-Server/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 업로드 ShellScript편</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/03/20/Deploy-Django-with-Fabric/">
+                <span class="level-item">Fabric으로 Django 배포하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

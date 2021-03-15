@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://beomi.github.io/2021/03/16/KcBERT-Downstream-Finetune/</loc>
+    
+    <lastmod>2021-03-15T17:43:28.468Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2021/03/15/KcBERT-MLM-Finetune/</loc>
+    
+    <lastmod>2021-03-15T15:16:04.680Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/others/plots/pyconkr_2019_naver_201906_similar_gte10.html</loc>
+    
+    <lastmod>2021-03-15T14:54:57.569Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/others/html_to_csv.html</loc>
+    
+    <lastmod>2021-03-15T14:54:57.557Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/naver0eed895aa522da30bfdcf1c4b681f4bd.html</loc>
+    
+    <lastmod>2021-03-15T14:54:57.549Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/07/01/Review-the-Interview/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.244Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/12/04/Transformers4/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.244Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/01/29/Use-parquet-on-pandas/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/01/05/Clustering_Twitter_Users/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/02/03/Lookup-HopsWorks/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/02/13/AWS-SSM-with-Bastion/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/02/26/Train-BERT-from-scratch-on-colab-TPU-Tensorflow-ver/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/05/29/Gitlab-for-LFS/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/02/24/Pytorch-with-TPU-on-Colab/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/07/08/Papago-API-with-Python/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/10/20/Learning-VLang/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/12/20/DockerImage_for_KoreanNLP/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/12/21/Crawling_Twitter_Following/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/12/22/Crawling_Twitter_Following_2/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/12/22/Crawling_Twitter_Following_3/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/12/31/Postmortem-2019/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/02/26/PySpark-Read-Parquet-ignoreCorruptedFiles/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/03/09/Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/03/18/Create_GPU_spot_EC2_for_ML/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/11/30/using-aws-lambda-layers-on-python3/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/06/24/alba300-0/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/06/27/DevGround/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/07/04/DLCAT2nd/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/12/15/Direct-upload-to-S3-with-Lambda/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/01/30/Hide-username-on-MAC-terminal/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/12/30/Blog-1Year-2017/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/02/02/Connect-django-to-MSSQL/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/02/07/pyldap-on-ubuntu16/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/02/12/Add-packages-installed-with-pip-usermode/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/02/19/django_orm_for_multiple_db_with_sqldriver/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/10/Export-HighQuality-Image-with-KeyNote/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/20/Deploy-Gitbook-to-Github-Pages/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/27/EMR-and-PySpark/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/28/Flask-CSV-Response/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/29/JS-TreeShaking-with-Webpack/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/29/HTML-Table-to-CSV/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/12/07/Deploy-Tensorflow-Keras-on-AWS-Lambda/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/17/Deploy-Flask-with-Fabric/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/01/PDF_to_GoogleTranslatorToolkit/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/18/Setup-Babel-with-webpack/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/20/DB-To-SQLAlchemy-Model/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/21/SQLAlchemy-Query-to-Pandas-DataFrame/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/29/HowToMakeWebCrawler-ImplicitWait-vs-ExplicitWait/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/09/Install-PySpark-and-Hadoop-on-Ubuntu-16-04/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/08/25/DjangoCBV-queryset-vs-get_queryset/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.237Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/08/26/SSH-Reverse-Proxy-like-ngrok/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.237Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/09/28/HowToMakeWebCrawler-Headless-Chrome/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.237Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/06/21/Activate-MS-AzurePass/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/06/10/Deploy-Django-to-MS-Azure-EN/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/03/Use-Shift-Space-for-Change-Language-on-macOS/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/04/Call-Sublime-from-Terminal/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/07/Beautify-ZSH/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/12/understanding_js_scope_function_vs_arrow/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/10/Ubuntu-Locale-to-ko_KR/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/16/Use-Autoenv/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/20/Using-ES6-JSX-on-Client/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/28/Make-Capture-to-GDrive-App/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/28/Use-GoogleDrive-as-Image-Server/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/22/Setup-SocialAuth-for-Django-Email-as-User/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/04/20/HowToMakeWebCrawler-Notice-with-Telegram/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/06/01/Add-Sentry-to-Django/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/06/09/Deploy-Django-to-MS-Azure/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/02/02/Django-CustomAuth/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/01/HowToMakeWebCrawler-Save-with-Django/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/19/Celery-Getting-Started/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/02/27/HowToMakeWebCrawler-With-Selenium/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/19/Introduction-to-Celery/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/20/Deploy-Django-with-Fabric/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/02/08/Setup-SocialAuth-for-Django/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/26/Django-TDD-Study-00-Starting-Study/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/27/Django-TDD-Study-01-Setting-DevEnviron/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/27/Django-TDD-Study-02-Using-UnitTest/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/01/20/HowToMakeWebCrawler/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/01/20/HowToMakeWebCrawler-With-Login/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/28/TelegramBot-with-Celery/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790ec849c-python3eab8b0ebb098-virtualenvwrapper-ec84a4ecb998/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/08/09/customac-ec84a4ecb998-ebb684ed88aceab8b0/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/09/14/chrome-native-adblockr-eb8c80ecb2b4ed9598eab8b0/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/11/04/ebb288ec97ad-ec9ea5eab3a0djangoec9980-ed95a8eabb98ed9598eb8a94-celery-ecb2abeab1b8ec9d8c/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/11/15/ReactNative-Translation-#01-getting-started/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/20/ReactNative-Translation-Intro-Finish/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/22/CKEditor-Lisence-and-Pricing/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/22/Fabric-Put-Command-No-Such-File-Exception/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/05/27/eba7a5ec9790ec849c-ec9c88eb8f84rdpeba19c-eca091ec868dec8b9c-ed959cec9881eca084ed9998ed9598eab8b0/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/05/27/pipeba19c-mysqlclientec84a4ecb998-eca491-mac-os-xec9790ec849c-egg_info-oserror-ebb09cec839dec8b9c-eb8c80ecb298ebb0a9ebb295/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/07/17/fabric-for-python3-fabric3/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/07/21/mac-os-xec9790ec849c-pip-virtualenvwrapper-ec84a4ecb998-ec8b9c-uninstalling-six-ec9790ec849c-exception-ebb09cec839d-ec8b9c/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/06/04/windowsec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9cpython3-43-5/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790-ohmyzsh-ec84a4ecb998/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9c/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+</urlset>

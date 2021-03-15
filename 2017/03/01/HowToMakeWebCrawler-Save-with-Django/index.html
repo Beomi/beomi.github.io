@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-27-HowToMakeWebCrawler-Save-with-Django/python+django.jpg" alt="나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-28T15:00:00.000Z">2017-03-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>(@2017.03.18) 본 블로그 테마가 업데이트되면서 구 블로그의 URL은 <a href="https://beomi.github.io/beomi.github.io_old/로">https://beomi.github.io/beomi.github.io_old/로</a> 변경되었습니다. 예제 코드에서는 변경을 완료하였지만 캡쳐 화면은 변경하지 않았으니 유의 바랍니다.</p>
+</blockquote>
+<p>이전게시글: <a href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기</a></p>
+<p>Python을 이용해 <code>requests</code>와 <code>selenium</code>을 이용해 웹 사이트에서 데이터를 크롤링해 보았습니다.</p>
+<p>하지만 이러한 데이터를 체계적으로 관리하려면 DB가 필요하고, 이러한 DB를 만들고 관리하는 방법이 여러가지가 있지만 이번 가이드에서는 Python 웹 프레임워크인 <code>django</code>의 Database ORM을 이용해 DB를 만들고 데이터를 저장해 보려 합니다.</p>
+<p>이번 가이드에서는 1회차 가이드였던 이 블로그를 크롤링해서 나온 결과물을 Django ORM으로 Sqlite DB에 저장해보는 것까지를 다룹니다.</p>
+<blockquote>
+<p>이번 가이드는 기본적으로 Django의 <code>Model</code>에 대해 이해하고 있는 분들에게 추천합니다.</p>
+</blockquote>
+<blockquote>
+<p>만약 django가 처음이시라면 <a href="https://djangogirlsseoul.gitbooks.io/django-tube/content/">DjangoGirls Tutorial: DjangoTube</a>를 따라해보시면 기본적인 이해에 도움이 되시리라 생각합니다. 30분 내외로 따라가실 수 있습니다.</p>
+</blockquote>
+<h1 id="Django-프로젝트-만들기"><a href="#Django-프로젝트-만들기" class="headerlink" title="Django 프로젝트 만들기"></a>Django 프로젝트 만들기</h1><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><p>우선 크롤링 한 데이터를 저장할 Django 프로젝트와 앱을 만들고, Model을 통해 DB를 만들어야 합니다.</p>
+<h2 id="Django-설치하기"><a href="#Django-설치하기" class="headerlink" title="Django 설치하기"></a>Django 설치하기</h2><p>Django는 pip로 간편하게 설치할 수 있습니다.</p>
+<blockquote>
+<p>가상환경을 이용해 설치하는 것을 추천합니다. 가상환경은 python3.4이후부터는 <code>python3 -m venv 가상환경이름</code>으로 만드실 수 있습니다.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install django</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2017.14.57.png" alt="django install success"></p>
+<blockquote>
+<p>글 작성 시점인 2017.02.28 기준 1.10.5 버전이 최신버전입니다.</p>
+</blockquote>
+<h2 id="Django-Start-Project-프로젝트-만들기"><a href="#Django-Start-Project-프로젝트-만들기" class="headerlink" title="Django Start Project | 프로젝트 만들기"></a>Django Start Project | 프로젝트 만들기</h2><p>django가 성공적으로 설치되면 <code>django-admin</code>이라는 명령어로 장고 프로젝트를 생성할 수 있습니다.</p>
+<p>이번 가이드에서는 <code>websaver</code>라는 이름의 프로젝트를 만들어보겠습니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">django-admin startproject websaver</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2017.15.47.png" alt="startproject websaver"></p>
+<blockquote>
+<p>성공적으로 생길 경우 어떠한 반응도 나타나지 않습니다.</p>
+</blockquote>
+<p>위 명령어를 치면 명령어를 친 위치에 <code>websaver</code>라는 폴더가 생기고, 그 안의 구조는 아래와 같습니다.</p>
+<blockquote>
+<p><code>cd websaver</code>로 <code>websaver</code>폴더 안으로 진입한 상태입니다.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2017.18.06.png" alt="tree websaver"></p>
+<blockquote>
+<p>tree 명령어는 mac에서 <code>brew install tree</code>로 설치한 명령어입니다. 기본적으로는 깔려있지 않습니다.</p>
+</blockquote>
+<p>이와 같이 <code>manage.py</code>파일과 프로젝트 이름인 <code>websaver</code>라는 이름의 폴더가 함께 생성됩니다.</p>
+<h2 id="Django-Start-App-장고-앱-만들기"><a href="#Django-Start-App-장고-앱-만들기" class="headerlink" title="Django Start App | 장고 앱 만들기"></a>Django Start App | 장고 앱 만들기</h2><p>Django는 프로젝트와 그 안의 <code>앱</code>으로 관리됩니다. 이 <code>앱</code>은 하나의 기능을 담당하는 단위로 보시면 됩니다.</p>
+<p>앱은 <code>manage.py</code>파일을 통해 <code>startapp</code>이라는 명령어로 생성 가능합니다. <code>parsed_data</code>라는 이름의 앱을 만들어보겠습니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py startapp parsed_data</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>manage.py 파일이 있는 곳에서 실행합니다. django가 설치된 가상환경에 진입해 있는지 꼭 확인하세요!</p>
+</blockquote>
+<p>이제 아래와 같은 구조로 앱이 생겼을 것인데, 이 앱을 Django가 관리하도록 <code>websaver</code>폴더 안의 <code>settings.py</code>파일의 <code>INSTALLED_APPS</code>에 추가해줘야 합니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2017.32.06.png" alt="startapp parsed_data"></p>
+<blockquote>
+<p>유의: .pyc파일은 python실행시 생기는 캐싱 파일입니다. 없으셔도 전혀 문제는 발생하지 않습니다.</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># websaver/settings.py</span></span><br><span class="line">...</span><br><span class="line">INSTALLED_APPS = [</span><br><span class="line">    <span class="string">'django.contrib.admin'</span>,</span><br><span class="line">    <span class="string">'django.contrib.auth'</span>,</span><br><span class="line">    <span class="string">'django.contrib.contenttypes'</span>,</span><br><span class="line">    <span class="string">'django.contrib.sessions'</span>,</span><br><span class="line">    <span class="string">'django.contrib.messages'</span>,</span><br><span class="line">    <span class="string">'django.contrib.staticfiles'</span>,</span><br><span class="line">    <span class="string">'parsed_data'</span>, <span class="comment"># 앱을 추가해 줍시다.</span></span><br><span class="line">]</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="Django-First-Migration-첫-마이그레이션"><a href="#Django-First-Migration-첫-마이그레이션" class="headerlink" title="Django First Migration | 첫 마이그레이션"></a>Django First Migration | 첫 마이그레이션</h2><p>​<br>장고는 <code>python manage.py migrate</code>이라는 명령어로 DB를 migrate합니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<p>위 명령어를 입력하면 아래와 같이 Django에서 사용하는 기본적인 DB가 생성됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2017.37.23.png" alt="First migrate"></p>
+<h2 id="parsed-data-App-Model-parsed-data-앱-모델-만들기"><a href="#parsed-data-App-Model-parsed-data-앱-모델-만들기" class="headerlink" title="parsed_data App Model | parsed_data 앱 모델 만들기"></a>parsed_data App Model | parsed_data 앱 모델 만들기</h2><p>이제 DB구조를 관리해주는 <code>Model</code>을 만들어 줘야 합니다.</p>
+<p>Django에서 모델은 앱 단위로 만들어지고 구성됩니다. 따라서 앞서 만들어준 <code>parsed_data</code>앱 안의 <code>models.py</code>파일을 수정해줘야 합니다.</p>
+<p>이 모델 파일은 크롤링해온 데이터를 필드별로 저장하는 것이 목적입니다. 따라서 크롤링한 데이터를 파이썬이 관리할 수 있는 객체로 만들어두는 것이 중요합니다.</p>
+<p>이번 가이드에서는 <a href="https://beomi.github.io/beomi.github.io_old/python/2017/01/19/HowToMakeWebCrawler.html">나만의 웹 크롤러 만들기 With Requests/BeautifulSoup</a>에서 만든 <code>parser.py</code>파일을 수정해 게시글의 title와 link를 DB에 저장해보겠습니다.</p>
+<p>따라서 이번 앱의 모델에서는 title와 link라는 column을 가진 <code>BlogData</code>라는 이름의 Table을 DB에 만들면 됩니다.</p>
+<blockquote>
+<p>django models의 class는 DB의 Table이 됩니다.</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parsed_data/models.py</span></span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BlogData</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    title = models.CharField(max_length=<span class="number">200</span>)</span><br><span class="line">    link = models.URLField()</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 만들어주면 <code>title</code>은 200글자 제한의 CharField로, <code>link</code>는 URLField로 지정됩니다.</p>
+<h2 id="parsed-data-App-Makemigrations-amp-Migrate-앱-DB-반영하기"><a href="#parsed-data-App-Makemigrations-amp-Migrate-앱-DB-반영하기" class="headerlink" title="parsed_data App Makemigrations &amp; Migrate | 앱 DB 반영하기"></a>parsed_data App Makemigrations &amp; Migrate | 앱 DB 반영하기</h2><p>이제 해야 할 일은 Django가 모델을 관리하도록 하려면 <code>makemigrations</code>를 통해 DB의 변경 정보를 정리하고, <code>migrate</code>를 통해 실제 DB에 반영하는 과정을 진행해야 합니다.</p>
+<blockquote>
+<p>django가 설치된 가상환경에서 실행하도록 합시다. 명령어의 실행 위치는 <code>manage.py</code>파일이 있는 곳입니다.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations parsed_data</span><br><span class="line">python manage.py migrate parsed_data</span><br></pre></td></tr></table></figure>
+
+<p>각 명령어 입력시 아래와 같이 결과가 나타난다면 성공적으로 DB에 반영된 것입니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2017.58.01.png" alt="parsed_data app migration"></p>
+<h1 id="크롤링-함수-만들기"><a href="#크롤링-함수-만들기" class="headerlink" title="크롤링 함수 만들기"></a>크롤링 함수 만들기</h1><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><p><a href="https://beomi.github.io/beomi.github.io_old/python/2017/01/19/HowToMakeWebCrawler.html">나만의 웹 크롤러 만들기 With Requests/BeautifulSoup</a>에서 만든 <code>parser.py</code>파일을 수정해보겠습니다.</p>
+<p>이번 파일은 <code>manage.py</code>가 있는 위치에 <code>parser.py</code>라는 이름으로 저장해보겠습니다.</p>
+<blockquote>
+<p>만약 <code>requests</code>와 <code>bs4</code>가 설치되어있지 않다면 pip로 설치해주세요!</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># python파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">my_titles = soup.select(</span><br><span class="line">    <span class="string">'h3 &gt; a'</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">data = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">    data[title.text] = title.get(<span class="string">'href'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'result.json'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> json_file:</span><br><span class="line">    json.dump(data, json_file)</span><br></pre></td></tr></table></figure>
+
+<p>이전의 <code>parser.py</code>파일은 위와 같습니다. 이제 이 파일을 <code>parse_blog</code>라는 함수로 만들고, {‘블로그 글 타이틀’: ‘블로그 글 링크’}로 이루어진 딕셔너리를 반환하도록 만들어 봅시다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_blog</span><span class="params">()</span>:</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data[title.text] = title.get(<span class="string">'href'</span>)</span><br><span class="line">    <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>parse_blog</code>라는 함수를 다른 파일에서 import해 사용할 수 있습니다.</p>
+<p>또한, 현재 프로젝트 폴더의 구조는 아래와 같습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.05.30.png" alt="project folder tree"></p>
+<p>하지만 현재 <code>parse_blog</code>함수는 Django에 저장하는 기능을 갖고 있지 않습니다. 따라서 약간 더 추가를 해줘야 합니다.</p>
+<h2 id="Django-환경-불러오기"><a href="#Django-환경-불러오기" class="headerlink" title="Django 환경 불러오기"></a>Django 환경 불러오기</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="comment"># 아래 4줄을 추가해 줍니다.</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># Python이 실행될 때 DJANGO_SETTINGS_MODULE이라는 환경 변수에 현재 프로젝트의 settings.py파일 경로를 등록합니다.</span></span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"websaver.settings"</span>)</span><br><span class="line"><span class="comment"># 이제 장고를 가져와 장고 프로젝트를 사용할 수 있도록 환경을 만듭니다.</span></span><br><span class="line"><span class="keyword">import</span> django</span><br><span class="line">django.setup()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_blog</span><span class="params">()</span>:</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data[title.text] = title.get(<span class="string">'href'</span>)</span><br><span class="line">    <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+
+<p>위 코드에서 아래 4줄을 추가해 줄 경우, 이 파일을 단독으로 실행하더라도 마치 <code>manage.py</code>을 통해 django를 구동한 것과 같이 django환경을 사용할 수 있게 됩니다.</p>
+<h2 id="Django-ORM으로-데이터-저장하기"><a href="#Django-ORM으로-데이터-저장하기" class="headerlink" title="Django ORM으로 데이터 저장하기"></a>Django ORM으로 데이터 저장하기</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"websaver.settings"</span>)</span><br><span class="line"><span class="keyword">import</span> django</span><br><span class="line">django.setup()</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>python manage.py shell</code>을 실행하는 것과 비슷한 방법입니다.</p>
+</blockquote>
+<p>이제 models에서 우리가 만든 <code>BlogData</code>를 import해 봅시다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"websaver.settings"</span>)</span><br><span class="line"><span class="keyword">import</span> django</span><br><span class="line">django.setup()</span><br><span class="line"><span class="comment"># BlogData를 import해옵니다</span></span><br><span class="line"><span class="keyword">from</span> parsed_data.models <span class="keyword">import</span> BlogData</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_blog</span><span class="params">()</span>:</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data[title.text] = title.get(<span class="string">'href'</span>)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 이 명령어는 이 파일이 import가 아닌 python에서 직접 실행할 경우에만 아래 코드가 동작하도록 합니다.</span></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    blog_data_dict = parse_blog()</span><br><span class="line">    <span class="keyword">for</span> t, l <span class="keyword">in</span> blog_data_dict.items():</span><br><span class="line">        BlogData(title=t, link=l).save()</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 <code>parser.py</code>를 수정한 후 터미널에서 <code>parser.py</code>파일을 실행해 봅시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python parser.py</span><br></pre></td></tr></table></figure>
+
+<p>아무런 에러가 나지 않는다면 성공적으로 저장된 것입니다.</p>
+<h2 id="저장된-데이터-Django-Admin에서-확인하기"><a href="#저장된-데이터-Django-Admin에서-확인하기" class="headerlink" title="저장된 데이터 Django Admin에서 확인하기"></a>저장된 데이터 Django Admin에서 확인하기</h2><h3 id="SuperUser-관리자계정-만들기"><a href="#SuperUser-관리자계정-만들기" class="headerlink" title="SuperUser | 관리자계정 만들기"></a>SuperUser | 관리자계정 만들기</h3><p>Django는 Django Admin이라는 강력한 기능을 제공합니다.</p>
+<p>우선 Admin 계정을 만들어야 합니다. <code>createsuperuser</code> 명령어로 만들 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.18.49.png" alt="createsuperuser"></p>
+<p>기본적으로 유저이름, 이메일, 비밀번호를 받습니다.</p>
+<blockquote>
+<p>이메일은 입력하지 않아도 됩니다.</p>
+</blockquote>
+<h3 id="앱에-Admin-등록하기"><a href="#앱에-Admin-등록하기" class="headerlink" title="앱에 Admin 등록하기"></a>앱에 Admin 등록하기</h3><p>Django가 어떤 앱을 admin에서 관리하도록 하려면 앱 폴더(<code>parsed_data</code>) 안의 <code>admin.py</code>파일을 수정해줘야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parsed_data/admin.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="comment"># models에서 BlogData를 import 해옵니다.</span></span><br><span class="line"><span class="keyword">from</span> .models <span class="keyword">import</span> BlogData</span><br><span class="line"></span><br><span class="line"><span class="comment"># 아래의 코드를 입력하면 BlogData를 admin 페이지에서 관리할 수 있습니다.</span></span><br><span class="line">admin.site.register(BlogData)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Django-Runserver-장고-서버-실행하기"><a href="#Django-Runserver-장고-서버-실행하기" class="headerlink" title="Django Runserver | 장고 서버 실행하기"></a>Django Runserver | 장고 서버 실행하기</h3><p>이제 <code>manage.py</code>가 있는 위치에서 <code>runserver</code>명령어로 장고 개발 서버를 실행해 봅시다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver</span><br></pre></td></tr></table></figure>
+
+<p>아래와 같이 나타난다면 성공적으로 서버가 실행된 것입니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.26.07.png" alt="django runserver"></p>
+<p>이제 <a href="http://localhost:8000/admin/">http://localhost:8000/admin/</a>로 들어가 봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.27.23.png" alt="Django admin login page"></p>
+<p>아까 <code>createsuperuser</code>로 만든 계정으로 로그인 해 봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.28.09.png" alt="django admin page"></p>
+<p>우리가 만든 <code>parsed_data</code>앱 안에 <code>BlogData</code>라는 항목이 나와있는 것을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.28.54.png" alt="blogdata admin list"></p>
+<p><code>BlogData object</code>라는 이름으로 데이터들이 들어와 있는 것을 확인할 수 있습니다. 하나를 클릭해 들어가 보면 아래와 같이 title와 link가 성공적으로 들어와 있는 것을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.29.43.png" alt="blogdata specific data"></p>
+<h1 id="약간-더-나아가기"><a href="#약간-더-나아가기" class="headerlink" title="약간 더 나아가기"></a>약간 더 나아가기</h1><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><p>위에서 Admin페이지에 들어갈 때 모든 데이터들의 이름이 <code>BlogData object</code>로 나와있는 것을 볼 수 있습니다.</p>
+<p>우리가 만들어 준 <code>parsed_data/models.py</code>파일의 <code>BlogData</code> Class를 살펴보면 <code>models.Model</code>클래스를 상속받아 만들었고, 이 클래스는 기본적으로 <code>ClassName + object</code>라는 값을 반환하는 <code>__str__</code>함수를 내장하고 있습니다.</p>
+<p>따라서 <code>models.Model</code>을 상속받은 <code>BlogData</code>의 <code>__str__</code>함수에서는 <code>BlogData object</code>라는 값을 반환합니다. 이 <code>__str__</code>함수를 오버라이딩해 사용하면 Admin에서 데이터의 이름을 좀 더 직관적으로 알 수 있습니다.</p>
+<h2 id="str-함수-오버라이딩하기"><a href="#str-함수-오버라이딩하기" class="headerlink" title="str 함수 오버라이딩하기"></a><strong>str</strong> 함수 오버라이딩하기</h2><p><code>parsed_data</code>앱 폴더 안의 <code>models.py</code>파일을 아래와 같이 수정해 봅시다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parsed_data/models.py</span></span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BlogData</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    title = models.CharField(max_length=<span class="number">200</span>)</span><br><span class="line">    link = models.URLField()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">    	<span class="keyword">return</span> self.title</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 BlogData 데이터 객체의 <code>title</code> 값을 반환합니다.</p>
+<p>이제 장고 서버를 다시 켜주고 <a href="http://localhost:8000/admin/parsed_data/blogdata/">BlogData admin page</a>로 들어가면 타이틀 이름으로 된 데이터들을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-28%2018.38.11.png" alt="title list admin page"></p>
+<blockquote>
+<p>현재 <code>models.py</code>파일을 수정했지만 DB에 반영되는 사항이 아니기 때문에 <code>makemigrations</code>나 <code>migrate</code>를 해줄 필요가 없습니다.</p>
+</blockquote>
+<h1 id="다음-가이드에서는"><a href="#다음-가이드에서는" class="headerlink" title="다음 가이드에서는.."></a>다음 가이드에서는..</h1><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>다음 가이드는 <strong>주기적</strong>으로 데이터를 크롤링 해, <strong>새로운</strong> 데이터가 생기는 경우 텔레그램 봇으로 메시지 알림을 보내주는 과정을 다룰 예정입니다.</p>
+<p>다음 가이드: <a href="/2017/04/20/HowToMakeWebCrawler-Notice-with-Telegram/">나만의 웹 크롤러 만들기(5): 웹페이지 업데이트를 알려주는 Telegram 봇</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/03/19/Introduction-to-Celery/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">[번역]셀러리 입문하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">
+                <span class="level-item">나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing! - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/crawling_with_multiprocessing.png" alt="나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing!">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-07-04T15:00:00.000Z">2017-07-05</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing!
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>이전 가이드: <a href="/2017/04/20/HowToMakeWebCrawler-Notice-with-Telegram/">나만의 웹 크롤러 만들기(5): 웹페이지 업데이트를 알려주는 Telegram 봇</a></p>
+</blockquote>
+<h2 id="들어가기전"><a href="#들어가기전" class="headerlink" title="들어가기전.."></a>들어가기전..</h2><p>나만의 웹 크롤러 만들기 6번째 가이드는 크롤링을 병렬화를 통해 빠르게 진행하는 방법을 안내합니다.</p>
+<p>지금까지 만들어온 크롤러들은 모두 한번에 하나의 요청만을 처리하고 있습니다. 물론 지금까지 따라오셨다면 충분히 크롤러들을 여러분의 의도에 맞게 잘 수정해서 사용해보셨을거라 생각합니다.</p>
+<p>하지만 한 페이지만을 여유로운 시간을 갖고 크롤링하는 것이 아니라 여러 사이트 혹은 여러 페이지를 좀더 빠르게 긁어오는 방법에는 역시 N개를 띄우는 방법이 제일 낫다고 볼 수 있습니다.</p>
+<p>만약 100만개의 페이지가 있다면 1<del>25만/25만1</del>50만/50만1<del>75만/75만1</del>100만와 같이 4개로 쪼개서 돌린다면 더 빠르게 도는 것은 당연합니다.</p>
+<p>하지만 전달해주는 페이지의 목록이나 페이지 숫자에 직접 저 수들을 입력하는 것은 상당히 귀찮은 일이기도 하고, 크롤링이 ‘자동화’를 위한 것이라는 면에 반하는 측면도 있습니다. 따라서 우리는 Python 자체에 내장된 병렬화 모듈을 사용할 예정입니다.</p>
+<p>Python을 이용할 때 프로그램을 병렬적으로 처리하는 방법은 여러가지가 있습니다. 하지만 우리가 하는 일은 연산이 아니고 IO와 네트워크가 가장 큰 문제이기 때문에 <code>multiprocessing</code>을 사용합니다.</p>
+<blockquote>
+<p><code>threading</code> 모듈도 사용 가능합니다. 하지만 <code>multiprocessing</code>모듈을 추천합니다. <code>threading</code>모듈은 싱글 프로세스 안의 스레드에서 동작하지만 이로인해 GIL의 제약에 걸리는 경우가 생기기 때문에 성능 향상에 제약이 있습니다. (물론 우리는 CPU 연산보다 IO/네트워크로 인한 지연이 훨씬 크기 때문에 큰 차이는 없습니다.)</p>
+</blockquote>
+<h2 id="멀티프로세스란"><a href="#멀티프로세스란" class="headerlink" title="멀티프로세스란?"></a>멀티프로세스란?</h2><p>프로세스란 ‘실행 중인 프로그램’을 의미합니다. 간단하게 말해 멀티프로세스는 프로세스를 여러개 띄우는 것, 즉 프로그램을 여러개 실행시키는 것이라고 볼 수 있습니다.</p>
+<p>Python에는 멀티프로세싱 프로그램을 위한 모듈이 <code>multiprocessing</code>이라는 이름으로 내장되어 있습니다. </p>
+<p>가장 단순한 예시로, 임의의 숫자 리스트 (ex: <code>[20, 25, 30, 35]</code>)를 받고 그 자리의 피보나치 수를 구해주는 프로그램이 있다고 가정해 봅시다.</p>
+<p>만약 for문을 통해 리스트를 순회하며 계산한다면 아래와 같이 코드를 짤 수 있습니다.</p>
+<blockquote>
+<p>주의: 명백한 코드 실행 시간 차이를 보여주기 위한 느린 코드입니다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibo</span><span class="params">(n)</span>:</span> <span class="comment"># 회귀적 피보나치 함수</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fibo(n<span class="number">-1</span>) + fibo(n<span class="number">-2</span>)</span><br><span class="line"></span><br><span class="line">num_list = [<span class="number">31</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>]</span><br><span class="line">result_list = []</span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> num_list:</span><br><span class="line">    result_list.append(fibo(num))</span><br><span class="line"></span><br><span class="line">print(result_list)</span><br><span class="line">print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<p>실행을 해보면 다음과 같이 약 7s가 걸리는 것을 볼 수 있습니다. 너무 오래걸리네요.</p>
+<script type="text/javascript" src="https://asciinema.org/a/c6iRt6q82WDuFruFfcFlmmrjn.js" id="asciicast-c6iRt6q82WDuFruFfcFlmmrjn" async></script>
+
+<p>그렇다면 <code>multiprocessing</code>을 이용하면 어떨까요?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibo</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fibo(n<span class="number">-1</span>) + fibo(n<span class="number">-2</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_fibo</span><span class="params">(n)</span>:</span> <span class="comment"># 피보나치 결과를 확인합니다.</span></span><br><span class="line">    print(fibo(n))</span><br><span class="line"></span><br><span class="line">num_list = [<span class="number">31</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>]</span><br><span class="line">    </span><br><span class="line">pool = Pool(processes=<span class="number">4</span>) <span class="comment"># 4개의 프로세스를 사용합니다.</span></span><br><span class="line">pool.map(print_fibo, num_list) <span class="comment"># pool에 일을 던져줍니다.</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<p>실행을 해 봅시다!</p>
+<script type="text/javascript" src="https://asciinema.org/a/gwOTuBQgs11J6ckOlgIERAdF5.js" id="asciicast-gwOTuBQgs11J6ckOlgIERAdF5" async></script>
+
+<p>확실히 빨라진 모습을 볼 수 있습니다. 3s, 즉 절반정도로 줄어든 것을 확인 할 수 있습니다.</p>
+<h2 id="크롤링-병렬화-하기"><a href="#크롤링-병렬화-하기" class="headerlink" title="크롤링 병렬화 하기"></a>크롤링 병렬화 하기</h2><p>이번 가이드에서는 위에서 사용한 모듈인 <code>multiprocessing</code>을 이용해 진행합니다. 크롤링은 위에서 사용한 것처럼 연산집중적이지 않습니다. 그래서 크롤링하는 함수를 만들어두었다면 그 함수를 그대로 사용하시면 됩니다.</p>
+<p>이번 가이드에서는 첫번째 가이드에서 사용했던 함수를 약간 변형해 사용해 봅니다.</p>
+<h3 id="하나씩-크롤링-하기"><a href="#하나씩-크롤링-하기" class="headerlink" title="하나씩 크롤링 하기"></a>하나씩 크롤링 하기</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links</span><span class="params">()</span>:</span> <span class="comment"># 블로그의 게시글 링크들을 가져옵니다.</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data.append(title.get(<span class="string">'href'</span>))</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_content</span><span class="params">(link)</span>:</span></span><br><span class="line">    abs_link = <span class="string">'https://beomi.github.io'</span>+link</span><br><span class="line">    req = requests.get(abs_link)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    <span class="comment"># 가져온 데이터로 뭔가 할 수 있겠죠?</span></span><br><span class="line">    <span class="comment"># 하지만 일단 여기서는 시간만 확인해봅시다.</span></span><br><span class="line">    print(soup.select(<span class="string">'h1'</span>)[<span class="number">0</span>].text) <span class="comment"># 첫 h1 태그를 봅시다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    <span class="keyword">for</span> link <span class="keyword">in</span> get_links():</span><br><span class="line">        get_content(link)</span><br><span class="line">    print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<p>약 7.3s가 걸리는 것을 아래에서 확인해 볼 수 있습니다.</p>
+<script type="text/javascript" src="https://asciinema.org/a/WgPLMFdo60dedeMD7PO53uyNZ.js" id="asciicast-WgPLMFdo60dedeMD7PO53uyNZ" async></script>
+
+<h3 id="Multiprocessing으로-병렬-크롤링하기"><a href="#Multiprocessing으로-병렬-크롤링하기" class="headerlink" title="Multiprocessing으로 병렬 크롤링하기"></a>Multiprocessing으로 병렬 크롤링하기</h3><p>이제 좀더 빠른 크롤링을 위해 병렬화를 도입해 봅시다.</p>
+<p><code>multiprocessing</code>에서 <code>Pool</code>을 import 해 줍시다.</p>
+<p>그리고 pool에 <code>get_content</code>함수를 넣어 줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool <span class="comment"># Pool import하기</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_links</span><span class="params">()</span>:</span> <span class="comment"># 블로그의 게시글 링크들을 가져옵니다.</span></span><br><span class="line">    req = requests.get(<span class="string">'https://beomi.github.io/beomi.github.io_old/'</span>)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    my_titles = soup.select(</span><br><span class="line">        <span class="string">'h3 &gt; a'</span></span><br><span class="line">        )</span><br><span class="line">    data = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> title <span class="keyword">in</span> my_titles:</span><br><span class="line">        data.append(title.get(<span class="string">'href'</span>))</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_content</span><span class="params">(link)</span>:</span></span><br><span class="line">    abs_link = <span class="string">'https://beomi.github.io'</span>+link</span><br><span class="line">    req = requests.get(abs_link)</span><br><span class="line">    html = req.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    <span class="comment"># 가져온 데이터로 뭔가 할 수 있겠죠?</span></span><br><span class="line">    <span class="comment"># 하지만 일단 여기서는 시간만 확인해봅시다.</span></span><br><span class="line">    print(soup.select(<span class="string">'h1'</span>)[<span class="number">0</span>].text) <span class="comment"># 첫 h1 태그를 봅시다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    pool = Pool(processes=<span class="number">4</span>) <span class="comment"># 4개의 프로세스를 사용합니다.</span></span><br><span class="line">    pool.map(get_content, get_links()) <span class="comment"># get_contetn 함수를 넣어줍시다.</span></span><br><span class="line">    print(<span class="string">"--- %s seconds ---"</span> % (time.time() - start_time))</span><br></pre></td></tr></table></figure>
+
+<script type="text/javascript" src="https://asciinema.org/a/yITked7NP4bM7nPaAZM4CcIYF.js" id="asciicast-yITked7NP4bM7nPaAZM4CcIYF" async></script>
+
+<p>약 2.8초로 약 3~4배의 속도 향상이 있었습니다.</p>
+<h2 id="마무리-및-팁"><a href="#마무리-및-팁" class="headerlink" title="마무리 및 팁"></a>마무리 및 팁</h2><p>멀티프로세싱으로 크롤링을 할 때 유의할 점은 Pool을 생성시 <code>processes</code>의 개수가 많다고 빠르지는 않다는 점을 유의하셔야 합니다.</p>
+<p>두번째 parser.py파일을 실행 시 process를 4개인 경우 2.8s, 8개로 할 때 1.85s, 16개로 할 때 0.96s, 32개로 할 때 0.63s로 속도 향상이 두드러집니다. 하지만 64개로 할 때는 오히려 1.30s로 속도 지연이 발생합니다. 프로세스는 CPU코어(Hyper-Thread인 경우 2배) 개수의 2배(ex: 4코어 i5는 8개, 4코어8스레드인 i7은 16개)로 하면 가장 빠르지는 않지만 적당히 빠른 속도를 가져다줍니다.</p>
+<p>다음으로는 웹 사이트에서 이러한 공격적 크롤링을 차단할 수 있다는 문제입니다. 잘 관리되는 사이트의 경우 이와 같은 공격적 크롤링은 사실 시스템 관리자에게 있어서는 공격 시도와 같이 보일 수 있기 때문에 적당한 속도를 유지하며 <code>robots.txt</code>를 존중해주는 것이 중요합니다.</p>
+<p>무작정 빠르게 긁는다고 빠르지 않은 점에는 이 코드를 실행하는 컴퓨터의 네트워크 환경 자체가 제약이 되기도 합니다. 만약 핫스팟이나 테더링을 이용하거나 인터넷 속도에 제약을 받는 환경에서 이러한 작업을 돌린다면 오히려 네트워크쪽 문제로 인해 에러나 지연이 발생할 가능성이 높습니다. 이런 경우에는 <code>processes</code>개수를 2~4개로 맞춰서 크롤링을 진행하는 것이 최적의 속도를 이끌어낼 수도 있습니다.</p>
+<p>다음 가이드에서는 실제 명령어를 받아 사용자들의 정보를 저장하고 사용자들에게 실제로 유용한 정보(예: 글 제목과 링크)를 보내주는 내용으로 진행할 예정입니다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/07/07/Beautify-ZSH/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">멋진 Terminal 만들기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/07/04/Call-Sublime-from-Terminal/">
+                <span class="level-item">서브라임텍스트 터미널에서 실행하기(macOS)</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

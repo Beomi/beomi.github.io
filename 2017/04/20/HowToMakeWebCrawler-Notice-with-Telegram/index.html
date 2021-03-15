@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>나만의 웹 크롤러 만들기(5): 웹페이지 업데이트를 알려주는 Telegram 봇 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/telegram.png" alt="나만의 웹 크롤러 만들기(5): 웹페이지 업데이트를 알려주는 Telegram 봇">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-04-19T15:00:00.000Z">2017-04-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                나만의 웹 크롤러 만들기(5): 웹페이지 업데이트를 알려주는 Telegram 봇
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>이전게시글: <a href="/2017/03/01/HowToMakeWebCrawler-Save-with-Django/">나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기</a></p>
+</blockquote>
+<blockquote>
+<p>이번 가이드에서는 작업하는 컴퓨터가 아닌 원격 우분투16.04 서버(vps)에 올리는 부분까지 다룹니다. 테스트는 <code>crontab -e</code> 명령어를 사용할 수 있는 환경에서 가능하며, VISA/Master카드등 해외결제가 가능한 카드가 있다면 서비스 가입 후 실제로 배포도 가능합니다. 이 가이드에서는 Vultr VPS를 이용합니다.</p>
+</blockquote>
+<p>앞서 <code>Django</code>를 이용해 크롤링한 데이터를 DB에 저장해 보았습니다.</p>
+<p>하지만 크롤링을 할 때마다 동일한(중복된) 데이터를 DB에 저장하는 것은 바람직 하지 않은 일이죠.</p>
+<p>또한, 크롤링을 자동으로 해 사이트에 변경사항이 생길 때 마다 내 텔레그램으로 알림을 받을 수 있다면 더 편리하지 않을까요?</p>
+<p>이번 가이드에서는 클리앙 중고장터 등을 크롤링해 새 게시글이 올라올 경우 새글 알림을 텔레그램으로 보내는 것까지를 다룹니다.</p>
+<p>다루는 내용:</p>
+<ul>
+<li>Telegram Bot API</li>
+<li>requests / BeautifulSoup</li>
+<li>Crontab</li>
+</ul>
+<h2 id="시작하며"><a href="#시작하며" class="headerlink" title="시작하며"></a>시작하며</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><p>텔레그램은 REST API를 통해 봇을 제어하도록 안내합니다.</p>
+<p>물론 직접 텔레그램 api를 사용할 수도 있지만, 이번 가이드에서는 좀 더 빠른 개발을 위해 <code>python-telegram-bot</code> 패키지를 사용합니다.</p>
+<p><code>python-telegram-bot</code>은 Telegram Bot API를 python에서 쉽게 이용하기 위한 wrapper 패키지입니다.</p>
+<h2 id="python-telegram-bot-설치하기"><a href="#python-telegram-bot-설치하기" class="headerlink" title="python-telegram-bot 설치하기"></a>python-telegram-bot 설치하기</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><p><code>python-telegram-bot</code>은 pip로 설치 가능합니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install python-telegram-bot</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>requests</code>, <code>bs4</code> 역시 설치되어있어야 합니다!</p>
+</blockquote>
+<h2 id="텔레그램-봇-만들기-amp-API-Key받기"><a href="#텔레그램-봇-만들기-amp-API-Key받기" class="headerlink" title="텔레그램 봇 만들기 &amp; API Key받기"></a>텔레그램 봇 만들기 &amp; API Key받기</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><p>텔레그램 봇을 만들고 API키를 받아 이용하는 기본적인 방법은 <a href="https://blog.psangwoo.com/coding/2016/12/08/python-telegram-bot-1.html">python에서 telegram bot 사용하기</a>에 차근차근 설명되어있습니다.</p>
+<p>위 가이드에서 텔레그램 봇의 토큰을 받아오세요. 토큰은 <code>aaaa:bbbbbbbbbbbbbb</code>와 같이 생긴 문자열입니다.</p>
+<blockquote>
+<p>이번 가이드는 텔레그램 봇을 다루는 내용보다는 Cron으로 크롤링을 하고 변화 발견시 텔레그램 메시지를 보내는 것에 초점을 맞췄습니다.</p>
+</blockquote>
+<p>텔레그램 봇 API키를 받아왔다면 아래와 같이 크롤링을 하는 간단한 python파일을 작성해 봅시다. 클리앙에 새로운 글이 올라오면 “새 글이 올라왔어요!”라는 메시지를 보내는 봇을 만들어 보겠습니다.</p>
+<h2 id="클리앙-새글-탐지코드-만들기"><a href="#클리앙-새글-탐지코드-만들기" class="headerlink" title="클리앙 새글 탐지코드 만들기"></a>클리앙 새글 탐지코드 만들기</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-04-21%2000.46.01.png" alt="clien marcket web page list"></p>
+<p>우선 게시판의 글 제목중 첫번째 제목을 가져오고 txt파일로 저장하는 코드를 만들어 봅시다.</p>
+<p>회원 장터 주소는 <code>http://clien.net/cs2/bbs/board.php?bo_table=sold</code>이고, 첫 게시글의 CSS Selector는 <code>#content &gt; div.board_main &gt; table &gt; tbody &gt; tr:nth-child(3) &gt; td.post_subject &gt; a</code>임을 알 수 있습니다. 따라서 아래와 같이 <code>latest</code> 변수에 담아 같은 폴더의 <code>latest.txt</code> 파일에 써 줍시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clien_market_parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'http://clien.net/cs2/bbs/board.php?bo_table=sold'</span>)</span><br><span class="line">req.encoding = <span class="string">'utf-8'</span> <span class="comment"># Clien에서 encoding 정보를 보내주지 않아 encoding옵션을 추가해줘야합니다.</span></span><br><span class="line"></span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">posts = soup.select(<span class="string">'td.post_subject'</span>)</span><br><span class="line">latest = posts[<span class="number">1</span>].text <span class="comment"># 0번은 회원중고장터 규칙입니다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(latest)</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 코드를 구성하면 <code>latest.txt</code>파일에 가장 최신 글의 제목이 저장됩니다.</p>
+<p>크롤링 이후 새로운 글이 생겼는지의 유무를 알아보려면 크롤링한 최신글의 제목과 파일에 저장된 제목이 같은지를 확인하면 됩니다.</p>
+<p>만약 같다면 패스, 다르다면 텔레그램으로 메시지를 보내는거죠!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clien_market_parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'http://clien.net/cs2/bbs/board.php?bo_table=sold'</span>)</span><br><span class="line">req.encoding = <span class="string">'utf-8'</span></span><br><span class="line"></span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">posts = soup.select(<span class="string">'td.post_subject'</span>)</span><br><span class="line">latest = posts[<span class="number">1</span>].text</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'r+'</span>) <span class="keyword">as</span> f_read:</span><br><span class="line">    before = f_read.readline()</span><br><span class="line">    <span class="keyword">if</span> before != latest:</span><br><span class="line">        <span class="comment"># 같은 경우는 에러 없이 넘기고, 다른 경우에만</span></span><br><span class="line">        <span class="comment"># 메시지 보내는 로직을 넣으면 됩니다.</span></span><br><span class="line">    f_read.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> f_write:</span><br><span class="line">    f_write.write(latest)</span><br><span class="line">    f_write.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="새글이라면-텔레그램으로-메시지-보내기"><a href="#새글이라면-텔레그램으로-메시지-보내기" class="headerlink" title="새글이라면? 텔레그램으로 메시지 보내기!"></a>새글이라면? 텔레그램으로 메시지 보내기!</h2><h2 id="widgets-4"><a href="#widgets-4" class="headerlink" title="widgets:"></a>widgets:</h2><p>이제 메시지를 보내볼게요. <code>telegram</code>을 import하신 후 <code>bot</code>을 선언해주시면 됩니다. token은 위에서 받은 토큰입니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clien_market_parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> telegram</span><br><span class="line"></span><br><span class="line"><span class="comment"># 토큰을 지정해서 bot을 선언해 줍시다! (물론 이 토큰은 dummy!)</span></span><br><span class="line">bot = telegram.Bot(token=<span class="string">'123412345:ABCDEFgHiJKLmnopqr-0StUvwaBcDef0HI4jk'</span>)</span><br><span class="line"><span class="comment"># 우선 테스트 봇이니까 가장 마지막으로 bot에게 말을 건 사람의 id를 지정해줄게요.</span></span><br><span class="line"><span class="comment"># 만약 IndexError 에러가 난다면 봇에게 메시지를 아무거나 보내고 다시 테스트해보세요.</span></span><br><span class="line">chat_id = bot.getUpdates()[<span class="number">-1</span>].message.chat.id</span><br><span class="line"></span><br><span class="line"><span class="comment"># 파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'http://clien.net/cs2/bbs/board.php?bo_table=sold'</span>)</span><br><span class="line">req.encoding = <span class="string">'utf-8'</span></span><br><span class="line"></span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">posts = soup.select(<span class="string">'td.post_subject'</span>)</span><br><span class="line">latest = posts[<span class="number">1</span>].text</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'r+'</span>) <span class="keyword">as</span> f_read:</span><br><span class="line">    before = f_read.readline()</span><br><span class="line">    <span class="keyword">if</span> before != latest:</span><br><span class="line">        bot.sendMessage(chat_id=chat_id, text=<span class="string">'새 글이 올라왔어요!'</span>)</span><br><span class="line">    <span class="keyword">else</span>: <span class="comment"># 원래는 이 메시지를 보낼 필요가 없지만, 테스트 할 때는 봇이 동작하는지 확인차 넣어봤어요.</span></span><br><span class="line">        bot.sendMessage(chat_id=chat_id, text=<span class="string">'새 글이 없어요 ㅠㅠ'</span>)</span><br><span class="line">    f_read.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> f_write:</span><br><span class="line">    f_write.write(latest)</span><br><span class="line">    f_write.close()</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>clien_market_parser.py</code>파일을 실행할 때 새 글이 올라왔다면 “새 글이 올라왔어요!”라는 알림이, 새 글이 없다면 “새 글이 없어요 ㅠㅠ”라는 알림이 옵니다.</p>
+<blockquote>
+<p>지금은 자동으로 실행되지 않기 때문에 <code>python clien_market_parser.py</code>명령어로 직접 실행해 주셔야 합니다.</p>
+</blockquote>
+<h2 id="자동으로-크롤링하고-메시지-보내기"><a href="#자동으로-크롤링하고-메시지-보내기" class="headerlink" title="자동으로 크롤링하고 메시지 보내기"></a>자동으로 크롤링하고 메시지 보내기</h2><h2 id="widgets-5"><a href="#widgets-5" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="가장-쉬운방법-while-sleep"><a href="#가장-쉬운방법-while-sleep" class="headerlink" title="가장 쉬운방법: while + sleep"></a>가장 쉬운방법: <code>while</code> + <code>sleep</code></h3><p>가장 쉬운 방법은 python의 <code>while</code>문을 쓰는 방법입니다. 물론, 가장 나쁜 방법이에요. 안전하지도 않고 시스템의 메모리를 좀먹을 수도 있어요.</p>
+<p>하지만 테스트에서는 가장 쉽게 쓸 수 있어요.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clien_market_parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> telegram</span><br><span class="line"></span><br><span class="line">bot = telegram.Bot(token=<span class="string">'123412345:ABCDEFgHiJKLmnopqr-0StUvwaBcDef0HI4jk'</span>)</span><br><span class="line">chat_id = bot.getUpdates()[<span class="number">-1</span>].message.chat.id</span><br><span class="line"></span><br><span class="line"><span class="comment"># 파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    req = requests.get(<span class="string">'http://clien.net/cs2/bbs/board.php?bo_table=sold'</span>)</span><br><span class="line">    req.encoding = <span class="string">'utf-8'</span></span><br><span class="line"></span><br><span class="line">    html = req.text</span><br><span class="line">    soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    posts = soup.select(<span class="string">'td.post_subject'</span>)</span><br><span class="line">    latest = posts[<span class="number">1</span>].text</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'r+'</span>) <span class="keyword">as</span> f_read:</span><br><span class="line">        before = f_read.readline()</span><br><span class="line">        <span class="keyword">if</span> before != latest:</span><br><span class="line">            bot.sendMessage(chat_id=chat_id, text=<span class="string">'새 글이 올라왔어요!'</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            bot.sendMessage(chat_id=chat_id, text=<span class="string">'새 글이 없어요 ㅠㅠ'</span>)</span><br><span class="line">        f_read.close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> f_write:</span><br><span class="line">        f_write.write(latest)</span><br><span class="line">        f_write.close()</span><br><span class="line"></span><br><span class="line">    time.sleep(<span class="number">60</span>) <span class="comment"># 60초(1분)을 쉬어줍니다.</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>파이썬 동작중에는 CTRL+C로 빠져나올수 있습니다.</p>
+</blockquote>
+<h3 id="추천-시스템의-cron-스케쥴러를-이용하기"><a href="#추천-시스템의-cron-스케쥴러를-이용하기" class="headerlink" title="추천: 시스템의 cron/스케쥴러를 이용하기"></a>추천: 시스템의 cron/스케쥴러를 이용하기</h3><p>이번 가이드에서 핵심인 부분인데요, 이 부분은 이제 우분투 16.04 기준으로 진행할게요.</p>
+<p>우선 Ubuntu 16.04가 설치된 시스템이 필요합니다. 이번 강의에서는 Vultr VPS를 이용합니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-04-21%2001.31.34.png" alt="add deploy new vps"></p>
+<p>Vultr는 가상 서버 회사인데, Tokyo리전의 VPS를 제공해줘 빠르게 이용이 가능합니다. 트래픽도 굉장히 많이주고요.</p>
+<p>가이드를 만드는 지금은 월 2.5달러 VPS는 아쉽게도 없어서, 월5달러 VPS로 진행하지만 월2.5달러 VPS로도 충분합니다!</p>
+<p>아래의 Deploy Now를 누르면 새 Cloud Instance(VPS)가 생성되는데요, 서버가 생성된 후 들어가 보면 다음과 같이 id와 pw가 나와있습니다. 패스워드는 눈 모양을 누르면 잠시 보입니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-04-21%2001.43.54.png" alt=""></p>
+<p>이 정보로 ssh에 접속해 봅시다. (윈도는 putty이나 Xshell등을 이용해주세요.)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-04-21%2001.46.08.png" alt=""></p>
+<p>우분투 16.04버전에는 이미 Python3.5버전이 설치되어있기 때문에 <code>pip3</code>, <code>setuptools</code>을 설치해 주고 Ubuntu의 Locale을 설정해줘야 합니다. 아래 명령어를 한줄씩 순차적으로 치시면 완료됩니다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip python3-setuptools build-essential</span><br><span class="line">sudo locale-gen <span class="string">"ko_KR.UTF-8"</span></span><br><span class="line">pip3 install requests bs4 python-telegram-bot</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-04-21%2001.48.11.png" alt=""></p>
+<p>설치를 하신 후 코드를 테스트 해보려면 위 파일을 <code>vi</code>등으로 열어 위 코드들을 입력하시면 됩니다.</p>
+<p>이제 코드를 약간 바꿔볼게요. 새 글이 올라올때만 파일을 다시 쓰도록 해요.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clien_market_parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> telegram</span><br><span class="line"></span><br><span class="line">bot = telegram.Bot(token=<span class="string">'123412345:ABCDEFgHiJKLmnopqr-0StUvwaBcDef0HI4jk'</span>)</span><br><span class="line">chat_id = bot.getUpdates()[<span class="number">-1</span>].message.chat.id</span><br><span class="line"></span><br><span class="line"><span class="comment"># 파일의 위치</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line">req = requests.get(<span class="string">'http://clien.net/cs2/bbs/board.php?bo_table=sold'</span>)</span><br><span class="line">req.encoding = <span class="string">'utf-8'</span></span><br><span class="line"></span><br><span class="line">html = req.text</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">posts = soup.select(<span class="string">'td.post_subject'</span>)</span><br><span class="line">latest = posts[<span class="number">1</span>].text</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'r'</span>) <span class="keyword">as</span> f_read:</span><br><span class="line">    before = f_read.readline()</span><br><span class="line">    f_read.close()</span><br><span class="line">    <span class="keyword">if</span> before != latest:</span><br><span class="line">        bot.sendMessage(chat_id=chat_id, text=<span class="string">'새 글이 올라왔어요!'</span>)</span><br><span class="line">        <span class="keyword">with</span> open(os.path.join(BASE_DIR, <span class="string">'latest.txt'</span>), <span class="string">'w+'</span>) <span class="keyword">as</span> f_write:</span><br><span class="line">            f_write.write(latest)</span><br><span class="line">            f_write.close()</span><br></pre></td></tr></table></figure>
+
+<p>이제 이 <code>clien_market_parser.py</code> 파일을 <code>python3</code>으로 실행해야 하기 때문에, <code>python3</code>이 어디 설치되어있는지 확인 해 봅시다.(아마 <code>/usr/bin/python3</code>일거에요!)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~<span class="comment"># which python3</span></span><br><span class="line">/usr/bin/python3</span><br></pre></td></tr></table></figure>
+
+<p>이제 Crontab에 이 파이썬으로 우리 파일을 매 1분마다 실행하도록 만들어 봅시다.</p>
+<blockquote>
+<p>crontab 수정은 <code>crontab -e</code>명령어로 사용 가능합니다. 만약 에디터를 선택하라고 한다면 초보자는 Nano를, vi를 쓰실수 있으시다면 vi를 이용하세요.</p>
+</blockquote>
+<p>이 한줄을 crontab 마지막에 추가해 주세요.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * /usr/bin/python3 /root/clien_market_parser.py</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>힌트: 매 12분마다로 하시려면 <code>*/12 * * * * /usr/bin/python3 /root/clien_market_parser.py</code>로 하시면 됩니다.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-04-21%2002.03.23.png" alt=""></p>
+<p>이제 여러분의 휴대폰으로 새 글이 올라올 때 마다 알람이 올라올 거랍니다 :)</p>
+<h2 id="마무리"><a href="#마무리" class="headerlink" title="마무리"></a>마무리</h2><h2 id="widgets-6"><a href="#widgets-6" class="headerlink" title="widgets:"></a>widgets:</h2><p>이번편 가이드는 DB를 이용하지 않고 단순하게 새로운 글이 왔다는 사실만을 메시지로 알려주는 봇을 만들어서 뭔가 아쉬움이 있을겁니다. </p>
+<p>다음편 가이드는 <code>multiprocessing</code>을 이용한 N배 빠른 크롤러을 만들어 봅니다.</p>
+<blockquote>
+<p>다음 가이드: <a href="/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/">나만의 웹 크롤러 만들기(6): N배빠른 크롤링, multiprocessing!</a></p>
+</blockquote>
+<!--
+
+-->
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/06/01/Add-Sentry-to-Django/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">배포한 Django 서비스 Exception Sentry로 받아보기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/03/28/Make-Capture-to-GDrive-App/">
+                <span class="level-item">편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 앱으로 만들고 키보드 단축키 연결하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

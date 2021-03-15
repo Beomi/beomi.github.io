@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>카테고리: django - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-3-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/categories">카테고리</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">django</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2018/02/19/django_orm_for_multiple_db_with_sqldriver/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/django_orm_for_multiple_db_with_sqldriver.png" alt="DjangoORM에서 SQL Driver 지정해 Query &amp; Pandas DataFrame 얻어내기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-02-18T15:00:00.000Z">2018-02-19</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/tips/">tips</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/02/19/django_orm_for_multiple_db_with_sqldriver/">DjangoORM에서 SQL Driver 지정해 Query &amp; Pandas DataFrame 얻어내기</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>장고의 매력적인 기능 중 하나는 ORM을 통해 SQL을 직접 작성하지 않아도 된다는 점입니다. 즉, 우리가 파이썬 코드를 작성하면 모델 매니저와 SQL Driver를 거쳐 실제로 SQL문으로 만들어주는 일을 장고가 대신해줍니다.</p>
+<p>그리고 장고가 DB를 바라보는 방법은 <code>settings.py</code>파일 내 <code>DATABASE</code>설정 통합니다. 그리고 <code>default</code>로 설정된 데이터베이스를 참고해 ORM을 제공합니다. 하지만 이점은 장고 프로젝트 하나에서 여러 데이터베이스를 바라보며 사용할 경우 문제가 발생합니다.</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/02/19/django_orm_for_multiple_db_with_sqldriver/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2018/02/02/Connect-django-to-MSSQL/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/MSSQL_LOGO.png" alt="django에 MSSQL 연결하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-02-01T15:00:00.000Z">2018-02-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/tips/">tips</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/02/02/Connect-django-to-MSSQL/">django에 MSSQL 연결하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 글은 macOS에서 개발하는 경우입니다.</p>
+</blockquote>
+<p>Django와 MSSQL, 그리고 개발 환경이 macOS라면 상당히 연결해 사용하기 어려운 조합입니다.</p>
+<p>Django에서 MSSQL을 지원하는 라이브러리는 몇가지 있지만 <a href="https://docs.djangoproject.com/en/2.0/ref/databases/#third-party-notes">Django 공식 문서</a>에서 MSSQL을 지원하는 ORM 라이브러리로 소개하는 <code>django-mssql</code>의 경우 django 1.8까지만 지원하는 문제가 있습니다.</p>
+<p>하지만 현재(2018-02-02 기준) 가장 최신 장고 버전은 무려 <code>2.0.2</code>입니다. 상당히 오래된 버전만을 지원한다는 문제가 있습니다.</p>
+<p>따라서 다른 라이브러리를 사용할 필요가 있습니다. 이번에는 Python3와 Django2.0을 모두 지원하는 <code>django-pyodbc-azure</code>를 사용합니다.</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/02/02/Connect-django-to-MSSQL/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/08/25/DjangoCBV-queryset-vs-get_queryset/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/queryset_vs_get_queryset_on_django_cbv.jpg" alt="Django CBV: queryset vs get_queryset() 삽질기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-08-24T15:00:00.000Z">2017-08-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/08/25/DjangoCBV-queryset-vs-get_queryset/">Django CBV: queryset vs get_queryset() 삽질기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>요약: <code>queryset</code>은 request 발생시 한번만 쿼리셋이 동작하고, <code>get_queryset()</code>은 매 request마다 쿼리를 발생시킨다. 조건이 걸린 쿼리셋을 쓸때는 <code>get_queryset()</code>을 오버라이딩하자.</p>
+</blockquote>
+<h2 id="사건의-발단"><a href="#사건의-발단" class="headerlink" title="사건의 발단"></a>사건의 발단</h2><p>ListView안에서 체크박스로 ForeignKey로 연결된 장고 모델 인스턴스를 저장(<code>.save()</code>를 호출)하는데 저장 후 모델 인스턴스의 값을 확인하는 뷰에서는 결과값이 저장 전의 데이터로 나타났었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 문제의 코드..</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderMatchingList</span><span class="params">(ListView)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = Order</span><br><span class="line"></span><br><span class="line">    queryset_list = Order.objects.filter(status__gte=<span class="number">5</span>) \</span><br><span class="line">        .select_related(<span class="string">'education'</span>, <span class="string">'region'</span>) \</span><br><span class="line">        .prefetch_related(<span class="string">'orderdetail_set'</span>)</span><br><span class="line">    queryset = sorted(queryset_list, key=<span class="keyword">lambda</span> x: x.start_date())</span><br></pre></td></tr></table></figure>
+
+<p>사실 지금은 코드를 보면 <code>queryset</code>에서 <code>sorted</code>된 값을 반환하고, 이경우에는 쿼리셋 자체가 저 변수로 할당되어버려 다음 request에서 쿼리가 돌지 않는다는 것을 쉽게 찾을 수 있다. 하지만 원래 한번 안보이면 잘 안보이는 법.. 심지어 이 경우에는 Exception이 나는 것도 아니기 때문에 더 찾기 어려웠다.. (ㅠㅠ)</p>
+<h2 id="삽질의-시작"><a href="#삽질의-시작" class="headerlink" title="삽질의 시작"></a>삽질의 시작</h2><p>여러가지 가정을 할 수 있는 상황이었다.</p>
+<ul>
+<li>혹시 브라우저가 리스트를 캐싱하고 있던건 아닐까? (브라우저 캐시)</li>
+<li>장고가 View의 Response를 캐싱하고 있는걸까? (장고 캐시)</li>
+<li>혹시 DB에 <code>save()</code>가 안된(아예 DB가 업데이트가 되지 않은) 것은 아닐까?</li>
+<li>장고 <code>queryset</code>에 캐싱이 되어있었을까?</li>
+<li>AJAX call이 비정상적으로 이루어진 것은 아닐까?</li>
+<li>아니면, 아예 내 View 로직이 잘못된 것은 아닐까? (CBV인데?)</li>
+<li><code>select_related</code>나 <code>prefetch_related</code>에서 캐싱이 발생하는걸까?</li>
+<li>…</li>
+</ul>
+<p>이런저런 가정을 하고 하나씩 체크를 해보기로 했다.</p>
+<blockquote>
+<p>아래부분에서는 django 로직과 관련된 삽질만 다뤘습니다. JS쪽은 문제가 없었거든요.</p>
+</blockquote>
+<h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="첫번째-삽질-“브라우저가-캐싱을-하고-있는건-아닐까-”"><a href="#첫번째-삽질-“브라우저가-캐싱을-하고-있는건-아닐까-”" class="headerlink" title="첫번째 삽질: “브라우저가 캐싱을 하고 있는건 아닐까?”"></a>첫번째 삽질: “브라우저가 캐싱을 하고 있는건 아닐까?”</h3><p>만약 브라우저가 HTML파일을 캐싱하고 있다면</p>
+<ul>
+<li>캐시 삭제후 강력 새로고침을 하거나,</li>
+<li>다른 브라우저로 접근하면</li>
+</ul>
+<p>정상적인 화면이 나와야 했다.</p>
+<blockquote>
+<p>그러나… “#망했어요”</p>
+</blockquote>
+<p>브라우저가 캐싱하고 있는게 아니었고, 다른 브라우저에서도 기존(업데이트 전)값을 가져왔다.</p>
+<h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="두번째-삽질-“장고가-template-렌더링-된것을-캐싱하는게-아닐까-”"><a href="#두번째-삽질-“장고가-template-렌더링-된것을-캐싱하는게-아닐까-”" class="headerlink" title="두번째 삽질: “장고가 template 렌더링 된것을 캐싱하는게 아닐까?”"></a>두번째 삽질: “장고가 template 렌더링 된것을 캐싱하는게 아닐까?”</h3><p>사실 장고에서 response는 따로 캐싱을 명시적으로 하지 않으면 쿼리가 새로 발생해야 하는 경우에는 캐싱을 하지 않는다. </p>
+<p>하지만 일단 template을 재 렌더링 하지 않는게 아닐까… 하는 생각에 아래와 같은 부분을 추가해 보았다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% raw %&#125;&#123;% for object in object_list %&#125;</span><br><span class="line">&#123;&#123; object &#125;&#125; 이건 object다 </span><br><span class="line">&#123;% endfor %&#125;&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>역시 .. “응 아니야~ 장고 일 잘하고 있음”</p>
+</blockquote>
+<p>템플릿은 렌더링이 충분히 잘 되고 있었다.</p>
+<p>뭐가 문제일까?</p>
+<h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="세번째-삽질-“-save-메소드의-사용을-잘못한게-아닐까-”"><a href="#세번째-삽질-“-save-메소드의-사용을-잘못한게-아닐까-”" class="headerlink" title="세번째 삽질: “.save() 메소드의 사용을 잘못한게 아닐까?”"></a>세번째 삽질: “<code>.save()</code> 메소드의 사용을 잘못한게 아닐까?”</h3><p>아예 다음번에는 DB에 저장이 되지 않고 있는게 아닌가.. 하는 생각에 <code>save()</code>와 <code>update()</code>의 사용법을 찾고, <code>force_insert=True</code>와 같은 옵션을 넣어보기도 했다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># view.py 파일에서...</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    <span class="keyword">for</span> m_pay <span class="keyword">in</span> mentor_payment_list:</span><br><span class="line">        <span class="keyword">if</span> str(m_pay.pk) <span class="keyword">in</span> cleaned_keys:</span><br><span class="line">            m_pay.status = <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            m_pay.status = <span class="number">0</span></span><br><span class="line">        m_pay.save(update_fields=[<span class="string">'status'</span>])</span><br><span class="line">    <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+
+<p><code>.save()</code>는 모델 인스턴스에 적용하는 케이스이고, <code>.update()</code>는 쿼리셋에 적용하는 방법이다. <code>save()</code>의 경우 모델 인스턴스를 가져오기 위해 SELECT 쿼리를 한번 날리고 값을 변경 후 UPDATE를 해주는 방법이라면, <code>update()</code>는 쿼리 자체를 SELECT쿼리로 날리는 방식이다. 따라서 만약의 경우 <code>.update()</code>를 실행 중 다른 요청에서 값이 변경되었다면 그 Transaction이 손실될 수 있고, 모델 인스턴스의 값 자체를 이용해 업데이트하는 방법은 사용하기 어렵다. (물론 사용은 가능하지만 SELECT쿼리같이 <code>.get()</code>으로 한번 가져와야 하기때문에 큰 의미는 없습니다. 여전히 중간에 값이 변경되었을 경우에 기존 값(get)에 대한 불가능하고요.)</p>
+<p><code>m_pay.save(update_fields=[&#39;status&#39;])</code>에서는 <code>save()</code>에 <code>update_fields</code> 리스트를 넣어주었다. 일반적인 <code>save()</code>함수가 인스턴스 전체를 변경하는 <code>UPDATE</code>문을 사용하지만 <code>update_fields</code>가 있는 경우에는 <code>force_insert</code>가 자동으로 <code>True</code>가 되며 동시에 해당되는 Column만 update가 일어난다.</p>
+<p>게다가 <code>update_fields</code>를 넣기 전에도 이미 잘 작동하던 코드.</p>
+<blockquote>
+<p>무엇이 문제일까? 문제는 미궁속으로..</p>
+</blockquote>
+<h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="네번째-삽질-“select-related나-prefetch-related에서-캐싱이-발생하는건-아닐까-”"><a href="#네번째-삽질-“select-related나-prefetch-related에서-캐싱이-발생하는건-아닐까-”" class="headerlink" title="네번째 삽질: “select_related나 prefetch_related에서 캐싱이 발생하는건 아닐까?”"></a>네번째 삽질: “<code>select_related</code>나 <code>prefetch_related</code>에서 캐싱이 발생하는건 아닐까?”</h3><p>장고에서 <code>select_related</code>나 <code>prefetch_related</code>는 기본적으로 한번에 데이터를 가져와 queryset 자체에 캐싱을 하는 전략인데.. 혹시 여기에서 ‘과도한 캐싱’이 발생하고 있는건 아닐까?</p>
+<p>그렇다면 장고의 캐싱을 강제로 없애는 <code>never_cache</code> 데코레이터를 사용하면 어떨까? 하지만 지금 뷰는 CBV니까.. <code>@method_decorator</code>로 <code>never_cache</code>를 전달해 주면 되겠다!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.views.decorators.cache <span class="keyword">import</span> never_cache</span><br><span class="line"></span><br><span class="line"><span class="meta">@method_decorator(never_cache, name='dispatch')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderMatchingList</span><span class="params">(SuperuserRequiredMixin, LoginRequiredMixin, ListView)</span>:</span></span><br><span class="line">    <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+
+<p>물론, 당연히, 캐시 문제가 아니었기 때문에 <strong>안되는 것</strong>은 당연했다.</p>
+<h2 id="widgets-4"><a href="#widgets-4" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="다섯번째-삽질-여섯번째-일곱-…-그리고-더-많은-삽질-끝에서의-허무"><a href="#다섯번째-삽질-여섯번째-일곱-…-그리고-더-많은-삽질-끝에서의-허무" class="headerlink" title="다섯번째 삽질, 여섯번째, 일곱 … 그리고 더 많은 삽질 끝에서의 허무"></a>다섯번째 삽질, 여섯번째, 일곱 … 그리고 더 많은 삽질 끝에서의 허무</h3><p>도대체 뭐가 문제인거지? <code>ListView</code>가 아예 문제인가? 이런 고민을 하다가 결국 django의 <code>ListView</code>자체를 뜯어보는데 눈에 들어오는 <code>MultipleObjectMixin</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MultipleObjectMixin</span><span class="params">(ContextMixin)</span>:</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    queryset = <span class="literal">None</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_queryset</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+
+<p>헐. <code>queryset</code>와 <code>get_queryset</code>은 다른데.</p>
+<h2 id="widgets-5"><a href="#widgets-5" class="headerlink" title="widgets:"></a>widgets:</h2><h2 id="해결-amp-평화"><a href="#해결-amp-평화" class="headerlink" title="해결 &amp; 평화"></a>해결 &amp; 평화</h2><p>사실 이 문제가 생긴건 DB에서 정렬하는 대신 파이썬 View에서 쿼리셋을 정렬하는 방식으로 사용하려다보니 생긴 문제였다.</p>
+<p>모델 내부의 <code>start_date()</code>에 따라 정렬하는 방식을 쿼리셋 내부에서 구현이 어려워 파이썬의 <code>sorted</code>를 이용했는데, 이 sorted된 결과물이 <code>queryset</code> 변수에 담겨 새 request에도 같은 결과를 반환하게 된 것.</p>
+<p>따라서 다음과 같이 <code>get_queryset</code>으로 변환해주어서 깔끔하게 해결되었다. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderMatchingList</span><span class="params">(ListView)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = Order</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_queryset</span><span class="params">(self)</span>:</span></span><br><span class="line">        queryset_list = Order.objects.filter(status__gte=<span class="number">5</span>) \</span><br><span class="line">            .select_related(<span class="string">'education'</span>, <span class="string">'region'</span>) \</span><br><span class="line">            .prefetch_related(<span class="string">'orderdetail_set'</span>)</span><br><span class="line">        <span class="keyword">return</span> sorted(queryset_list, key=<span class="keyword">lambda</span> x: x.start_date())</span><br></pre></td></tr></table></figure>
+
+<p>사실 DJDT(Django Debug Toolbar)를 사용하며 쿼리의 개수를 확인해보는데 첫 요청시에는 6개의 쿼리가 가는데 비해 두번째 요청부터는 3개의 쿼리만이 실행되고, 그마저도 데이터를 가져오는 쿼리는 없고 세션/로그인등의 비교만 쿼리를 실행하고 있다는 것을 발견해 쿼리셋쪽의 문제라는 것을 알 수 있었다.</p>
+<h3 id="여담"><a href="#여담" class="headerlink" title="여담"></a>여담</h3><p>문제의 코드 부분(아래)에서 <code>select_related</code>와 <code>prefetch_related</code>를 제거하면 쿼리수는 몇십개로 증가하지만 데이터 자체는 정상적으로 가져왔다. 이건 또 왜그랬을까?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 문제의 코드..</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderMatchingList</span><span class="params">(ListView)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = Order</span><br><span class="line"></span><br><span class="line">    queryset_list = Order.objects.filter(status__gte=<span class="number">5</span>) \</span><br><span class="line">        .select_related(<span class="string">'education'</span>, <span class="string">'region'</span>) \</span><br><span class="line">        .prefetch_related(<span class="string">'orderdetail_set'</span>)</span><br><span class="line">    queryset = sorted(queryset_list, key=<span class="keyword">lambda</span> x: x.start_date())</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure.jpg" alt="Deploy Django to MS Azure with Fabric3">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-06-09T15:00:00.000Z">2017-06-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/fabric/">fabric</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/">Deploy Django to MS Azure with Fabric3</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>한국어 버전은 <a href="/2017/06/09/Deploy-Django-to-MS-Azure/">Django MS Azure에 Fabric으로 배포하기</a>에서 보실 수 있습니다.</p>
+</blockquote>
+<blockquote>
+<p>This guide covers about deploying <a href="https://tutorial.djangogirls.org/en/">DjangoGirls Tutorial</a> to MS Azure Virtual machine(Ubuntu 16.04 LTS) with Fabric3.</p>
+</blockquote>
+<p>You’re probably participant in <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial Workshop</a> and you’ll be now on ‘deploy’ step on it. </p>
+<p>Today we’re going to deploy our django project to <a href="http://azure.com">Azure</a> which is provided with MS.</p>
+<p>If you didnt’ register your <code>AzurePass</code> yet, please precede this guide first: <a href="/2017/06/21/Activate-MS-AzurePass/">Register Azure and redeem AzurePass</a></p>
+<h2 id="If-Windows-Using-cmder"><a href="#If-Windows-Using-cmder" class="headerlink" title="(If Windows) Using cmder"></a>(If Windows) Using <code>cmder</code></h2><p>You can’t use linux commands like <code>git</code> or <code>ssh</code> on your <code>cmd</code>, so we’re going to use great shell program which named <code>cmder</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-18%2010.30.18.png" alt=""></p>
+<p>First, click this link:<a href="https://github.com/cmderdev/cmder/releases/download/v1.3.2/cmder.zip">cmder.zip</a> to download cmder. (It may take times.)</p>
+<p>Second, unzip downloaded <code>cmder.zip</code> file. (It’ll take some times too.) And then you got this!:</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/1-folder.PNG" alt=""></p>
+<p>Execute <code>cmder.exe</code> in this folder. If you execute <code>cmder.exe</code> as a first time you’ll be see Security Warning like this: just click <code>RUN</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/2-securityWarning.PNG" alt=""></p>
+<p>And one time more, if you execute cmder for the first time, there will be another warning like this: click first option, “Unblock and continue”.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/3-UnblockBinaries.PNG" alt=""></p>
+<p>It’ll take some times when you run cmder first time. This wouln’t appear next time, so please wait for a moment!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/4-firstlook.PNG" alt=""></p>
+<p>If you see this, you’re ready to use <code>cmder</code> NOW!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/5-final.PNG" alt=""></p>
+<p>If you’re following DjangoGirls Tutorial, you probably made folder named <code>djangogirls</code>. Let’s get into it.</p>
+<blockquote>
+<p><code>cd</code> is command to ender the folder! Let’s get into <code>djangogirls</code> folder with <code>cd djangogirls</code>.</p>
+</blockquote>
+<p>Let’s start deploy then.</p>
+<h2 id="Deploy-Azure-Virtual-machine"><a href="#Deploy-Azure-Virtual-machine" class="headerlink" title="Deploy Azure Virtual machine"></a>Deploy Azure Virtual machine</h2><p>You’ll see this screen if you logged in to <a href="https://portal.azure.com/">Azure Portal</a>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.39.54.png" alt="Azure Portal Dashboard"></p>
+<p>Let’s make Virtual machine with clicking <code>VirtualComputer(가상 컴퓨터)</code> button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.41.09.png" alt=""></p>
+<p>Now let’s add Virtual machine with ‘+Add’ button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.41.22.png" alt=""></p>
+<p>If you click <code>+ Add</code> button, you’ll see another options which provides many OS. But  we’re going to use <code>Ubuntu Server</code> today.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.41.53.png" alt=""></p>
+<p>If you clicked Ubuntu Server there’ll be server lists like this: we’ll use <code>Ubuntu Server 16.04 LTS</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.42.10.png" alt=""></p>
+<p>Then you’ll see <code>Create</code> button. Click it!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.42.24.png" alt=""></p>
+<p>You’ll see configure window when you click <code>Create</code> button. Fillout blanks like picture lower.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-23%2012.43.45.png" alt=""></p>
+<blockquote>
+<p>Username should be <code>django</code> (surelly this is not critical but you may encounter issues.</p>
+</blockquote>
+<blockquote>
+<p>You may set your password on your own, but it shoud be longer/equal than 12. Please remember not to reset it later.</p>
+</blockquote>
+<blockquote>
+<p>Select locaiton on Korea Centeral or SouthEast Asia(which available one).</p>
+</blockquote>
+<p>Now we have to choose server size. We’ll setup just one django server so we’ll choose <code>DS1_V2</code>, the left one.</p>
+<blockquote>
+<p>Don’t worry, you won’t be charged :)</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.46.03.png" alt=""></p>
+<p>Next step you have to setup storage settings. Just select <code>Use managed disks</code> to ‘Yes’.</p>
+<p>And then click <code>Network Security Group(Firewall)</code> settings. After click on it, you’ll see pre-configured setting <code>SSH (TCP/22)</code>. We’re going to add <code>HTTP (TCP/80)</code></p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.47.06.png" alt=""></p>
+<p>Click <code>+ Inbound Rule add</code> Button, and fillout blanks like this and click OK button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.47.31.png" alt=""></p>
+<p>Now default settings are finished! Just click OK button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.47.57.png" alt=""></p>
+<p>And one more time, click confirm button.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.18.png" alt=""></p>
+<p>And lastly, click confirm button more! I know you’re tired with confirm button, but this is process of Azure :)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.48.21.png" alt=""></p>
+<p>If you see your azure dashboard again like this, your server deployment is finished :)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.48.36.png" alt=""></p>
+<p>Please wait until your server is successfully installed! (This will take upto 5mins.)</p>
+<blockquote>
+<p>Your browser will redirected to your server info page when your server is successfully installed.</p>
+</blockquote>
+<h2 id="Get-Azure-Server-Configurations"><a href="#Get-Azure-Server-Configurations" class="headerlink" title="Get Azure Server Configurations"></a>Get Azure Server Configurations</h2><p>You can access to your server info with clicking server icon-which tells <code>Running</code>.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2012.52.43.png" alt=""></p>
+<p>On this page you can see your server’s ‘Public IP Address’. <code>ip</code> is set of numbers which provides your computer access to internet. We can upload and deploy our django project through this ip.</p>
+<p>You can see this example server’s ip, <code>13.67.60.234</code>. Surelly we can access to our server with this numbers but we can’t remember easily with it.</p>
+<p>So we’re going to use <code>domain</code> like <code>djangogirls.com</code> to that <code>ip</code>.</p>
+<p>First of all, copy(CTRL+C) your virtual machine’s ip!</p>
+<h2 id="Get-free-domain-and-connect-to-Virtual-Machine"><a href="#Get-free-domain-and-connect-to-Virtual-Machine" class="headerlink" title="Get free domain and connect to Virtual Machine"></a>Get free domain and connect to Virtual Machine</h2><p>You may know about popular domains like <code>.com</code> or <code>.net</code>. But they are paid one(10 dollars per year) so we’re going to use free domain.</p>
+<p>Let’s go to <a href="http://dot.tk">Dot.tk</a>.</p>
+<p>This <a href="http://dot.tk">Dot.tk</a> provides <code>.tk</code> domains as free! I’ll check <code>djangogirls-seoul-tutorial-en.tk</code> as example. You should think of your own domain name and click <code>Check Availability</code>!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2013.05.00.png" alt=""></p>
+<p>Oh, it’s available! Just click ‘get it now’ button and add to cart.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.38.28.png" alt=""></p>
+<p>You’ll see this page when you clicked ‘checkout’ button. Just click ‘Use DNS’ button and input ip address of your virtual machine(azure) and click ‘Continue’.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-06-23%2013.06.02.png" alt=""></p>
+<blockquote>
+<p>If you forgot ip address of your virtual machine, go to <a href="https://portal.azure.com">Azure portal</a> and check your machine’s ip again!</p>
+</blockquote>
+<p>You’ll see checkout page and you have to login. You can login with your social media account like Google or Facebook!</p>
+<blockquote>
+<p>Sometimes there are some errors(404 or others..) then you can restart from “Get free domain and connect to Virtual Machine” on this guide.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.40.52.png" alt=""></p>
+<p>If you successfully logined, you’ll see form to input your info, but you don’t have to fill it all. Just click Agress Terms and conditions and Conitnue button, your order will be finished!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.42.39.png" alt=""></p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.45.21.png" alt=""></p>
+<p>Great! You’ve just connect your own domain to your server!</p>
+<h2 id="Install-Fabric3"><a href="#Install-Fabric3" class="headerlink" title="Install Fabric3"></a>Install Fabric3</h2><p>Now your server is connected with <code>yourdomainname.tk</code> domain. But if you try to access to that address, you can see nothing at all. </p>
+<p>Because your server doesn’t have any django code and ofcourse, even django!</p>
+<p>We’ll upload and deploy our django project with just one command line through <code>Fabric3</code>.</p>
+<p>Let’s install <code>fabric3</code> on our computer. You can install <code>fabric3</code> with this command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fabric3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Remember: NOT <code>fabric</code> BUT <code>fabric3</code>! Don’t forget 3. <code>fabric</code> is python2 project.</p>
+</blockquote>
+<h2 id="Downlaod-fabfile-py-and-edit-deploy-json"><a href="#Downlaod-fabfile-py-and-edit-deploy-json" class="headerlink" title="Downlaod fabfile.py and edit deploy.json"></a>Downlaod <code>fabfile.py</code> and edit <code>deploy.json</code></h2><p>Download <a href="https://gist.github.com/Beomi/0cc830bd5cda029c277cba648386b28c/archive/0152df8617a63c6678b7b64c54892dc5b4ce19d8.zip">Fabfile for Django</a> and unzip it.</p>
+<p>You can see <code>deploy.json</code> and <code>fabfile.py</code> inside of it. Move 2 files into your django folder(where <code>manage.py</code> exists)</p>
+<p>Inside <code>deploy.json</code>, we can edit our server(virtual machine) info.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"REPO_URL"</span>:<span class="string">"Your Github Repository URL"</span>,</span><br><span class="line">  <span class="attr">"PROJECT_NAME"</span>:<span class="string">"DjangoProject folder's name(where settings.py exists)"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_HOST"</span>:<span class="string">"Your domain(ex: djangogirls-seoul-tutorial-en.tk )"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_USER"</span>:<span class="string">"django"</span>,</span><br><span class="line">  <span class="attr">"STATIC_ROOT"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"STATIC_URL"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"MEDIA_ROOT"</span>:<span class="string">"media"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Change <code>REPO_URL</code>, <code>PROJECT_NAME</code>, <code>REMOTE_HOST</code>. Other values are already setup for djangogirls tutorial we followed.</p>
+<blockquote>
+<p>Every values must be in “”!</p>
+</blockquote>
+<h2 id="Upload-and-deploy-code-thorugh-Fabric3"><a href="#Upload-and-deploy-code-thorugh-Fabric3" class="headerlink" title="Upload and deploy code thorugh Fabric3"></a>Upload and deploy code thorugh Fabric3</h2><p>We can use fabric through <code>fab</code> command. Like this: <code>fab new_server</code>, <code>fab deploy</code>, <code>fab create_superuser</code>. This commands will execute commands on remote server(azure virtual machine which we made)</p>
+<p>When you use fabric for new server, just type this command and execute: <code>fab new_server</code>. this will install python3, apache2, and mod_wsgi to run django.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab new_server</span><br></pre></td></tr></table></figure>
+
+<p>When you edit django code and committed &amp; pushed to github, then use <code>fab deploy</code> command. This will fetch latest code on github and migrate db.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab deploy</span><br></pre></td></tr></table></figure>
+
+<p>When you want to create superuser, just execute <code>fab create_superuser</code> and there’ll be creating superuser prompt.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab create_superuser</span><br></pre></td></tr></table></figure>
+
+<h2 id="Whoa"><a href="#Whoa" class="headerlink" title="Whoa!"></a>Whoa!</h2><p>You’ve just upload and deploy <strong>REAL</strong> working web service on Azure! Congratulation!</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/09/Deploy-Django-to-MS-Azure/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure.jpg" alt="Django MS Azure에 Fabric으로 배포하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-06-08T15:00:00.000Z">2017-06-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/fabric/">fabric</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/09/Deploy-Django-to-MS-Azure/">Django MS Azure에 Fabric으로 배포하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>If you looking for English version, goto <a href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/">Deploy Django to MS Azure with Fabric3</a>.</p>
+</blockquote>
+<blockquote>
+<p>이번 가이드에서는 <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial</a>를 Fabric으로 Azure 가상 컴퓨터(Ubuntu16.04LTS)에 올리는 과정을 다룹니다.</p>
+</blockquote>
+<p>지금 이 글을 읽고 있는 분들은 아마 장고걸즈 워크숍에 참가해 <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial</a>을 따라가다 이제 <code>배포</code>를 해볼 단계에 도착하셨을거에요.</p>
+<p>오늘 우리가 만들어본(만들고 있는) Django 프로젝트를 MS가 서비스하는 <a href="http://azure.com">Azure(애저)</a>에 배포해보는 시간을 가져볼거에요.</p>
+<p>만약 여러분이 <code>AzurePass</code>를 아직 계정에 등록하지 않았다면, <a href="/2017/06/21/Activate-MS-AzurePass/">Azure 가입하고 AzurePass 등록하기</a>를 먼저 진행해 주세요.</p>
+<h2 id="윈도우의-경우-cmder-설치하기"><a href="#윈도우의-경우-cmder-설치하기" class="headerlink" title="(윈도우의 경우) cmder 설치하기"></a>(윈도우의 경우) <code>cmder</code> 설치하기</h2><p>윈도우에서는 <code>git</code>와 <code>ssh</code>등의 명령어를 <code>cmd</code>에서 바로 사용할 수 없어요. 그래서 우리는 <code>cmder</code>라는 멋진 프로그램을 사용할 거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-18%2010.30.18.png" alt=""></p>
+<p>우선 <a href="https://github.com/cmderdev/cmder/releases/download/v1.3.2/cmder.zip">cmder.zip</a>을 클릭해 cmder를 받아주세요. (84MB정도라 시간이 조금 걸릴거에요.)</p>
+<p>다운받은 <code>cmder.zip</code> 파일의 압축을 풀어주세요.(이것도 시간이 조금 걸릴거에요.) 그러면 다음과 같은 내용이 보일거에요. </p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/1-folder.PNG" alt=""></p>
+<p>여기 있는 <code>cmder.exe</code> 파일을 실행해주세요. 실행하면 아래와 같은 Security Warning이 뜰 수 있어요. <code>RUN</code>을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/2-securityWarning.PNG" alt=""></p>
+<p>만약 여러분이 cmder를 처음 실행하신다면 아래와 같은 워닝이 뜰거에요. 제일 첫번째 옵션인 “Unblock and continue”를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/3-UnblockBinaries.PNG" alt=""></p>
+<p>첫 실행시 아래 화면에서 약간 시간이 걸릴 수 있어요. 다음번 실행부터는 뜨지 않을테니 잠시만 기다려주세요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/4-firstlook.PNG" alt=""></p>
+<p>아래 화면이 뜨면 여러분이 멋진 cmder를 쓸 준비를 마친거랍니다!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/5-final.PNG" alt=""></p>
+<p>장고걸즈 튜토리얼을 따라오는 중이시라면 <code>djangogirls</code>라는 폴더를 만드셨을거에요.</p>
+<blockquote>
+<p>폴더로 이동하는 명령어가 <code>cd</code>입니다! <code>cd djangogirls</code>라고 입력해주세요.</p>
+</blockquote>
+<p>이제 배포를 진행해볼게요.</p>
+<h2 id="Azure-가상컴퓨터-만들기"><a href="#Azure-가상컴퓨터-만들기" class="headerlink" title="Azure 가상컴퓨터 만들기"></a>Azure 가상컴퓨터 만들기</h2><p><a href="https://portal.azure.com/">Azure Portal</a>에 들어가 로그인 하시면 아래와 같은 화면을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.07.02.png" alt="Azure Portal 초기 대시보드"></p>
+<p>이제 대시보드 왼쪽의 메뉴에서 <code>가상 컴퓨터</code>를 눌러보시면 아래와 같은 화면이 나옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.10.34.png" alt=""></p>
+<p>이제 가상 컴퓨터를 추가해봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.11.19.png" alt=""></p>
+<p><code>+ 추가</code> 버튼을 눌러주시면 아래와 같은 수많은 선택지가 나오는데요, 우리는 그 중에서 <code>Ubuntu Server</code>(우분투 서버)를 사용할거랍니다. <code>Ubuntu Server</code>를 클릭해주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.12.02.png" alt=""></p>
+<p>우분투 서버를 클릭하면 아래와 같이 서버 버전들이 나옵니다. 우리는 오늘 <code>Ubuntu Server 16.04 LTS</code>를 사용할거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.13.01.png" alt=""></p>
+<p>우분투 서버 16.04를 선택하고 나면 아래와 같이 <code>만들기</code> 버튼이 나올거에요. 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.14.29.png" alt=""></p>
+<p>만들기 버튼을 누르면 아래 사진처럼 기본 사항을 설정하는 창이 나올거에요. 내용을 화면 사진 그대로 채워주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.16.28.png" alt=""></p>
+<blockquote>
+<p>사용자 이름은 가이드 다음부분에서 이용할 <code>django</code>로 하셔야 합니다.</p>
+</blockquote>
+<blockquote>
+<p>암호는 각자 사용하는 암호를 입력하시면 되는데요, 12자리 이상을 요구하기 때문에 약간 어려우실 수 있어요!</p>
+</blockquote>
+<blockquote>
+<p>위치는 대한민국 중부/남부로 해주세요. (안되는 경우 아시아 남동부로 해주세요!)</p>
+</blockquote>
+<p>이제 서버의 크기를 골라야 하는데요, 오늘 우리는 장고 서버만을 띄울 것이기 때문에 가장 왼쪽에 있는 <code>DS1_V2</code>를 이용할거에요.</p>
+<blockquote>
+<p>AzurePass를 등록하면 돈을 지불하지 않아도 되니 걱정하지 마세요!</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.19.53.png" alt=""></p>
+<p>이제 다음으로 넘어가면 저장소 설정을 해야 해요. 이부분에서는 ‘관리 디스크 사용’을 ‘예’로 클릭해주세요.</p>
+<p>그 다음으로는 아래쪽의 <code>네트워크 보안 그룹(방화벽)</code>을 클릭해 주세요. 클릭하시면 아래와 같이 <code>SSH (TCP/22)</code>만 인바운드 규칙에 들어가 있는 것을 확인할 수 있어요. 우리는 여기서 <code>HTTP (TCP/80)</code>을 추가해 줄 거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.22.01.png" alt=""></p>
+<p><code>+ 인바운드 규칙 추가</code> 버튼을 눌러주시고 사진과 같이 칸을 채워주시고 확인 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.24.23.png" alt=""></p>
+<p>이제 설정이 모두 끝났어요! 아래쪽의 <code>확인</code>버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.24.54.png" alt=""></p>
+<p>다시 한번 확인 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.18.png" alt=""></p>
+<p>이제 정말로 다음 <code>확인</code>버튼만 누르면 서버 설치가 끝나요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.53.png" alt=""></p>
+<p>이제 조금만 기다려주시면 서버 설치가 끝난답니다!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.28.15.png" alt=""></p>
+<blockquote>
+<p>아이콘의 설명이 <code>Creating</code>에서 <code>Running</code>으로 바뀌면 설치가 끝난거에요.</p>
+</blockquote>
+<h2 id="Azure-설정-확인하기"><a href="#Azure-설정-확인하기" class="headerlink" title="Azure 설정 확인하기"></a>Azure 설정 확인하기</h2><p>Running으로 바뀐 아이콘을 클릭해주시면 아래 화면으로 들어올 수 있어요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.30.25.png" alt=""></p>
+<p>애저에서 가상컴퓨터가 생기면 <code>공용 IP 주소</code>라는걸 하나 갖게 된답니다. <code>ip</code>라는 것은 서버나 컴퓨터가 인터넷에 접속할 수 있게 해주는 일련의 번호인데요, 우리는 이 <code>ip</code>를 통해 우리 장고 프로젝트를 서버에 올리는 작업을 진행할 수 있어요.</p>
+<p>지금 화면에 보이는 가상컴퓨터의 ip는 <code>52.231.30.148</code>인데요, 이렇게 숫자로만 되어있으면 우리는 기억하기가 어려워요.</p>
+<p>그래서 <code>djangogirls.com</code>와 같이 사람이 이해하고 외우기도 쉬운 <code>도메인</code>을 저 <code>ip</code>주소에 붙여줄거에요.</p>
+<p>자, 우선 여러분의 가상 컴퓨터의 ip를 복사(Ctrl+C / CMD+C)해두세요!</p>
+<h2 id="무료-도메인-얻어-가상컴퓨터에-연결하기"><a href="#무료-도메인-얻어-가상컴퓨터에-연결하기" class="headerlink" title="무료 도메인 얻어 가상컴퓨터에 연결하기"></a>무료 도메인 얻어 가상컴퓨터에 연결하기</h2><p><code>.com</code>, <code>.net</code>와 같이 유명한 도메인은 돈을 주고 사야한답니다.(1년에 만원정도 나가요) 하지만 우리는 오늘 무료 도메인을 연결해 볼 거에요.</p>
+<p>우선 <a href="http://dot.tk/">Dot.tk</a>로 들어오세요.</p>
+<p>이 Dot.tk에서는 <code>.tk</code> 도메인을 무료로 제공하고 있어요. 우선 <code>djangogirls-seoul-tutorial</code>이라는 이름으로 찾아볼게요. 값을 입력하고 <code>Check Availability</code>를 눌러주세요!</p>
+<blockquote>
+<p>여러분은 여러분이 원하는 주소를 검색해보세요! (ex: myfirstdjango 등등)</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.36.35.png" alt=""></p>
+<p>오, 다행히 주소가 남아있어요. 이제 <code>Get it now!</code>버튼을 눌러 장바구니에 담아볼게요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.38.28.png" alt=""></p>
+<p>장바구니에 담은 도메인을 <code>Checkout</code>버튼을 눌러주면 아래 화면으로 넘어올거에요. <code>Use DNS</code>버튼을 눌러주신 후에 IP address 칸에 아까 애저 가상컴퓨터의 ip를 입력해주신 후 <code>Continue</code>를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.39.27.png" alt=""></p>
+<p><code>Continue</code>를 누르면 로그인 화면이 나와요. 구글이나 페이스북의 소셜 로그인을 이용할 수 있어요!</p>
+<blockquote>
+<p>페이스북은 가끔 오류가 나기도 해요. 그럴때는 구글이나 MS Live계정으로 다시한번 시도해주세요.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.40.52.png" alt=""></p>
+<p>로그인이 완료되면 아래와 같이 자신의 정보를 입력하는 부분이 나와요. 꼭 다 채울필요는 없어요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.42.39.png" alt=""></p>
+<p>주문 거래 동의 체크상자를 클릭한 후 계속 버튼을 누르면 주문이 완료된답니다! 좋아요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.45.21.png" alt=""></p>
+<h2 id="Fabric3-설치하기"><a href="#Fabric3-설치하기" class="headerlink" title="Fabric3 설치하기"></a>Fabric3 설치하기</h2><p>이제 여러분의 서버는 <code>여러분이입력한이름.tk</code>라는 인터넷 주소로 연결되었어요.</p>
+<p>하지만 아직 여러분의 서버에는 아무것도 설치되어있지 않아요. 물론 장고도 설치되어있지 않아요.</p>
+<p>이제 <code>Fabric3</code>이라는 멋진 자동화 도구를 통해 명령어 한 줄로(마치 startapp처럼) 진짜 서버에 배포하는 멋진 작업을 해볼거에요!</p>
+<p>우선 여러분의 가상환경에 <code>fabric3</code>을 설치해줘야 해요. <code>fabric3</code>은 아래 명령어를 통해 설치할 수 있어요.</p>
+<blockquote>
+<p><code>fabric</code>이 아니라 <code>fabric3</code>입니다! 3을 빼먹지 마세요. 그냥 <code>fabric</code>은 파이썬2용이랍니다.</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fabric3</span><br></pre></td></tr></table></figure>
+
+<h2 id="deploy-json-수정하기"><a href="#deploy-json-수정하기" class="headerlink" title="deploy.json 수정하기"></a><code>deploy.json</code> 수정하기</h2><p>이제 <a href="https://gist.github.com/Beomi/0cc830bd5cda029c277cba648386b28c/archive/0152df8617a63c6678b7b64c54892dc5b4ce19d8.zip">Fabfile for Django</a>를 클릭해 압축파일을 받아 풀어주세요.</p>
+<p>안에 <code>deploy.json</code>와 <code>fabfile.py</code>가 보일거에요. 이 두 파일을 여러분의 장고 폴더(<code>manage.py</code>파일이 있는 곳)안에 넣어주세요.</p>
+<p><code>deploy.json</code>파일 안에는 우리 서버의 정보를 적어넣을 수 있어요. </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"REPO_URL"</span>:<span class="string">"깃헙Repo주소"</span>,</span><br><span class="line">  <span class="attr">"PROJECT_NAME"</span>:<span class="string">"프로젝트폴더(settings.py가있는 폴더)의 이름(ex: mysite)"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_HOST"</span>:<span class="string">"여러분이 만든 도메인주소(ex: djangogirls-seoul-tutorial.tk )"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_USER"</span>:<span class="string">"django"</span>,</span><br><span class="line">  <span class="attr">"STATIC_ROOT"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"STATIC_URL"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"MEDIA_ROOT"</span>:<span class="string">"media"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>파일에 있는 <code>REPO_URL</code>, <code>PROJECT_NAME</code>, <code>REMOTE_HOST</code> 부분을 채워주세요. 나머지 값은 우리가 따라한 튜토리얼에서 이미 설정되어있어요.</p>
+<blockquote>
+<p>모든 값은 “큰 따옴표” 안에 들어가야 한다는 것을 주의하세요!</p>
+</blockquote>
+<h2 id="Fabric으로-서버에-올리기"><a href="#Fabric으로-서버에-올리기" class="headerlink" title="Fabric으로 서버에 올리기"></a>Fabric으로 서버에 올리기</h2><p>Fabric을 사용하기 위한 명령어는 <code>fab</code>이라는 명령어입니다. 이 <code>fab</code>뒤에 <code>new_server</code>, <code>deploy</code>, <code>createsuperuser</code>등을 덧붙여 실제로 원격 서버에 명령을 내리는거에요.</p>
+<p>서버에 처음 올릴 때는 <code>fab new_server</code> 명령어를 이용하세요. 파이썬3 설치부터 Apache2설치와 <code>mod_wsgi</code>설치까지 완료해준답니다. </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab new_server</span><br></pre></td></tr></table></figure>
+
+<p>만약 여러분이 장고 소스를 수정(커밋&amp;푸시)후 서버에 올리고 싶으시다면 <code>fab deploy</code> 명령어를 이용하세요. 장고 앱을 새로 실행해주고 <code>manage.py migrate</code>, <code>manage.py collectstaticfiles</code>등의 명령을 서버에 실행해 준답니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab deploy</span><br></pre></td></tr></table></figure>
+
+<p>우리가 진행하는 튜토리얼에서는 슈퍼유저 만들기 항목이 있어요. 여러분의 컴퓨터에서는 <code>manage.py createsuperuser</code>를 통해 만들었지만 서버에 띄운 장고에 슈퍼유저를 만들어 주려면 <code>fab create_superuser</code>를 이용해주세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab create_superuser</span><br></pre></td></tr></table></figure>
+
+<h2 id="짜잔"><a href="#짜잔" class="headerlink" title="짜잔!"></a>짜잔!</h2><p>여러분은 이제 Azure에 올라간 <strong>진짜</strong> 웹 서비스 하나를 만들었어요! 이제 여러분은 장고로 웹 서비스를 만드는 것의 처음부터 끝까지를 모두 알게되었어요! 축하합니다 :D</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/06/01/Add-Sentry-to-Django/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Django/sentry.jpg" alt="배포한 Django 서비스 Exception Sentry로 받아보기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-05-31T15:00:00.000Z">2017-06-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/06/01/Add-Sentry-to-Django/">배포한 Django 서비스 Exception Sentry로 받아보기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>이번 포스팅은 <code>wsgi</code>기반으로 동작하는 <code>django</code>서비스를 대상으로 합니다.</p>
+</blockquote>
+<p>Django 서비스를 실제 서버에 배포하면 보안을 위해 프로젝트 폴더의 <code>settings.py</code>파일 안의 <code>DEBUG</code>항목을 <code>False</code>로 두고 배포합니다. 이렇게 디버그모드를 끌 경우 장고에서 기본적인 보안을 제공해 줍니다. 그러나 만약 View나 Model에서 Exception이 발생했을 경우 클라이언트에 흰색의 500에러 화면만을 띄워줍니다.</p>
+<p>이 경우 개발자에게도 장고의 에러 화면을 보여주지 않습니다. 따라서 Exception이 발생할 경우 개발자(혹은 운영자)에게 에러를 전송할 필요가 있습니다. <code>wsgi</code> 기반으로 서버를 구동할 경우 에러로그는 Apache2나 NginX등의 웹서버의 접근/에러로그가 있으며 Wsgi의 에러로그로 두가지가 있습니다.</p>
+<p>장고서버의 경우에는 Wsgi의 에러로그에 로그를 쌓습니다. 그러나, Django 프로젝트에 <code>LOGGERS</code> 설정값을 추가해줘야 하며 에러 트래킹을 따로 설정해줘야 합니다.</p>
+<p>이때 사용할 수 있는 것이 Sentry와 같은 서비스입니다.</p>
+<blockquote>
+<p>이번 가이드는 <a href="https://docs.sentry.io/clients/python/integrations/django/">Sentry for Django</a>를 기반으로 진행합니다.</p>
+</blockquote>
+<h2 id="Sentry-설치하기"><a href="#Sentry-설치하기" class="headerlink" title="Sentry 설치하기"></a>Sentry 설치하기</h2><p>우선 <code>raven</code>을 설치해 줍니다. </p>
+<blockquote>
+<p><code>raven</code>은 Sentry를 위한 Python패키지입니다. </p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install raven --upgrade</span><br></pre></td></tr></table></figure>
+
+<h2 id="Sentry-settings-py에-설정하기"><a href="#Sentry-settings-py에-설정하기" class="headerlink" title="Sentry settings.py에 설정하기"></a>Sentry <code>settings.py</code>에 설정하기</h2><p>장고 프로젝트의 <code>settings.py</code>파일 안 <code>INSTALLED_APPS</code>에 아래 줄을 추가해줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    <span class="comment"># 기존 앱 가장 아래에 추가해주세요.</span></span><br><span class="line">    <span class="string">'raven.contrib.django.raven_compat'</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이제 Sentry용 환경변수를 추가해 줍시다. 아래 <code>DSN_URL</code>은 Sentry에 로그인 하신 후 <a href="https://docs.sentry.io/clients/python/integrations/django/#setup">Sentry for Django</a>의 코드 부분을 복사하면 알 수 있습니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py 파일 import문 아래에 raven을 import해주세요.</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> raven</span><br><span class="line"></span><br><span class="line"><span class="comment"># import아래 환경변수를 설정해주세요. 이 URL은 위 Sentry for Django에서 바로 찾을 수 있습니다.</span></span><br><span class="line">DSN_URL = <span class="string">'https://sampleurl1234141534samplesample:somemoreurl12341235dfaetr@sentry.io/123456'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 기타 설정들(생략...)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># settings.py 파일 가장 아래에 RAVEN_CONFIG를 추가해주세요.</span></span><br><span class="line">RAVEN_CONFIG = &#123;</span><br><span class="line">    <span class="string">'dsn'</span>: <span class="string">'&#123;&#125;'</span>.format(DSN_URL), <span class="comment"># DSN_URL을 위에 적어주셔야 동작합니다.</span></span><br><span class="line">    <span class="string">'release'</span>: raven.fetch_git_sha(BASE_DIR), <span class="comment"># Django가 Git으로 관리되는 경우 자동으로 커밋 버전에 따른 트래킹을 해줍니다.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Sentry-wsgi-py에-설정하기"><a href="#Sentry-wsgi-py에-설정하기" class="headerlink" title="Sentry wsgi.py에 설정하기"></a>Sentry <code>wsgi.py</code>에 설정하기</h2><p>이제 장고 프로젝트 폴더 안의 <code>wsgi.py</code> 파일을 아래와 같이 수정해봅시다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.wsgi <span class="keyword">import</span> get_wsgi_application</span><br><span class="line"><span class="keyword">from</span> raven.contrib.django.raven_compat.middleware.wsgi <span class="keyword">import</span> Sentry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 이 부분은 여러분의 장고 프로젝트 이름을 쓰세요..</span></span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"장고프로젝트이름.settings"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># get_wsgi_application을 Sentry()로 감싸주세요.</span></span><br><span class="line">application = Sentry(get_wsgi_application())</span><br></pre></td></tr></table></figure>
+
+<p>자, 이제 Sentry 사용을 위한 기본적인 설정이 끝났습니다. 여러분의 서비스를 다시 원래 서버에 배포해보세요.</p>
+<h2 id="Exception이-발생하면"><a href="#Exception이-발생하면" class="headerlink" title="Exception이 발생하면.."></a>Exception이 발생하면..</h2><p>이제 여러분이 잡아주지 않은 Exception이 발생할 경우 아래와 같이 이메일이 옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Django/sentry_mail.jpeg" alt="sentry django integrity error log mail"><br><br>이메일의 Issue 링크를 클릭하면 아래와 같이 에러로그 페이지가 나옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Django/sentry_web.png" alt="Sentry django integrity error log web page"></p>
+<h2 id="조금-더-알아보기"><a href="#조금-더-알아보기" class="headerlink" title="조금 더 알아보기"></a>조금 더 알아보기</h2><p>이번 포스팅에서는 장고의 Wsgi에서 발생하는 에러(Exception)을 Sentry 미들웨어를 통해 관리합니다. 그러나 유저에게 500페이지를 보여주는것은 여전합니다.</p>
+<p>만약 여러분이 미리 잡아준 상황을 Sentry로 보내고 싶으시다면 <a href="https://docs.sentry.io/clients/python/integrations/django/#integration-with-logging">Sentry를 logging와 함께 쓰기</a>를 참고하세요.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/profile_beomi.jpg" alt="Junbum Lee">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Junbum Lee
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Beomi&#39;s tech blog
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Seoul, KR</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/beomi">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/DataCollection/">
+            <span class="level-start">
+                <span class="level-item">DataCollection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DataCollection/Twitter/">
+            <span class="level-start">
+                <span class="level-item">Twitter</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/">
+            <span class="level-start">
+                <span class="level-item">DevEnv</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DataScience/">
+            <span class="level-start">
+                <span class="level-item">DataScience</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DeepLearning/">
+            <span class="level-start">
+                <span class="level-item">DeepLearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Ubuntu/">
+            <span class="level-start">
+                <span class="level-item">Ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Django/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/">
+            <span class="level-start">
+                <span class="level-item">DjangoTDDStudy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/MacOS/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/NLP/">
+            <span class="level-start">
+                <span class="level-item">NLP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/NLP/LanguageModel/">
+            <span class="level-start">
+                <span class="level-item">LanguageModel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/NLP/Unsupervised/">
+            <span class="level-start">
+                <span class="level-item">Unsupervised</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Postmortem/">
+            <span class="level-start">
+                <span class="level-item">Postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Python/Celery/">
+            <span class="level-start">
+                <span class="level-item">Celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/Fabric/">
+            <span class="level-start">
+                <span class="level-item">Fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Tech/">
+            <span class="level-start">
+                <span class="level-item">Tech</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Translation/">
+            <span class="level-start">
+                <span class="level-item">Translation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/aws/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/azure/">
+            <span class="level-start">
+                <span class="level-item">azure</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/blog/">
+            <span class="level-start">
+                <span class="level-item">blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/blog/github/">
+            <span class="level-start">
+                <span class="level-item">github</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/django/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/django/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/flask/sqlalchemy/">
+            <span class="level-start">
+                <span class="level-item">sqlalchemy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/javascript/webpack/">
+            <span class="level-start">
+                <span class="level-item">webpack</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/life/">
+            <span class="level-start">
+                <span class="level-item">life</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/machinelearning/">
+            <span class="level-start">
+                <span class="level-item">machinelearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/machinelearning/seminar/">
+            <span class="level-start">
+                <span class="level-item">seminar</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/macos/">
+            <span class="level-start">
+                <span class="level-item">macos</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/macos/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/nlp/">
+            <span class="level-start">
+                <span class="level-item">nlp</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/nlp/languagemodel/">
+            <span class="level-start">
+                <span class="level-item">languagemodel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/postmortem/">
+            <span class="level-start">
+                <span class="level-item">postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">25</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/python/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/celery/">
+            <span class="level-start">
+                <span class="level-item">celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/dataanalysis/">
+            <span class="level-start">
+                <span class="level-item">dataanalysis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/pyspark/">
+            <span class="level-start">
+                <span class="level-item">pyspark</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/react/">
+            <span class="level-start">
+                <span class="level-item">react</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/react/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/tips/githubpages/">
+            <span class="level-start">
+                <span class="level-item">githubpages</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ubuntu/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/vlang/">
+            <span class="level-start">
+                <span class="level-item">vlang</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>CustoMac  설치 분투기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-08-08T15:00:00.000Z">2016-08-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/MacOS/">MacOS</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                CustoMac  설치 분투기
+            
+        </h1>
+        <div class="content">
+            <p>기본적으로 커스텀맥(해킨토시) 설치는 큰 어려움이 따른다.</p>
+<p>그런데, 이번에 설치한  OS X El Capitan은 기본적인 설정만으로도 상당히 쉽게 설치되었기 때문에(그래도 약간의 설정은 필요하다) 매우 놀랐다.</p>
+<p>설치 PC사양은 다음과 같다.</p>
+<pre><code>CPU: I5-4670 (Haswell, 하스웰)
+RAM: DDR3 8Gx2 (&lt;span id=&quot;grpDescrip_&quot;&gt;G.SKILL Ripjaws X Series 16GB (2 x 8GB)&lt;/span&gt;)
+M/B: ASRock ASRock H87 Performance 에즈윈
+HDD: WD Blue 1TB (8MB cache / 2.5&quot;)
+VGA: AMD HD7970 3G (HIS 라데온 HD 7970 기가에디션 OC D5 3GB IceQ X² 잘만테크)</code></pre><p>설치를 시도한 OS는 OS X 10.11.6 (El Capitan)버전이었고, 설치 디스크 제작은 순정 맥을 이용해 제작했다.</p>
+<p>설치에 사용한 Kext와 여러 프로그램들은 아래 드롭박스 링크에서 받을 수 있다. PW:installosx</p>
+<p><a href="https://www.dropbox.com/s/adcn375wywotkxm/InstallOSX.zip?dl=0">[ 다운로드 ]</a></p>
+<h2 id="설치-과정"><a href="#설치-과정" class="headerlink" title="[설치 과정]"></a>[설치 과정]</h2><p>가장 먼저 해야 하는 것은 바로 순정 설치 디스크를 제작하는 것이다.</p>
+<p>순정 El Capitan을 받기 위해 맥의 AppStore에서 El Capitan을 다운로드 하면 LaunchPad에 저장된다.</p>
+<p>저장이 완료되면 설치 창이 뜨는데, 간단히 무시하고 TonyMac의 <a href="http://tonymacx86.com/resources/unibeast-6-2-0.314/">Unibeast</a>를 통해 GUI로 부팅 디스크를 만든다.</p>
+<p>El Capitan / UEFI만 선택하면 부팅 디스크를 아주 깔끔하게 만들어준다.</p>
+<p>부팅 및 설치는 전면 USB3.0단자를 이용해 이루어졌다.(혹자는 usb2.0으로 진행하라고 했지만, 큰 문제 없이 진행되었다.)</p>
+<p>USB에는 여러 프로그램(MultiBeast / Clover / CloverConfigurator / 기타 kexts/Scripts)을 담아두면 OS X 설치 이후에 좀더 편안하게 설치 마무리를 진행할 수 있다.</p>
+<p>위쪽에 올려둔 드롭박스 링크의 압축파일에는</p>
+<ul>
+<li><p><a href="http://mackie100projects.altervista.org/download-clover-configurator">Clover Configuator</a> : EFI 파티션 자동인식 및 마운트 기능 / config.plist 수정기능 제공 / Clover 자동 확인 및 업데이트 제공</p>
+</li>
+<li><p><a href="https://sourceforge.net/projects/cloverefiboot/">Clover</a> : 클로버 부트로더. OS X으로 부팅 가능하게 만들어준다.</p>
+</li>
+<li><p><a href="http://tonymacx86.com/resources/multibeast-el-capitan-8-2-3.319/">MultiBeast</a> : OS X의 각종 드라이버(kext파일들)를 EFI파티션에 잡아준다. 이번설치에서는 굳이 쓰지 않아도 성공적으로 설치됨.</p>
+</li>
+<li><p>Kext파일들 : 위 HW에 필요했던 기본적인 kext들. EFI파티션의 KEXTS폴더에 10.11버전 폴더에 넣어주면 된다.</p>
+</li>
+<li><p><a href="http://member.ipmu.jp/yuji.tachikawa/MenuMetersElCapitan/">MenuMeters</a> : OS X 설치 후 시스템 상태를 메뉴바에서 그래픽으로 볼 수 있게 지원. OS X설치후 항상 쓰는 프로그램이라 넣었을 뿐, 운영체제 설치 자체와는 관련이 전혀 없다.</p>
+</li>
+<li><p><a href="https://github.com/toleda/audio_CloverHDMI">AudioCloverHDMI</a> : OS X에서 기본적으로 지원하지 않는 HDMI 오디오 출력을 가능하게 만들어준다. 스크립트형.</p>
+</li>
+</ul>
+<p>이렇게 구성되어있다.</p>
+<p>+alpha:</p>
+<p>이번에 사용한 메인보드가 ASRock보드인데, 부트로더가 efi파일을 잡지 않아 버그가 난  경우가 있었다.</p>
+<p><a href="https://www.x86.co.kr:447/qa/1274453">https://www.x86.co.kr:447/qa/1274453</a></p>
+<p>클로버를 저렇게 설치해주면 된다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/09/14/chrome-native-adblockr-eb8c80ecb2b4ed9598eab8b0/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Chrome Native Adblockr 대체하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/07/22/ubuntu14-04ec9790-ohmyzsh-ec84a4ecb998/">
+                <span class="level-item">Ubuntu14.04에 OhMyZsh 설치</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 livingmethod&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>카테고리: django - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-3-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/categories">카테고리</a></li>
+            
+            <li><a href="/categories/python/">python</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">django</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2018/03/09/Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2018-03-09-Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi.png" alt="Django: Truncated or oversized response headers received from daemon process 에러 해결법">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-03-08T15:00:00.000Z">2018-03-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/tips/">tips</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/03/09/Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi/">Django: Truncated or oversized response headers received from daemon process 에러 해결법</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="문제-발생-환경"><a href="#문제-발생-환경" class="headerlink" title="문제 발생 환경"></a>문제 발생 환경</h2><ul>
+<li>OS: Ubuntu 16.04 LTS</li>
+<li>Python 3.5.2</li>
+<li>Django 2.0.2</li>
+<li>Apache HTTPd 2.4</li>
+<li>numpy / Pandas / pymssql 등 사용중</li>
+</ul>
+<h2 id="문제의-발생"><a href="#문제의-발생" class="headerlink" title="문제의 발생"></a>문제의 발생</h2><p>장고 배포를 마친 뒤 배포 서버에 접속시 화면이 뜨지 않고 <code>500</code>에러가 났던 상황.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Timeout when reading response headers from daemon process 'djangoproject': /home/ubuntu/djangoproject/djangoproject/wsgi.py</span><br></pre></td></tr></table></figure>
+
+<p>에러 로그로 살펴보면 위와 같이 “Timeout when reading response headers from daemon process”이라는 문제가 발생했다.</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/03/09/Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/03/22/Setup-SocialAuth-for-Django-Email-as-User/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-08-Setup-SocialAuth-for-Django/social_login.png" alt="Django에 Social Login와 Email유저 함께 이용하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-03-21T15:00:00.000Z">2017-03-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/03/22/Setup-SocialAuth-for-Django-Email-as-User/">Django에 Social Login와 Email유저 함께 이용하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p><code>django-custom-user</code>와 <code>social-auth-app-django</code>(구 <code>python-social-auth</code>)를 이용해 이메일 기반 유저와 소셜 로그인으로 로그인 한 유저를 하나처럼 사용하는 방법입니다.</p>
+</blockquote>
+<blockquote>
+<p>장고에 소셜 로그인을 붙이는 가이드는 <a href="/2017/02/08/Setup-SocialAuth-for-Django/">Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지</a> 포스팅에서 찾으실 수 있습니다.</p>
+</blockquote>
+<h1 id="Django-SocialLogin-Email-as-User"><a href="#Django-SocialLogin-Email-as-User" class="headerlink" title="Django + SocialLogin + Email as User"></a>Django + SocialLogin + Email as User</h1><p>웹 서비스를 제공할 때 여러가지 로그인 방법을 구현할 수 있습니다. 아이디/패스워드 기반의 방식, 페이스북과 구글등의 OAuth를 이용한 소셜 로그인 방식 등이 있습니다.</p>
+<p>장고 프로젝트를 만들 때 <code>django-custom-user</code>등의 패키지를 이용하면 이메일 주소를 Unique Key로 사용해 이메일 주소로 로그인을 할 수 있도록 만들어 줍니다.</p>
+<blockquote>
+<p><code>django-custom-user</code>에 관한 문서는 <a href="https://github.com/jcugat/django-custom-user#django-custom-user">Django Custom User GitHub</a>에서 확인하실 수 있습니다.</p>
+</blockquote>
+<p>하지만, <code>social-auth-app-django</code>를 통해 유저를 생성 할 경우 OAuth Provider에 따라 다른 User를 생성합니다. 즉, 같은 이메일 주소를 가지고 있는 유저라 하더라도 페이스북을 통해 로그인 한 유저와 구글을 통해 로그인 한 유저는 다르게 다뤄진다는 뜻입니다.</p>
+<blockquote>
+<p>사실 이메일 주소를 신뢰하지 않고 Provier마다 다른 유저로 생성하는 것이 기본으로 되어있는 이유는 Oauth Provier의 신뢰 문제입니다. 모든 Oauth Provier가 가입한 유저의 Email의 실 소유권을 확인하지는 않기 때문입니다.</p>
+</blockquote>
+<p>이를 해결하고 같은 이메일을 통해 로그인한 유저는 모두 같은 유저로 취급하기 위해서는 장고 프로젝트 폴더의 <code>settings.py</code>파일 안에서 <code>social-auth-app-django</code>의 Pipeline설정을 변경해 줘야 합니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">SOCIAL_AUTH_PIPELINE = (</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.social_details'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.social_uid'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.auth_allowed'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.social_user'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.user.get_username'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.associate_by_email'</span>,  <span class="comment"># &lt;--- 이 줄이 핵심입니다.</span></span><br><span class="line">    <span class="string">'social_core.pipeline.user.create_user'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.associate_user'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.social_auth.load_extra_data'</span>,</span><br><span class="line">    <span class="string">'social_core.pipeline.user.user_details'</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>SOCIAL_AUTH_PIPELINE</code>은 <code>settings.py</code>내에는 기본적으로 지정이 해제되어있습니다. 따라서 변수가 없는 경우 위 코드 전체를 <code>settings.py</code>파일 끝에 덧붙이시면 됩니다.</p>
+<blockquote>
+<p>참고: <a href="http://python-social-auth.readthedocs.io/en/latest/use_cases.html#associate-users-by-email">Python Social Auth: Associate users by Email</a></p>
+</blockquote>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/02/08/Setup-SocialAuth-for-Django/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-08-Setup-SocialAuth-for-Django/social_login.png" alt="Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-07T15:00:00.000Z">2017-02-08</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/02/08/Setup-SocialAuth-for-Django/">Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지</a>
+            
+        </h1>
+        <div class="content">
+            <p>Django등 웹 서비스를 제공하며 항상 다루게 되는 주제가 있습니다. 유저를 우리 서비스의 유저 모델을 통해 직접 가입시키느냐, 혹은 타사의 oAuth를 이용한 Social Login을 붙여 가입없이(혹은 최소화) 서비스를 이용할 수 있도록 유도 하느냐 등입니다.</p>
+<p>Django에서 이러한 Social Login을 이용하기 위한 라이브러리는 여러개가 있었고, 대표적으로는 <code>django-social-auth</code>와 <code>python-social-auth</code>가 있었지만, 두 프로젝트 모두 현재(2017.02.08기준) Deprecated되었고 이 프로젝트들은 <code>python-social-auth</code>가 org자체로 이전해 <code>social-auth-app-django</code>로 바뀌었습니다.</p>
+<p>한편 <code>-social-auth</code>들의 대체재로 <code>django-allauth</code>가 있는데, 올해 1월에도 새 버전 릴리즈가 있는만큼 활동적인 프로젝트입니다. (하지만 이번 글에서는 다루지 않습니다.)</p>
+<p>이번 게시글에서는 <code>social-auth-app-django</code>을 이용해 Django 프로젝트에 social login을 붙여봅니다.</p>
+<p>참조한 공식 docs는 <a href="http://python-social-auth.readthedocs.io/en/latest/configuration/django.html">python-social-auth configuration django</a>에서 볼 수 있습니다.</p>
+<blockquote>
+<p>참고: <code>social-auth-app-django</code>는 pip패키지 이름이며, 프로젝트 이름은 <code>python-social-auth</code>로 동일합니다.</p>
+</blockquote>
+<h2 id="설치하기"><a href="#설치하기" class="headerlink" title="설치하기"></a>설치하기</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install social-auth-app-django</span><br></pre></td></tr></table></figure>
+
+<p>Django의 기본 ORM을 이용하고 있다면 <code>social-auth-app-django</code>를 pip로 설치하면 됩니다.</p>
+<h2 id="settings-py-설정하기"><a href="#settings-py-설정하기" class="headerlink" title="settings.py 설정하기"></a>settings.py 설정하기</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="INSTALLED-APPS-추가하기"><a href="#INSTALLED-APPS-추가하기" class="headerlink" title="INSTALLED_APPS 추가하기"></a>INSTALLED_APPS 추가하기</h3><p>settings.py에 <code>social_django</code>를 추가해줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = (</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'social_django'</span>,</span><br><span class="line">    ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>앱 추가후 migrate를 해줘야 정상적으로 Social Auth용 DB Table이 생성됩니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<h3 id="AUTHENTICATION-BACKENDS-추가하기"><a href="#AUTHENTICATION-BACKENDS-추가하기" class="headerlink" title="AUTHENTICATION_BACKENDS 추가하기"></a>AUTHENTICATION_BACKENDS 추가하기</h3><p>Social Login은 기존 유저모델과 함께 사용이 가능합니다. 하지만 기본 유저 ModelBackend를 사용하지 않고 독자적인 ModelBackend를 사용하기 때문에 settings.py의 AUTHENTICATION_BACKENDS에 Social login용 Backends를 추가해줘야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'social_core.backends.google.GoogleOAuth2'</span>, <span class="comment"># Google</span></span><br><span class="line">    <span class="string">'social_core.backends.facebook.FacebookOAuth2'</span>, <span class="comment"># Facebook</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django 기본 유저모델</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>django.contrib.auth.backends.ModelBackend</code>가 있어야 <code>createsuperuser</code>로 만들어진 계정의 로그인이 가능해집니다.</p>
+</blockquote>
+<h3 id="Social-Login용-URL-Namespace-지정"><a href="#Social-Login용-URL-Namespace-지정" class="headerlink" title="Social Login용 URL Namespace 지정"></a>Social Login용 URL Namespace 지정</h3><p>최상위 프로젝트 <code>urls.py</code>에 지정할 social login의 namespace를 지정해줍니다. 또한, Login 후 어떤 URL로 장고가 유저를 Redirect시킬지 지정해 줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SOCIAL_AUTH_URL_NAMESPACE = <span class="string">'social'</span></span><br><span class="line"></span><br><span class="line">LOGIN_REDIRECT_URL=<span class="string">'/'</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>꼭 namespace가 ‘social’일 필요는 없습니다. 하지만 가이드에서는 ‘social’을 사용하기에 아래 urls.py 설정에서도 동일하게 사용할 예정입니다.</p>
+</blockquote>
+<h3 id="Social-Login을-위한-API-Key-Secret-설정하기"><a href="#Social-Login을-위한-API-Key-Secret-설정하기" class="headerlink" title="Social Login을 위한 API Key/Secret 설정하기"></a>Social Login을 위한 API Key/Secret 설정하기</h3><p>우선 프로젝트 BASE_DIR(<code>manage.py</code>파일이 있는 폴더)에 <code>envs.json</code>이라는 이름의 환경변수를 담은 json 파일을 만들어 줍니다.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"FACEBOOK_KEY"</span>:<span class="string">"숫자숫자숫자들"</span>,</span><br><span class="line">  <span class="attr">"FACEBOOK_SECRET"</span>:<span class="string">"숫자영어숫자영어들"</span>,</span><br><span class="line">  <span class="attr">"GOOGLE_KEY"</span>:<span class="string">"숫자-영어.apps.googleusercontent.com"</span>,</span><br><span class="line">  <span class="attr">"GOOGLE_SECRET"</span>:<span class="string">"숫자영어대문자들"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>당연하게도 위 파일은 실제 동작하는 Key와 Secret이 아닙니다.</p>
+<p>Social Login을 사용하기 위해 Google에서는 <a href="https://console.developers.google.com/apis/api/plus.googleapis.com">Google+ API</a>를 활성화 하고 <a href="https://console.developers.google.com/apis/credentials">OAuth 2.0 클라이언트 ID</a>를 ‘웹 애플리케이션’으로 생성해 API Key/Secret을 발급받아야 합니다.</p>
+<blockquote>
+<p>Google Login은 Google+ API에 연결되어있기 때문에 다른 Login API는 없습니다.</p>
+</blockquote>
+<p>Facebook의 경우에는 <a href="https://developers.facebook.com/">Facebook for Developers</a>에서 새 앱 추가 후 ‘Facebook 로그인’ 제품을 활성화 시킨 후 앱의 대시보드에서 앱 ID와 앱 시크릿 코드를 받아 이용하면 됩니다.</p>
+<p>두 서비스 모두 지정된 url에서만 동작하기 때문에 Google의 경우에는 ‘OAuth 2.0 클라이언트 ID’에서 ‘승인된 리디렉션 URI’에 <code>http://localhost:8000/complete/google-oauth2/</code>을 추가해줘야 하며, Facebook의 경우에는 ‘Facebook 로그인’의 ‘클라이언트 OAuth 설정’에 있는 ‘유효한 OAuth 리디렉션 URI’에 <code>http://localhost:8000/</code>을 추가해주면 됩니다.</p>
+<blockquote>
+<p>위 설정을 모두 하지 않을 경우 40x번대 에러가 발생합니다.</p>
+</blockquote>
+<p>이제 위에서 만든 <code>envs.json</code>파일을 환경변수로 사용해야 합니다. <code>settings.py</code>파일 최상위에 이와 같은 코드를 적용해 줄 경우, 개발용 <code>envs_dev.json</code>와 배포용 <code>envs.json</code>, 그리고 환경변수로 관리되는 경우 모두 커버가 가능합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> ImproperlyConfigured</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build paths inside the project like this: os.path.join(BASE_DIR, ...)</span></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Env for dev / deploy</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_env</span><span class="params">(setting, envs)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> envs[setting]</span><br><span class="line">    <span class="keyword">except</span> KeyError:</span><br><span class="line">        error_msg = <span class="string">"You SHOULD set &#123;&#125; environ"</span>.format(setting)</span><br><span class="line">        <span class="keyword">raise</span> ImproperlyConfigured(error_msg)</span><br><span class="line"></span><br><span class="line">DEV_ENVS = os.path.join(BASE_DIR, <span class="string">"envs_dev.json"</span>)</span><br><span class="line">DEPLOY_ENVS = os.path.join(BASE_DIR, <span class="string">"envs.json"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> os.path.exists(DEV_ENVS): <span class="comment"># Develop Env</span></span><br><span class="line">    env_file = open(DEV_ENVS)</span><br><span class="line"><span class="keyword">elif</span> os.path.exists(DEPLOY_ENVS): <span class="comment"># Deploy Env</span></span><br><span class="line">    env_file = open(DEPLOY_ENVS)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    env_file = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> env_file <span class="keyword">is</span> <span class="literal">None</span>: <span class="comment"># System environ</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        FACEBOOK_KEY = os.environ[<span class="string">'FACEBOOK_KEY'</span>]</span><br><span class="line">        FACEBOOK_SECRET = os.environ[<span class="string">'FACEBOOK_SECRET'</span>]</span><br><span class="line">        GOOGLE_KEY = os.environ[<span class="string">'GOOGLE_KEY'</span>]</span><br><span class="line">        GOOGLE_SECRET = os.environ[<span class="string">'GOOGLE_SECRET'</span>]</span><br><span class="line">    <span class="keyword">except</span> KeyError <span class="keyword">as</span> error_msg:</span><br><span class="line">        <span class="keyword">raise</span> ImproperlyConfigured(error_msg)</span><br><span class="line"><span class="keyword">else</span>: <span class="comment"># JSON env</span></span><br><span class="line">    envs = json.loads(env_file.read())</span><br><span class="line">    FACEBOOK_KEY = get_env(<span class="string">'FACEBOOK_KEY'</span>, envs)</span><br><span class="line">    FACEBOOK_SECRET = get_env(<span class="string">'FACEBOOK_SECRET'</span>, envs)</span><br><span class="line">    GOOGLE_KEY = get_env(<span class="string">'GOOGLE_KEY'</span>, envs)</span><br><span class="line">    GOOGLE_SECRET = get_env(<span class="string">'GOOGLE_SECRET'</span>, envs)</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 사용할 경우, APACHE웹서버 등에서 시스템 환경변수를 불러오지 못하는 상황이거나, HEROKU나 PythonAnywhere와 같은 PaaS에서도 Django코드와 API키들을 완전히 분리해 사용할 수 있습니다.</p>
+<p>위에서 지정한 FACEBOOK_KEY들을 SocialLogin에 할당해 줍니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SocialLogin: Facebook</span></span><br><span class="line">SOCIAL_AUTH_FACEBOOK_KEY = FACEBOOK_KEY</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_SECRET = FACEBOOK_SECRET</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_SCOPE = [<span class="string">'email'</span>]</span><br><span class="line">SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = &#123;</span><br><span class="line">  <span class="string">'fields'</span>: <span class="string">'id, name, email'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SocialLogin: Google</span></span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = GOOGLE_KEY</span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = GOOGLE_SECRET</span><br><span class="line">SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [<span class="string">'email'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 가장 기본적인 ‘email’을 유저 식별도구로 받아옵니다.</p>
+<blockquote>
+<p> _PROFILE_EXTRA_PARAMS를 이용해 다른 Field를 받아올 수도 있습니다. (필수 아님)</p>
+</blockquote>
+<h2 id="project폴더의-urls-py-설정하기-최상위-urls-py"><a href="#project폴더의-urls-py-설정하기-최상위-urls-py" class="headerlink" title="project폴더의 urls.py 설정하기(최상위 urls.py)"></a>project폴더의 urls.py 설정하기(최상위 urls.py)</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><p>이제 프로젝트 폴더의 urls.py에 Social Login이 사용할 url들을 등록하고 namespace를 지정해 Template에서 사용할 수 있도록 설정해야 합니다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url, include <span class="comment"># url뿐 아니라 include를 import해야 합니다.</span></span><br><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, admin.site.urls),</span><br><span class="line">    url(<span class="string">''</span>, include(<span class="string">'social_django.urls'</span>, namespace=<span class="string">'social'</span>)), <span class="comment"># 이 줄을 등록해주면 됩니다.</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 <code>social_django.urls</code>를 include하고 ‘social’ namespace를 등록해 줍니다.</p>
+<h2 id="Template에서-Social-Login-url-호출하기"><a href="#Template에서-Social-Login-url-호출하기" class="headerlink" title="Template에서 Social Login url 호출하기"></a>Template에서 Social Login url 호출하기</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>위 코드들을 추가해주는 것 만으로도 기본적인 Social Login기능은 완성되었습니다. 이제 Template에서 호출을 해봅시다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% raw %&#125;<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;% url "</span><span class="attr">social:begin</span>" "<span class="attr">google-oauth2</span>" %&#125;"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"btn btn-danger"</span> <span class="attr">style</span>=<span class="string">"width: 40%"</span>&gt;</span>G+ Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;% url "</span><span class="attr">social:begin</span>" "<span class="attr">facebook</span>" %&#125;"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"btn btn-primary"</span> <span class="attr">style</span>=<span class="string">"width: 40%"</span>&gt;</span>FB Login<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span>&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>이와 같이 button을 등록해 호출할 수 있습니다.</p>
+<p>위 버튼을 누를 경우 각각 Google/Facebook의 Social Login페이지로 넘어갑니다.</p>
+<h2 id="수고하셨습니다"><a href="#수고하셨습니다" class="headerlink" title="수고하셨습니다!"></a>수고하셨습니다!</h2><h2 id="widgets-4"><a href="#widgets-4" class="headerlink" title="widgets:"></a>widgets:</h2><p>위 코드만으로도 약간의 조작을 통해 더 멋진 Social Login기능을 구현하실 수 있으리라 생각합니다.</p>
+<p>Happy Coding!</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/02/02/Django-CustomAuth/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-02-Django-CustomAuth/authentication.png" alt="Django에 Custom인증 붙이기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-01T15:00:00.000Z">2017-02-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/02/02/Django-CustomAuth/">Django에 Custom인증 붙이기</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가기-전"><a href="#들어가기-전" class="headerlink" title="들어가기 전"></a>들어가기 전</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><p>Django는 기본적으로 authentication을 내장하고 있고, User Model을 장고 자체가 가지고 있다.</p>
+<p>UserModel의 경우 <code>settings.py</code>에서 <code>AUTH_USER_MODEL</code>을 커스텀 유저 모델로 지정해주면 프로젝트 전역에서 사용 가능하지만, 이번 글에서는 이 부분이 아니라 <code>AUTH</code> 처리를 추가할 수 있는지에 대해 알아볼 것이다.</p>
+<p>프로젝트 폴더 구조는 아래와 같다. (<code>django-admin startproject sample_project</code>로 생성한 것과 같다. <code>my_user</code>라는 폴더를 만들고 안에 <code>custom_auth.py</code>와 <code>my_auth.py</code>파일을 만든다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── manage.py</span><br><span class="line">├── my_user <span class="comment"># 유저 모델을 다룰 곳</span></span><br><span class="line">│   ├── custom_auth.py</span><br><span class="line">│   └── my_auth.py</span><br><span class="line">└── sample_project <span class="comment"># 프로젝트 디렉토리</span></span><br><span class="line">    ├── __init__.py</span><br><span class="line">    ├── settings.py <span class="comment"># 장고 프로젝트 settings</span></span><br><span class="line">    ├── urls.py</span><br><span class="line">    └── wsgi.py</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="사용하는-경우"><a href="#사용하는-경우" class="headerlink" title="사용하는 경우"></a>사용하는 경우</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><p>예를들어, “OO커뮤니티 소속이라면, 우리 서비스에서도 커뮤니티 id와 pw로 로그인이 가능하게 하자”가 대표적인 예시가 될 수 있다.</p>
+<p>위 문장을 좀더 풀어쓴다면 “OO커뮤니티에 로그인이 가능한 ID”를 받아 “OO커뮤니티의 인증”으로 “우리 서비스에도 로그인” 할 수 있게 하는 것이다.</p>
+<h2 id="만들어봅시다"><a href="#만들어봅시다" class="headerlink" title="만들어봅시다"></a>만들어봅시다</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="1-check-if-user-함수-만들기"><a href="#1-check-if-user-함수-만들기" class="headerlink" title="1. check_if_user 함수 만들기"></a>1. check_if_user 함수 만들기</h3><p>우선 “OO커뮤니티 사이트에 로그인이 가능한 유저인지”를 확인해야 한다.<br>예를들어 “community-dummy”라는 사이트에 로그인하는 url이 <code>/login</code>이고, 유저만 볼 수 있는 페이지가 <code>/login_requited_page</code>라고 가정하자.<br>이 사이트에서는 <code>/login_requited_page</code>에 접속시 로그인된 상태라면 HTTP <code>200</code>코드를, 로그인 되어있지 않다면 HTTP <code>401</code>등의 에러코드를 전송한다고 가정하자.</p>
+<p>그렇다면 우리는 파이썬의 <code>requests</code>모듈을 이용해 <code>/login</code>에 로그인 정보를 <code>POST</code>방식으로 전송하고 <code>/login_requited_page</code>에 <code>GET</code>방식으로 접근해 HTTP코드를 <code>.status_code</code>를 통해 확인해보면 된다.<br>아래 코드를 확인해보자.</p>
+<blockquote>
+<p>참고: requests는 <code>pip install requests</code>로 설치 가능하다.</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># custom_auth.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_if_user</span><span class="params">(user_id, user_pw)</span>:</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">'user_id'</span>: str(user_id),</span><br><span class="line">        <span class="string">'user_pw'</span>: str(user_pw)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">        s.post(<span class="string">'https://community-dummy.com/login'</span>, data=payload)</span><br><span class="line">        auth = s.get(<span class="string">'https://community-dummy.com/login_requited_page'</span>)</span><br><span class="line">        <span class="keyword">if</span> auth.status_code == <span class="number">200</span>: <span class="comment"># 성공적으로 가져올 때</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 로그인이 실패시</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>우리는 이제 이 코드를 통해 유저가 우리 사이트에 입력한 id와 pw가 정확한(OO커뮤니티에 로그인 가능한)것인지를 확인할 수 있다.</p>
+<h3 id="2-커스텀-UserBackend-만들기"><a href="#2-커스텀-UserBackend-만들기" class="headerlink" title="2. 커스텀 UserBackend 만들기"></a>2. 커스텀 UserBackend 만들기</h3><p>우선 django 프로젝트가 사용하는 User모델을 가져오자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br></pre></td></tr></table></figure>
+
+<p>위 방식으로 사용할 경우 Django의 기본 UserModel인 <code>django.contrib.auth.models.User</code> 뿐 아니라 <code>settings.py</code>에 따로 지정한 <code>AUTH_USER_MODEL</code> 클래스를 가져오게 된다.</p>
+<blockquote>
+<p>참고: <code>get_user_model</code>와 <code>AUTH_USER_MODEL</code>은 다르다.<br><code>django.contrib.auth</code>의 <code>get_user_model</code>은 유저모델 class를 반환하는 반면,<br><code>django.conf.settings</code>의 <code>AUTH_USER_MODEL</code>은 유저모델 지정을 str로 반환한다.</p>
+</blockquote>
+<p>그리고 위에서 만든 <code>custom_auth.py</code>에서 <code>check_if_user</code>를 import해주자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model() <span class="comment"># django.contrib.auth.models.User대신 사용</span></span><br></pre></td></tr></table></figure>
+
+<p>이제 장고가 <code>AUTHENTICATION_BACKENDS</code>로서 추가적으로 사용할 <code>UserBackend</code> class를 만들어보자.</p>
+<p><code>UserBackend</code>클래스는 최소한 <code>authenticate</code>, <code>user_can_authenticate</code>, <code>get_user</code>라는 함수는 있어야 동작한다.</p>
+<p><code>authenticate</code>함수는 <code>self</code>, <code>username</code>, <code>password</code>를 인자로 받은 후, 정상적으로 인증된 경우 <code>user 객체</code>를 ‘하나’ 반환해야 하고, 없는 경우 <code>None</code>값을 반환해야 한다.</p>
+<p><code>user_can_authenticate</code>함수는 <code>user</code>객체를 인자로 받아서 <code>is_active</code>값을 가져와 활성화된 유저인지를 체크한다. (유저가 없거나 활성화된 경우 <code>True</code>, 비활성화된 경우 <code>False</code>)</p>
+<p><code>get_user</code>함수는 <code>user_id</code>를 인자로 받아 User객체를 <code>pk</code>로 참조해 <code>user</code>객체를 반환한다. 없는경우 <code>None</code>을 반환한다.</p>
+<p>위 함수들을 작성하면 아래와 같다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBackend</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate</span><span class="params">(self, username=None, password=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> check_if_user(username, password): <span class="comment"># OO커뮤니티 사이트 인증에 성공한 경우</span></span><br><span class="line">            <span class="keyword">try</span>: <span class="comment"># 유저가 있는 경우</span></span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">            <span class="keyword">except</span> UserModel.DoesNotExist: <span class="comment"># 유저 정보가 없지만 인증 통과시 user 생성</span></span><br><span class="line">                user = UserModel(username=username)</span><br><span class="line">                user.is_staff = <span class="literal">False</span></span><br><span class="line">                user.is_superuser = <span class="literal">False</span></span><br><span class="line">                user.save()</span><br><span class="line">                <span class="comment"># 여기서는 user.password를 저장하는 의미가 없음.(장고가 관리 못함)</span></span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># OO 커뮤니티 사이트 인증에 실패한 경우, Django기본 User로 감안해 password검증</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">                <span class="keyword">if</span> user.check_password(password) <span class="keyword">and</span> self.user_can_authenticate(user):</span><br><span class="line">                    <span class="keyword">return</span> user</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">user_can_authenticate</span><span class="params">(self, user)</span>:</span></span><br><span class="line">        is_active = getattr(user, <span class="string">'is_active'</span>, <span class="literal">None</span>) <span class="comment"># 유저가 활성화 되었는지</span></span><br><span class="line">        <span class="keyword">return</span> is_active <span class="keyword">or</span> is_active <span class="keyword">is</span> <span class="literal">None</span> <span class="comment"># 유저가 없는 경우 is_active는 None이므로 True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_user</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> UserModel.objects.get(pk=user_id) <span class="comment"># 유저를 pk로 가져온다</span></span><br><span class="line">        <span class="keyword">except</span> UserModel.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-settings-py에-AUTHENTICATION-BACKENDS-추가하기"><a href="#3-settings-py에-AUTHENTICATION-BACKENDS-추가하기" class="headerlink" title="3. settings.py에 AUTHENTICATION_BACKENDS 추가하기"></a>3. settings.py에 AUTHENTICATION_BACKENDS 추가하기</h3><p>장고에서 기본적으로 관리해주는 <code>AUTHENTICATION_BACKENDS</code>에는 <code>django.contrib.auth.backends.ModelBackend</code>가 있다. 하지만 위에서 우리가 만든 UserBackend를 추가해줘야 한다.</p>
+<p><code>AUTHENTICATION_BACKENDS</code>는 기본적으로 list로 구성되어있으며, 적혀진 순서대로 위에서부터 Auth을 진행한다.(실패시 다음 auth backend를 이용)</p>
+<p>아래 코드와 같이 <code>settings.py</code> 파일 아래에 추가해 주자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'my_user.my_auth.UserBackend'</span>, <span class="comment"># 우리가 만든 AUTH를 먼저 검사</span></span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django가 관리하는 AUTH</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이렇게 추가해 줌으로서 django는 우리의 <code>UserBackend</code>를 이용해 유저를 관리하게 된다.</p>
+<h2 id="마무리-코드"><a href="#마무리-코드" class="headerlink" title="마무리 코드"></a>마무리 코드</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>custom_auth 파일(진짜 OO커뮤니티 유저인가?)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># custom_auth.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_if_user</span><span class="params">(user_id, user_pw)</span>:</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">'user_id'</span>: str(user_id),</span><br><span class="line">        <span class="string">'user_pw'</span>: str(user_pw)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">        s.post(<span class="string">'https://community-dummy.com/login'</span>, data=payload)</span><br><span class="line">        auth = s.get(<span class="string">'https://community-dummy.com/login_requited_page'</span>)</span><br><span class="line">        <span class="keyword">if</span> auth.status_code == <span class="number">200</span>: <span class="comment"># 성공적으로 가져올 때</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 로그인이 실패시</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>my_auth 파일 (우리가 만든 UserBackend)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBackend</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate</span><span class="params">(self, username=None, password=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> check_if_user(username, password): <span class="comment"># OO커뮤니티 사이트 인증에 성공한 경우</span></span><br><span class="line">            <span class="keyword">try</span>: <span class="comment"># 유저가 있는 경우</span></span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">            <span class="keyword">except</span> UserModel.DoesNotExist: <span class="comment"># 유저 정보가 없지만 인증 통과시 user 생성</span></span><br><span class="line">                user = UserModel(username=username)</span><br><span class="line">                user.is_staff = <span class="literal">False</span></span><br><span class="line">                user.is_superuser = <span class="literal">False</span></span><br><span class="line">                user.save()</span><br><span class="line">                <span class="comment"># 여기서는 user.password를 저장하는 의미가 없음.(장고가 관리 못함)</span></span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># OO 커뮤니티 사이트 인증에 실패한 경우, Django기본 User로 감안해 password검증</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">                <span class="keyword">if</span> user.check_password(password) <span class="keyword">and</span> self.user_can_authenticate(user):</span><br><span class="line">                    <span class="keyword">return</span> user</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">user_can_authenticate</span><span class="params">(self, user)</span>:</span></span><br><span class="line">        is_active = getattr(user, <span class="string">'is_active'</span>, <span class="literal">None</span>) <span class="comment"># 유저가 활성화 되었는지</span></span><br><span class="line">        <span class="keyword">return</span> is_active <span class="keyword">or</span> is_active <span class="keyword">is</span> <span class="literal">None</span> <span class="comment"># 유저가 없는 경우 is_active는 None이므로 True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_user</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> UserModel.objects.get(pk=user_id) <span class="comment"># 유저를 pk로 가져온다</span></span><br><span class="line">        <span class="keyword">except</span> UserModel.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<p>장고의 프로젝트 settings.py파일</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'my_user.my_auth.UserBackend'</span>, <span class="comment"># 우리가 만든 AUTH를 먼저 검사</span></span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django가 관리하는 AUTH</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/profile_beomi.jpg" alt="Junbum Lee">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Junbum Lee
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Beomi&#39;s tech blog
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Seoul, KR</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/beomi">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/DataCollection/">
+            <span class="level-start">
+                <span class="level-item">DataCollection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DataCollection/Twitter/">
+            <span class="level-start">
+                <span class="level-item">Twitter</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/">
+            <span class="level-start">
+                <span class="level-item">DevEnv</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DataScience/">
+            <span class="level-start">
+                <span class="level-item">DataScience</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/DeepLearning/">
+            <span class="level-start">
+                <span class="level-item">DeepLearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/DevEnv/Ubuntu/">
+            <span class="level-start">
+                <span class="level-item">Ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Django/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/">
+            <span class="level-start">
+                <span class="level-item">DjangoTDDStudy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/DjangoTDDStudy/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/MacOS/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/NLP/">
+            <span class="level-start">
+                <span class="level-item">NLP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/NLP/LanguageModel/">
+            <span class="level-start">
+                <span class="level-item">LanguageModel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/NLP/Unsupervised/">
+            <span class="level-start">
+                <span class="level-item">Unsupervised</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Postmortem/">
+            <span class="level-start">
+                <span class="level-item">Postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Python/Celery/">
+            <span class="level-start">
+                <span class="level-item">Celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/Fabric/">
+            <span class="level-start">
+                <span class="level-item">Fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Python/MacOS/">
+            <span class="level-start">
+                <span class="level-item">MacOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Tech/">
+            <span class="level-start">
+                <span class="level-item">Tech</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Translation/">
+            <span class="level-start">
+                <span class="level-item">Translation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/aws/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/azure/">
+            <span class="level-start">
+                <span class="level-item">azure</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/blog/">
+            <span class="level-start">
+                <span class="level-item">blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/blog/github/">
+            <span class="level-start">
+                <span class="level-item">github</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/django/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/django/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/flask/sqlalchemy/">
+            <span class="level-start">
+                <span class="level-item">sqlalchemy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/javascript/webpack/">
+            <span class="level-start">
+                <span class="level-item">webpack</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/life/">
+            <span class="level-start">
+                <span class="level-item">life</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/machinelearning/">
+            <span class="level-start">
+                <span class="level-item">machinelearning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/machinelearning/seminar/">
+            <span class="level-start">
+                <span class="level-item">seminar</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/macos/">
+            <span class="level-start">
+                <span class="level-item">macos</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/macos/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/nlp/">
+            <span class="level-start">
+                <span class="level-item">nlp</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/nlp/languagemodel/">
+            <span class="level-start">
+                <span class="level-item">languagemodel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/postmortem/">
+            <span class="level-start">
+                <span class="level-item">postmortem</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">25</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/python/aws/">
+            <span class="level-start">
+                <span class="level-item">aws</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/celery/">
+            <span class="level-start">
+                <span class="level-item">celery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/dataanalysis/">
+            <span class="level-start">
+                <span class="level-item">dataanalysis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/django/">
+            <span class="level-start">
+                <span class="level-item">django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/fabric/">
+            <span class="level-start">
+                <span class="level-item">fabric</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/flask/">
+            <span class="level-start">
+                <span class="level-item">flask</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/howtomakewebcrawler/">
+            <span class="level-start">
+                <span class="level-item">howtomakewebcrawler</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/pyspark/">
+            <span class="level-start">
+                <span class="level-item">pyspark</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/react/">
+            <span class="level-start">
+                <span class="level-item">react</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/react/javascript/">
+            <span class="level-start">
+                <span class="level-item">javascript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/tips/githubpages/">
+            <span class="level-start">
+                <span class="level-item">githubpages</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ubuntu/">
+            <span class="level-start">
+                <span class="level-item">ubuntu</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ubuntu/tips/">
+            <span class="level-start">
+                <span class="level-item">tips</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/vlang/">
+            <span class="level-start">
+                <span class="level-item">vlang</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            최근 글
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time></div>
+                    <a href="/2021/03/16/KcBERT-Downstream-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT Finetune with PyTorch-Lightning v1.3.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/15/fine-tuning_methods-20210315151211294.png" alt="KcBERT MLM Finetune으로 Domain adaptation하기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-14T15:00:00.000Z">2021-03-15</time></div>
+                    <a href="/2021/03/15/KcBERT-MLM-Finetune/" class="title has-link-black-ter is-size-6 has-text-weight-normal">KcBERT MLM Finetune으로 Domain adaptation하기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/nlp/">nlp</a> / <a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/12/04/Transformers4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time></div>
+                    <a href="/2020/12/04/Transformers4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">BertForSequenceClassification on Transformers v4.0.0</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/NLP/">NLP</a> / <a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/01/Review-the-Interview/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time></div>
+                    <a href="/2020/07/01/Review-the-Interview/" class="title has-link-black-ter is-size-6 has-text-weight-normal">면접에서 나온 통계 질문 리뷰</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/29/Gitlab-for-LFS/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-05-27-12-22-58-KDTi9H.jpg" alt="딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T15:00:00.000Z">2020-05-29</time></div>
+                    <a href="/2020/05/29/Gitlab-for-LFS/" class="title has-link-black-ter is-size-6 has-text-weight-normal">딥러닝 프로젝트 100% 재현을 위한 Git-LFS와 Gitlab</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a> / <a class="has-link-grey -link" href="/categories/DevEnv/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            아카이브
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">10월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">1월 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">12월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">9월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">8월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">7월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">6월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">5월 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

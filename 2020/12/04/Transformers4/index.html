@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>BertForSequenceClassification on Transformers v4.0.0 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002610609.277ab6.png" alt="BertForSequenceClassification on Transformers v4.0.0">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-12-03T15:00:00.000Z">2020-12-04</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/NLP/">NLP</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/NLP/LanguageModel/">LanguageModel</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                BertForSequenceClassification on Transformers v4.0.0
+            
+        </h1>
+        <div class="content">
+            <h2 id="Huggingface-Transformers-v4-0-0"><a href="#Huggingface-Transformers-v4-0-0" class="headerlink" title="Huggingface Transformers v4.0.0!"></a>Huggingface Transformers v4.0.0!</h2><p>Huggingface에서 <code>Transformers</code> 패키지 4버전을 릴리즈했다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002709974.a79671.png" alt="Huggingface Transformers v4.0.0 깃헙 릴리즈 페이지"></p>
+<p>많은 변화가 있지만, 이 변화를 체감하게 된 것은 KcBERT 레포에 한 이슈가 달리게 되어서이다.</p>
+<blockquote>
+<p>“KcBERT-Large NSMC Finetune 코드가 동작하지 않아요.”</p>
+</blockquote>
+<a id="more"></a>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204002838137.6b2172.png" alt="위 오류가 제보된 이슈"></p>
+<p>1주일 전까지 잘 되던 코드가 안된다? 내가 수정한 적도 없는데…</p>
+<p>하다가 떠올린 생각. 아. Transformers가 4버전으로 나왔지. 그리고 나는…. Colab에 pip로 항상 최신 버전의 패키지를 설치하도록 해 두었구나.</p>
+<p>그래서 직접 실행해보니 위와 같이 도대체 이해가 되지 않는 에러가 보였다.</p>
+<blockquote>
+<p>“str object has no attribute ‘argmax’”</p>
+</blockquote>
+<p>아니, <code>str</code> 이라고? 다른 Type이라면 모르겠지만, 도대체 왜 <code>Str</code> 이지? 하는 의문을 갖고 코드를 실행해보니.. </p>
+<p>Model, 즉 샘플 코드에서는 <code>BertForSequenceClassification</code> Class에서 <code>forward</code> 실행시 반환하는 객체가 달라진 것이다. (ㅠㅠ)</p>
+<h2 id="이유는-return-dict-옵션-때문"><a href="#이유는-return-dict-옵션-때문" class="headerlink" title="이유는 return_dict 옵션 때문"></a>이유는 <code>return_dict</code> 옵션 때문</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/image-20201204003115199.9b2e49.png" alt="3.x버전과 동일한 결과를 얻으려면 return_dict를 False로 두어야 한다."></p>
+<p>위와 같이 <code>return_dict=False</code> 로 두어야 이전과 동일한 결과가 나오고, 기본 값은 <code>True</code> 이기 때문에 주의가 필요하다.</p>
+<p>하지만 새 코드를 굳이 예전처럼 쓸 이유는 없다고 판단해, 새로운 코드에 적응하기로 했다.</p>
+<h2 id="AS-IS-and-TO-BE"><a href="#AS-IS-and-TO-BE" class="headerlink" title="AS-IS and TO-BE"></a>AS-IS and TO-BE</h2><p>기존 코드에서는 아래와 같이 모델을 Forward시 loss와 logits 값이 Tuple로 반환되어서 곧장 사용할 수 있었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validation_step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    data, labels = batch</span><br><span class="line">    <span class="comment"># Transformers v3.x.x</span></span><br><span class="line">    loss, logits = self(input_ids=data, labels=labels)</span><br><span class="line"></span><br><span class="line">    preds = logits.argmax(dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    y_true = list(labels.cpu().numpy())</span><br><span class="line">    y_pred = list(preds.cpu().numpy())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">'loss'</span>: loss,</span><br><span class="line">        <span class="string">'y_true'</span>: y_true,</span><br><span class="line">        <span class="string">'y_pred'</span>: y_pred,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>하지만 이제는 아예 여러 attribute를 가진 객체를 반환하기에, 아래와 같이 <code>output.loss</code>, <code>output.logits</code> 라는 attribute로 접근해야 값을 가져올 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validation_step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    data, labels = batch</span><br><span class="line">    output = self(input_ids=data, labels=labels)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Transformers 4.0.0+</span></span><br><span class="line">    loss = output.loss</span><br><span class="line">    logits = output.logits</span><br><span class="line"></span><br><span class="line">    preds = logits.argmax(dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    y_true = list(labels.cpu().numpy())</span><br><span class="line">    y_pred = list(preds.cpu().numpy())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">'loss'</span>: loss,</span><br><span class="line">        <span class="string">'y_true'</span>: y_true,</span><br><span class="line">        <span class="string">'y_pred'</span>: y_pred,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><blockquote>
+<p>“잘 돌아가는 코드는 건드리는게 아니지만, 코드는 가만 내비두면 썩는다.”</p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/bert/" rel="tag">bert</a>, <a class="has-link-grey -link" href="/tags/huggingface/" rel="tag">huggingface</a>, <a class="has-link-grey -link" href="/tags/nlp/" rel="tag">nlp</a>, <a class="has-link-grey -link" href="/tags/transformers/" rel="tag">transformers</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/03/15/KcBERT-MLM-Finetune/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">KcBERT MLM Finetune으로 Domain adaptation하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/07/01/Review-the-Interview/">
+                <span class="level-item">면접에서 나온 통계 질문 리뷰</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#Huggingface-Transformers-v4-0-0">
+        <span class="has-mr-6">1</span>
+        <span>Huggingface Transformers v4.0.0!</span>
+        </a></li><li>
+        <a class="is-flex" href="#이유는-return-dict-옵션-때문">
+        <span class="has-mr-6">2</span>
+        <span>이유는 return_dict 옵션 때문</span>
+        </a></li><li>
+        <a class="is-flex" href="#AS-IS-and-TO-BE">
+        <span class="has-mr-6">3</span>
+        <span>AS-IS and TO-BE</span>
+        </a></li><li>
+        <a class="is-flex" href="#맺으며">
+        <span class="has-mr-6">4</span>
+        <span>맺으며</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

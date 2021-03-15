@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>나만의 웹 크롤러 만들기(2): Login with Session - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-01-20-HowToMakeWebCrawler-With-Login/httpcookie.jpg" alt="나만의 웹 크롤러 만들기(2): Login with Session">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-01-19T15:00:00.000Z">2017-01-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                나만의 웹 크롤러 만들기(2): Login with Session
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>이전게시글: <a href="/2017/01/20/HowToMakeWebCrawler/">나만의 웹 크롤러 만들기 with Requests/BeautifulSoup</a></p>
+</blockquote>
+<blockquote>
+<p>@2017.07.12 Update: 뉴클리앙으로 업데이트 됨에 따라 코드와 스크린샷이 업데이트 되었습니다.</p>
+</blockquote>
+<p>웹 사이트를 로그인 하는데 있어 쿠키와 세션을 빼놓고 이야기하는 것은 불가능합니다.</p>
+<p>이번 포스팅에서는 requests모듈을 이용해 로그인이 필요한 웹 사이트를 크롤링 하는 예제를 다룹니다.</p>
+<h2 id="쿠키-Cookie-세션-Session"><a href="#쿠키-Cookie-세션-Session" class="headerlink" title="쿠키(Cookie)? 세션(Session)?"></a>쿠키(Cookie)? 세션(Session)?</h2><p>웹은 대다수가 HTTP기반으로 동작합니다. 하지만 HTTP가 구현된 방식에서 웹 서버와 클라이언트는 지속적으로 연결을 유지한 상태가 아니라 요청(request)-응답(response)의 반복일 뿐이기 때문에, 이전 요청과 새로운 요청이 같은 사용자(같은 브라우저)에서 이루어졌는지를 확인하는 방법이 필요합니다. 이 때 등장하는 것이 ‘쿠키’와 ‘세션’입니다.</p>
+<p>쿠키는 유저가 웹 사이트를 방문할 때 사용자의 브라우저에 심겨지는 작은 파일인데, Key - Value 형식으로 로컬 브라우저에 저장됩니다. 서버는 이 쿠키의 정보를 읽어 HTTP 요청에 대해 브라우저를 식별합니다.</p>
+<p>그러나, 쿠키는 로컬에 저장된다는 근원적인 문제로 인해 악의적 사용자가 쿠키를 변조하거나 탈취해 정상적이지 않은 쿠키로 서버에 요청을 보낼 수 있습니다. 만약 ‘로그인 하였음’이라는 식별을, 로컬 쿠키만을 신뢰해 로그인을 한 상태로 서버가 인식한다면 쿠키 변조를 통해 마치 관리자나 다른 유저처럼 행동할 수도 있는 것이죠.(굉장히 위험합니다.)</p>
+<p>이로 인해 서버측에서 클라이언트를 식별하는 ‘세션’을 주로 이용하게 됩니다.</p>
+<p>세션은 브라우저가 웹 서버에 요청을 한 경우 서버 내에 해당 세션 정보를 파일이나 DB에 저장하고 클라이언트의 브라우저에 session-id라는 임의의 긴 문자열을 줍니다. 이때 사용되는 쿠키는 클라이언트와 서버간 연결이 끊어진 경우 삭제되는 메모리 쿠키를 이용합니다.</p>
+<h2 id="Requests의-Session"><a href="#Requests의-Session" class="headerlink" title="Requests의 Session"></a>Requests의 Session</h2><p>이전 게시글에서 다룬 requests모듈에는 Session이라는 도구가 있습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성</span></span><br><span class="line">s = requests.Session()</span><br></pre></td></tr></table></figure>
+
+<p>Session은 위와 같은 방식으로 만들 수 있습니다.</p>
+<p>이렇게 만들어진 세션은 이전 게시글에서의 <code>requests</code>위치를 대신하는데, 이전 게시글의 코드를 바꿔본다면 아래와 같습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성</span></span><br><span class="line">s = requests.Session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP GET Request: requests대신 s 객체를 사용한다.</span></span><br><span class="line">req = s.get(<span class="string">'https://www.clien.net/service/'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTML 소스 가져오기</span></span><br><span class="line">html = req.text</span><br><span class="line"><span class="comment"># HTTP Header 가져오기</span></span><br><span class="line">header = req.headers</span><br><span class="line"><span class="comment"># HTTP Status 가져오기 (200: 정상)</span></span><br><span class="line">status = req.status_code</span><br><span class="line"><span class="comment"># HTTP가 정상적으로 되었는지 (True/False)</span></span><br><span class="line">is_ok = req.ok</span><br></pre></td></tr></table></figure>
+
+<p>코드를 with구문을 사용해 좀 더 정리하면 아래와 같습니다. 위 코드와 아래코드는 정확히 동일하게 동작하지만, 위쪽 코드의 경우 Session이 가끔 풀리는 경우가 있어 (5번중 한번 꼴) 아래 코드로 진행하는 것을 추천합니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># HTTP GET Request: requests대신 s 객체를 사용한다.</span></span><br><span class="line">    req = s.get(<span class="string">'https://www.clien.net/service/'</span>)</span><br><span class="line">    <span class="comment"># HTML 소스 가져오기</span></span><br><span class="line">    html = req.text</span><br><span class="line">    <span class="comment"># HTTP Header 가져오기</span></span><br><span class="line">    header = req.headers</span><br><span class="line">    <span class="comment"># HTTP Status 가져오기 (200: 정상)</span></span><br><span class="line">    status = req.status_code</span><br><span class="line">    <span class="comment"># HTTP가 정상적으로 되었는지 (True/False)</span></span><br><span class="line">    is_ok = req.ok</span><br></pre></td></tr></table></figure>
+
+<h2 id="로그인하기"><a href="#로그인하기" class="headerlink" title="로그인하기"></a>로그인하기</h2><p>로그인을 구현하기 위한 예시로 클리앙에 로그인 해 클리앙 장터를 크롤링 해 봅시다.</p>
+<p align="center">
+<img src="/img/dropbox/Screenshot%202017-07-12%2021.18.52.png?dl=1" />
+</p>
+
+<p>크롬 개발자 도구 중 Inspect(검사)를 이용해 로그인 폼 필드의 <code>name</code>값들을 알아봅시다.(폼 위에서 마우스 오른쪽 버튼을 클릭하고 <code>검사</code>를 눌러주세요.)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2021.20.53.png" alt=""></p>
+<p>아래 스크린샷 우측을 확인해 봅시다. <code>form</code> 태그 안에 <code>input</code>필드가 여러개가 있는 것을 알 수 있습니다.</p>
+<p align="center">
+<img src="/img/dropbox/Screenshot%202017-07-12%2021.22.33.png?dl=1" />
+</p>
+
+<p>조금 더 상세하게 뜯어봅시다. 아래 스크린샷을 보시면 <code>input</code>필드들의 <code>name</code>이 <code>_csrf</code>,<code>userID</code>,<code>userPassword</code>,<code>remember-me</code>가 있는 것을 볼 수 있습니다. 또한, 로그인 버튼을 누르면 <code>auth.login()</code>라는 자바스크립트 함수가 먼저 실행되는 것을 볼 수 있습니다.</p>
+<p align="center">
+    <img src="/img/dropbox/Screenshot%202017-07-12%2021.26.02.png?dl=1">
+</p>
+
+<p>로그인을 구현하기 전, HTML form에 대해 간단하게 알아봅시다.</p>
+<p>HTML form Field에서는 <code>name:입력값</code>이라는 Key:Value식으로 데이터를 전달합니다.(주로 POST방식)</p>
+<p>클리앙 로그인 폼 필드의 경우 <code>userID:사용자id</code>, <code>userPassword:사용자pw</code>라는 세트로 입력을 받는 것을 볼 수 있습니다.</p>
+<p>그리고 약간 특이해 보이는 <code>_csrf</code>이라는 것도 있습니다. 원래 CSRF는 사용자의 요청이 악의적이거나 제 3자에 의해 변조된(해킹된) 요청이 아닌지 확인해주는 보안 도구중 하나입니다. 세션과 연결되어 폼을 전달할때 폼의 안정성을 높여줍니다. 새로고침하시면 매번 달라지는 CSRF값을 보실 수 있습니다. 그리고 CSRF를 사용하는 경우 CSRF값이 없는 폼 전송은 위험한 요청으로 생각하고 폼을 받아들이지 않습니다.(즉, 로그인이 되지 않습니다.) 따라서 우리는 <code>_csrf</code>라는 것도 함께 전송해 줘야 합니다. 따라서 메인 화면을 먼저 가져와 <code>_csrf</code>필드를 가져오고 로그인을 해야 합니다.</p>
+<blockquote>
+<p>이전 클리앙은 CSRF검증이 없었습니다. 이번 업데이트를 하면서 클리앙의 보안이 전반적으로 올라갔습니다. 좋은 변화입니다!</p>
+</blockquote>
+<p>다음으로는 <code>auth.login()</code>이라는 함수를 살펴봅시다. 함수를 살펴보면 그냥 입력 유무만 확인하는 심플한 함수입니다. 사실 이것보다 더 길지만, 실제로 <code>login</code>함수에서 사용되는 코드 부분은 이부분이 전부이기 때문에 뒷부분을 잘랐습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Auth</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _this = <span class="keyword">this</span>; <span class="comment">// _this에 Auth라는 함수를 넣었습니다.</span></span><br><span class="line">    _this.env = &#123;&#125;;</span><br><span class="line">    _this.env.form = $(<span class="string">'#loginForm'</span>); <span class="comment">// 로그인 폼입니다. id, pw, _csrf 등을 받는다고 위에서 확인했죠?</span></span><br><span class="line">    _this.env.iptUserId = _this.env.form.find(<span class="string">'*[name=userId]'</span>); <span class="comment">// 사용자가 폼에 입력한 ID입니다.</span></span><br><span class="line">    _this.env.iptUserPassWord = _this.env.form.find(<span class="string">'*[name=userPassword]'</span>); <span class="comment">// 사용자가 폼에 입력한 PW입니다.</span></span><br><span class="line"></span><br><span class="line">    _this.loginValidate = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> isValid = <span class="literal">true</span>; <span class="comment">// 아무 문제가 없다면(id나 pw가 빈칸이 아니라면) true를 반환하는 함수입니다.</span></span><br><span class="line">        <span class="keyword">if</span> (_this.env.iptUserId.val().trim() == <span class="string">''</span>) &#123; <span class="comment">// 아이디가 빈칸이면 false죠?</span></span><br><span class="line">            alert(<span class="string">'아이디를 입력하세요.'</span>);</span><br><span class="line">            _this.env.iptUserId.focus();</span><br><span class="line">            isValid = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span> isValid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (_this.env.iptUserPassWord.val().trim() == <span class="string">''</span>) &#123; <span class="comment">// 비번이 빈칸이어도 false가 됩니다.</span></span><br><span class="line">            alert(<span class="string">'비밀번호를 입력하세요.'</span>);</span><br><span class="line">            _this.env.iptUserPassWord.focus();</span><br><span class="line">            isValid = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span> isValid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> isValid;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    _this.login = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> isValid = _this.loginValidate(); <span class="comment">// 방금 본 아이디/비번이 빈칸인지 확인하기</span></span><br><span class="line">        <span class="keyword">if</span> (isValid) &#123; <span class="comment">// 빈칸이 아니라면 -&gt;</span></span><br><span class="line">            _this.env.form.attr(&#123; <span class="comment">// 폼 속성을 정의해 줍시다.</span></span><br><span class="line">                method: <span class="string">'POST'</span>, <span class="comment">// 폼 전송 방식은 'POST'이고,</span></span><br><span class="line">                action: BASE_URL + <span class="string">'/login'</span> <span class="comment">// 폼 전송하는 주소는 https://www.clien.net/service/login 이네요!</span></span><br><span class="line">            &#125;);</span><br><span class="line">            _this.env.form.submit(); <span class="comment">// 진짜로 폼을 전송해줍니다.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위 자바스크립트 코드에서 알게된 것은 아이디와 비밀번호 폼에 빈칸이 없다면 <code>POST</code>방식으로 <code>https://www.clien.net/service/login</code>에 폼을 전송해 로그인을 한다는 것입니다.</p>
+<p>한번 이 주소에 폼 값들만 넣어서 전송해 봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 로그인할 유저정보를 넣어주자 (모두 문자열)</span></span><br><span class="line">LOGIN_INFO = &#123;</span><br><span class="line">    <span class="string">'userId'</span>: <span class="string">'사용자이름'</span>,</span><br><span class="line">    <span class="string">'userPassword'</span>: <span class="string">'사용자패스워드'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># HTTP POST request: 로그인을 위해 POST url와 함께 전송될 data를 넣어주자.</span></span><br><span class="line">    login_req = s.post(<span class="string">'https://www.clien.net/service/login'</span>, data=LOGIN_INFO)</span><br><span class="line">    <span class="comment"># 어떤 결과가 나올까요?</span></span><br><span class="line">    print(login_req.status_code)</span><br></pre></td></tr></table></figure>
+
+<p>이런! 404가 나와버렸네요. 제대로 로그인이 되지 않은 것 같아요. 아마 <code>_csrf</code>값이 없어서가 아닐까요?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; python parsing.py</span><br><span class="line">404</span><br></pre></td></tr></table></figure>
+
+<p>그렇다면 코드를 조금 더 수정해 봅시다. 우선 클리앙 공식 홈페이지에 들어가 form에 들어있는 <code>_csrf</code>값을 가져와 봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 로그인할 유저정보를 넣어줍시다. (모두 문자열입니다!)</span></span><br><span class="line">LOGIN_INFO = &#123;</span><br><span class="line">    <span class="string">'userId'</span>: <span class="string">'myidid'</span>,</span><br><span class="line">    <span class="string">'userPassword'</span>: <span class="string">'mypassword123'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># 우선 클리앙 홈페이지에 들어가 봅시다.</span></span><br><span class="line">    first_page = s.get(<span class="string">'https://www.clien.net/service'</span>)</span><br><span class="line">    html = first_page.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    csrf = soup.find(<span class="string">'input'</span>, &#123;<span class="string">'name'</span>: <span class="string">'_csrf'</span>&#125;) <span class="comment"># input태그 중에서 name이 _csrf인 것을 찾습니다.</span></span><br><span class="line">    print(csrf[<span class="string">'value'</span>]) <span class="comment"># 위에서 찾은 태그의 value를 가져옵니다.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 LOGIN_INFO에 csrf값을 넣어줍시다.</span></span><br><span class="line">    <span class="comment"># (p.s.)Python3에서 두 dict를 합치는 방법은 &#123;**dict1, **dict2&#125; 으로 dict들을 unpacking하는 것입니다.</span></span><br><span class="line">    LOGIN_INFO = &#123;**LOGIN_INFO, **&#123;<span class="string">'_csrf'</span>: csrf[<span class="string">'value'</span>]&#125;&#125;</span><br><span class="line">    print(LOGIN_INFO)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 다시 로그인을 해봅시다.</span></span><br><span class="line">    login_req = s.post(<span class="string">'https://www.clien.net/service/login'</span>, data=LOGIN_INFO)</span><br><span class="line">    <span class="comment"># 어떤 결과가 나올까요? (200이면 성공!)</span></span><br><span class="line">    print(login_req.status_code)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.12.00.png?dl=1" alt=""></p>
+<p>와우! 200이 나온걸 보니 성공적으로 로그인이 된 것 같아요.</p>
+<h2 id="진짜-데이터를-가져와봅시다"><a href="#진짜-데이터를-가져와봅시다" class="headerlink" title="진짜 데이터를 가져와봅시다"></a>진짜 데이터를 가져와봅시다</h2><p>이제 우리 코드를 좀 더 멋지게 만들어 봅시다. 로그인이 실패한 경우 Exception을 만들고, 성공일 경우에는 회원 장터의 게시글을 가져와봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.24.12.png?dl=1" alt=""></p>
+<p>위 스크린샷처럼 오른쪽 버튼을 누르고 Copy &gt; Copy selector를 눌러주면 <code>#div_content &gt; div.post-title &gt; div.title-subject &gt; div</code>라는 CSS Selector가 나옵니다. 이 HTML문서에서 이 제목만을 콕 하고 찾아줍니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.30.35.png?dl=1" alt=""></p>
+<p>본문도 같은 방식으로 찾아줍시다. 다만 <code>p</code>태그가 아니라 글 전체를 담고있는 <code>#div_content &gt; div.post.box &gt; div.post-content &gt; div.post-article.fr-view</code>을 가져와봅시다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># parser.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 로그인할 유저정보를 넣어줍시다. (모두 문자열입니다!)</span></span><br><span class="line">LOGIN_INFO = &#123;</span><br><span class="line">    <span class="string">'userId'</span>: <span class="string">'myidid'</span>,</span><br><span class="line">    <span class="string">'userPassword'</span>: <span class="string">'mypassword123'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Session 생성, with 구문 안에서 유지</span></span><br><span class="line"><span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">    <span class="comment"># 우선 클리앙 홈페이지에 들어가 봅시다.</span></span><br><span class="line">    first_page = s.get(<span class="string">'https://www.clien.net/service'</span>)</span><br><span class="line">    html = first_page.text</span><br><span class="line">    soup = bs(html, <span class="string">'html.parser'</span>)</span><br><span class="line">    csrf = soup.find(<span class="string">'input'</span>, &#123;<span class="string">'name'</span>: <span class="string">'_csrf'</span>&#125;) <span class="comment"># input태그 중에서 name이 _csrf인 것을 찾습니다.</span></span><br><span class="line">    print(csrf[<span class="string">'value'</span>]) <span class="comment"># 위에서 찾은 태그의 value를 가져옵니다.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 LOGIN_INFO에 csrf값을 넣어줍시다.</span></span><br><span class="line">    <span class="comment"># (p.s.)Python3에서 두 dict를 합치는 방법은 &#123;**dict1, **dict2&#125; 으로 dict들을 unpacking하는 것입니다.</span></span><br><span class="line">    LOGIN_INFO = &#123;**LOGIN_INFO, **&#123;<span class="string">'_csrf'</span>: csrf[<span class="string">'value'</span>]&#125;&#125;</span><br><span class="line">    print(LOGIN_INFO)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 이제 다시 로그인을 해봅시다.</span></span><br><span class="line">    login_req = s.post(<span class="string">'https://www.clien.net/service/login'</span>, data=LOGIN_INFO)</span><br><span class="line">    <span class="comment"># 어떤 결과가 나올까요? (200이면 성공!)</span></span><br><span class="line">    print(login_req.status_code)</span><br><span class="line">    <span class="comment"># 로그인이 되지 않으면 경고를 띄워줍시다.</span></span><br><span class="line">    <span class="keyword">if</span> login_req.status_code != <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">'로그인이 되지 않았어요! 아이디와 비밀번호를 다시한번 확인해 주세요.'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># -- 여기서부터는 로그인이 된 세션이 유지됩니다 --</span></span><br><span class="line">    <span class="comment"># 이제 장터의 게시글 하나를 가져와 봅시다. 아래 예제 링크는 중고장터 공지글입니다.</span></span><br><span class="line">    post_one = s.get(<span class="string">'https://www.clien.net/service/board/rule/10707408'</span>)</span><br><span class="line">    soup = bs(post_one.text, <span class="string">'html.parser'</span>) <span class="comment"># Soup으로 만들어 줍시다.</span></span><br><span class="line">    <span class="comment"># 아래 CSS Selector는 공지글 제목을 콕 하고 집어줍니다.</span></span><br><span class="line">    title = soup.select(<span class="string">'#div_content &gt; div.post-title &gt; div.title-subject &gt; div'</span>)</span><br><span class="line">    contents = soup.select(<span class="string">'#div_content &gt; div.post.box &gt; div.post-content &gt; div.post-article.fr-view'</span>)</span><br><span class="line">    <span class="comment"># HTML을 제대로 파싱한 뒤에는 .text속성을 이용합니다.</span></span><br><span class="line">    print(title[<span class="number">0</span>].text) <span class="comment"># 글제목의 문자만을 가져와봅시다.</span></span><br><span class="line">    <span class="comment"># [0]을 하는 이유는 select로 하나만 가져와도 title자체는 리스트이기 때문입니다.</span></span><br><span class="line">    <span class="comment"># 즉, 제목 글자는 title이라는 리스트의 0번(첫번째)에 들어가 있습니다.</span></span><br><span class="line">    print(contents[<span class="number">0</span>].text) <span class="comment"># 글내용도 마찬가지겠지요?</span></span><br></pre></td></tr></table></figure>
+
+<p>코드를 실행해 봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/Screenshot%202017-07-12%2022.33.05.png?dl=1" alt=""></p>
+<p>잘 가져옵니다 :)</p>
+<h2 id="그러나-위-코드가-안먹힌다면"><a href="#그러나-위-코드가-안먹힌다면" class="headerlink" title="그러나, 위 코드가 안먹힌다면?"></a>그러나, 위 코드가 안먹힌다면?</h2><p>일부 사이트의 경우 프론트 브라우저 단에서 ID와 PW를 이용해 암호화된 전송값을 보내는 경우가 있습니다.(대표적으로 네이버가 이렇습니다.) 또한, SPA등으로 인해 PageSource을 가져오는 것이 불충분한 경우가 자주 있습니다.</p>
+<p>물론 오늘처럼 JS파일을 분석해 수동으로 data에 넣어주는 방법도 있지만, 브라우저를 직접 다뤄서 사람이 로그인하듯 크롤링을 해보면 어떨까요?</p>
+<p>다음 포스팅에서 좀 더 간편히 실제 브라우저(혹은 Headless브라우저)를 이용해 로그인부터 크롤링까지, 간편하게 해보는 방법을 알아봅시다.</p>
+<p>다음 가이드: <a href="/2017/02/27/HowToMakeWebCrawler-With-Selenium/">나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기</a></p>
+<h3 id="업데이트-후기"><a href="#업데이트-후기" class="headerlink" title="업데이트 후기"></a>업데이트 후기</h3><p>2017년 7월 12일, 올해 초(1월 20일)에 작성한 인기 크롤링글 대상인 클리앙이 바뀌어 업데이트가 필요했습니다. 사실 예전 코드를 업데이트 하는 것도 사실상 새 글을 쓰는 것과 같은 시간과 노력이 듭니다. 하지만 오래된 정보를 두는 것보다 새로운 정보를 두는 것이 낫다고 생각해 업데이트를 했으나..!</p>
+<p>클리앙을 이용하는데 덧글 쓰기/글 쓰기 빼고 글을 읽는 것에 제한은 회원장터조차도 제한이 없어졌더군요. (눈물)</p>
+<p>그래도 이 가이드를 기반으로 다른 사이트 로그인 하는데 조금 더 쉬워지기를 바랍니다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/01/20/HowToMakeWebCrawler/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">나만의 웹 크롤러 만들기 with Requests/BeautifulSoup</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/">
+                <span class="level-item">Virtualenv/VirtualenvWrapper OS별 설치&amp;이용법</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

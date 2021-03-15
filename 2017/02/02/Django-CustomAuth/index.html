@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Django에 Custom인증 붙이기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-02-Django-CustomAuth/authentication.png" alt="Django에 Custom인증 붙이기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-01T15:00:00.000Z">2017-02-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/django/">django</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Django에 Custom인증 붙이기
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가기-전"><a href="#들어가기-전" class="headerlink" title="들어가기 전"></a>들어가기 전</h2><h2 id="widgets"><a href="#widgets" class="headerlink" title="widgets:"></a>widgets:</h2><p>Django는 기본적으로 authentication을 내장하고 있고, User Model을 장고 자체가 가지고 있다.</p>
+<p>UserModel의 경우 <code>settings.py</code>에서 <code>AUTH_USER_MODEL</code>을 커스텀 유저 모델로 지정해주면 프로젝트 전역에서 사용 가능하지만, 이번 글에서는 이 부분이 아니라 <code>AUTH</code> 처리를 추가할 수 있는지에 대해 알아볼 것이다.</p>
+<p>프로젝트 폴더 구조는 아래와 같다. (<code>django-admin startproject sample_project</code>로 생성한 것과 같다. <code>my_user</code>라는 폴더를 만들고 안에 <code>custom_auth.py</code>와 <code>my_auth.py</code>파일을 만든다.)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── manage.py</span><br><span class="line">├── my_user <span class="comment"># 유저 모델을 다룰 곳</span></span><br><span class="line">│   ├── custom_auth.py</span><br><span class="line">│   └── my_auth.py</span><br><span class="line">└── sample_project <span class="comment"># 프로젝트 디렉토리</span></span><br><span class="line">    ├── __init__.py</span><br><span class="line">    ├── settings.py <span class="comment"># 장고 프로젝트 settings</span></span><br><span class="line">    ├── urls.py</span><br><span class="line">    └── wsgi.py</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="사용하는-경우"><a href="#사용하는-경우" class="headerlink" title="사용하는 경우"></a>사용하는 경우</h2><h2 id="widgets-1"><a href="#widgets-1" class="headerlink" title="widgets:"></a>widgets:</h2><p>예를들어, “OO커뮤니티 소속이라면, 우리 서비스에서도 커뮤니티 id와 pw로 로그인이 가능하게 하자”가 대표적인 예시가 될 수 있다.</p>
+<p>위 문장을 좀더 풀어쓴다면 “OO커뮤니티에 로그인이 가능한 ID”를 받아 “OO커뮤니티의 인증”으로 “우리 서비스에도 로그인” 할 수 있게 하는 것이다.</p>
+<h2 id="만들어봅시다"><a href="#만들어봅시다" class="headerlink" title="만들어봅시다"></a>만들어봅시다</h2><h2 id="widgets-2"><a href="#widgets-2" class="headerlink" title="widgets:"></a>widgets:</h2><h3 id="1-check-if-user-함수-만들기"><a href="#1-check-if-user-함수-만들기" class="headerlink" title="1. check_if_user 함수 만들기"></a>1. check_if_user 함수 만들기</h3><p>우선 “OO커뮤니티 사이트에 로그인이 가능한 유저인지”를 확인해야 한다.<br>예를들어 “community-dummy”라는 사이트에 로그인하는 url이 <code>/login</code>이고, 유저만 볼 수 있는 페이지가 <code>/login_requited_page</code>라고 가정하자.<br>이 사이트에서는 <code>/login_requited_page</code>에 접속시 로그인된 상태라면 HTTP <code>200</code>코드를, 로그인 되어있지 않다면 HTTP <code>401</code>등의 에러코드를 전송한다고 가정하자.</p>
+<p>그렇다면 우리는 파이썬의 <code>requests</code>모듈을 이용해 <code>/login</code>에 로그인 정보를 <code>POST</code>방식으로 전송하고 <code>/login_requited_page</code>에 <code>GET</code>방식으로 접근해 HTTP코드를 <code>.status_code</code>를 통해 확인해보면 된다.<br>아래 코드를 확인해보자.</p>
+<blockquote>
+<p>참고: requests는 <code>pip install requests</code>로 설치 가능하다.</p>
+</blockquote>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># custom_auth.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_if_user</span><span class="params">(user_id, user_pw)</span>:</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">'user_id'</span>: str(user_id),</span><br><span class="line">        <span class="string">'user_pw'</span>: str(user_pw)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">        s.post(<span class="string">'https://community-dummy.com/login'</span>, data=payload)</span><br><span class="line">        auth = s.get(<span class="string">'https://community-dummy.com/login_requited_page'</span>)</span><br><span class="line">        <span class="keyword">if</span> auth.status_code == <span class="number">200</span>: <span class="comment"># 성공적으로 가져올 때</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 로그인이 실패시</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>우리는 이제 이 코드를 통해 유저가 우리 사이트에 입력한 id와 pw가 정확한(OO커뮤니티에 로그인 가능한)것인지를 확인할 수 있다.</p>
+<h3 id="2-커스텀-UserBackend-만들기"><a href="#2-커스텀-UserBackend-만들기" class="headerlink" title="2. 커스텀 UserBackend 만들기"></a>2. 커스텀 UserBackend 만들기</h3><p>우선 django 프로젝트가 사용하는 User모델을 가져오자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br></pre></td></tr></table></figure>
+
+<p>위 방식으로 사용할 경우 Django의 기본 UserModel인 <code>django.contrib.auth.models.User</code> 뿐 아니라 <code>settings.py</code>에 따로 지정한 <code>AUTH_USER_MODEL</code> 클래스를 가져오게 된다.</p>
+<blockquote>
+<p>참고: <code>get_user_model</code>와 <code>AUTH_USER_MODEL</code>은 다르다.<br><code>django.contrib.auth</code>의 <code>get_user_model</code>은 유저모델 class를 반환하는 반면,<br><code>django.conf.settings</code>의 <code>AUTH_USER_MODEL</code>은 유저모델 지정을 str로 반환한다.</p>
+</blockquote>
+<p>그리고 위에서 만든 <code>custom_auth.py</code>에서 <code>check_if_user</code>를 import해주자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model() <span class="comment"># django.contrib.auth.models.User대신 사용</span></span><br></pre></td></tr></table></figure>
+
+<p>이제 장고가 <code>AUTHENTICATION_BACKENDS</code>로서 추가적으로 사용할 <code>UserBackend</code> class를 만들어보자.</p>
+<p><code>UserBackend</code>클래스는 최소한 <code>authenticate</code>, <code>user_can_authenticate</code>, <code>get_user</code>라는 함수는 있어야 동작한다.</p>
+<p><code>authenticate</code>함수는 <code>self</code>, <code>username</code>, <code>password</code>를 인자로 받은 후, 정상적으로 인증된 경우 <code>user 객체</code>를 ‘하나’ 반환해야 하고, 없는 경우 <code>None</code>값을 반환해야 한다.</p>
+<p><code>user_can_authenticate</code>함수는 <code>user</code>객체를 인자로 받아서 <code>is_active</code>값을 가져와 활성화된 유저인지를 체크한다. (유저가 없거나 활성화된 경우 <code>True</code>, 비활성화된 경우 <code>False</code>)</p>
+<p><code>get_user</code>함수는 <code>user_id</code>를 인자로 받아 User객체를 <code>pk</code>로 참조해 <code>user</code>객체를 반환한다. 없는경우 <code>None</code>을 반환한다.</p>
+<p>위 함수들을 작성하면 아래와 같다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBackend</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate</span><span class="params">(self, username=None, password=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> check_if_user(username, password): <span class="comment"># OO커뮤니티 사이트 인증에 성공한 경우</span></span><br><span class="line">            <span class="keyword">try</span>: <span class="comment"># 유저가 있는 경우</span></span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">            <span class="keyword">except</span> UserModel.DoesNotExist: <span class="comment"># 유저 정보가 없지만 인증 통과시 user 생성</span></span><br><span class="line">                user = UserModel(username=username)</span><br><span class="line">                user.is_staff = <span class="literal">False</span></span><br><span class="line">                user.is_superuser = <span class="literal">False</span></span><br><span class="line">                user.save()</span><br><span class="line">                <span class="comment"># 여기서는 user.password를 저장하는 의미가 없음.(장고가 관리 못함)</span></span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># OO 커뮤니티 사이트 인증에 실패한 경우, Django기본 User로 감안해 password검증</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">                <span class="keyword">if</span> user.check_password(password) <span class="keyword">and</span> self.user_can_authenticate(user):</span><br><span class="line">                    <span class="keyword">return</span> user</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">user_can_authenticate</span><span class="params">(self, user)</span>:</span></span><br><span class="line">        is_active = getattr(user, <span class="string">'is_active'</span>, <span class="literal">None</span>) <span class="comment"># 유저가 활성화 되었는지</span></span><br><span class="line">        <span class="keyword">return</span> is_active <span class="keyword">or</span> is_active <span class="keyword">is</span> <span class="literal">None</span> <span class="comment"># 유저가 없는 경우 is_active는 None이므로 True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_user</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> UserModel.objects.get(pk=user_id) <span class="comment"># 유저를 pk로 가져온다</span></span><br><span class="line">        <span class="keyword">except</span> UserModel.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-settings-py에-AUTHENTICATION-BACKENDS-추가하기"><a href="#3-settings-py에-AUTHENTICATION-BACKENDS-추가하기" class="headerlink" title="3. settings.py에 AUTHENTICATION_BACKENDS 추가하기"></a>3. settings.py에 AUTHENTICATION_BACKENDS 추가하기</h3><p>장고에서 기본적으로 관리해주는 <code>AUTHENTICATION_BACKENDS</code>에는 <code>django.contrib.auth.backends.ModelBackend</code>가 있다. 하지만 위에서 우리가 만든 UserBackend를 추가해줘야 한다.</p>
+<p><code>AUTHENTICATION_BACKENDS</code>는 기본적으로 list로 구성되어있으며, 적혀진 순서대로 위에서부터 Auth을 진행한다.(실패시 다음 auth backend를 이용)</p>
+<p>아래 코드와 같이 <code>settings.py</code> 파일 아래에 추가해 주자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'my_user.my_auth.UserBackend'</span>, <span class="comment"># 우리가 만든 AUTH를 먼저 검사</span></span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django가 관리하는 AUTH</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>이렇게 추가해 줌으로서 django는 우리의 <code>UserBackend</code>를 이용해 유저를 관리하게 된다.</p>
+<h2 id="마무리-코드"><a href="#마무리-코드" class="headerlink" title="마무리 코드"></a>마무리 코드</h2><h2 id="widgets-3"><a href="#widgets-3" class="headerlink" title="widgets:"></a>widgets:</h2><p>custom_auth 파일(진짜 OO커뮤니티 유저인가?)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># custom_auth.py</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_if_user</span><span class="params">(user_id, user_pw)</span>:</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">'user_id'</span>: str(user_id),</span><br><span class="line">        <span class="string">'user_pw'</span>: str(user_pw)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">with</span> requests.Session() <span class="keyword">as</span> s:</span><br><span class="line">        s.post(<span class="string">'https://community-dummy.com/login'</span>, data=payload)</span><br><span class="line">        auth = s.get(<span class="string">'https://community-dummy.com/login_requited_page'</span>)</span><br><span class="line">        <span class="keyword">if</span> auth.status_code == <span class="number">200</span>: <span class="comment"># 성공적으로 가져올 때</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 로그인이 실패시</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>my_auth 파일 (우리가 만든 UserBackend)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_auth.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</span><br><span class="line"><span class="keyword">from</span> .custom_auth <span class="keyword">import</span> check_if_user <span class="comment"># custom Auth성공시 True 아니면 False</span></span><br><span class="line"></span><br><span class="line">UserModel = get_user_model()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBackend</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate</span><span class="params">(self, username=None, password=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> check_if_user(username, password): <span class="comment"># OO커뮤니티 사이트 인증에 성공한 경우</span></span><br><span class="line">            <span class="keyword">try</span>: <span class="comment"># 유저가 있는 경우</span></span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">            <span class="keyword">except</span> UserModel.DoesNotExist: <span class="comment"># 유저 정보가 없지만 인증 통과시 user 생성</span></span><br><span class="line">                user = UserModel(username=username)</span><br><span class="line">                user.is_staff = <span class="literal">False</span></span><br><span class="line">                user.is_superuser = <span class="literal">False</span></span><br><span class="line">                user.save()</span><br><span class="line">                <span class="comment"># 여기서는 user.password를 저장하는 의미가 없음.(장고가 관리 못함)</span></span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># OO 커뮤니티 사이트 인증에 실패한 경우, Django기본 User로 감안해 password검증</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                user = UserModel.objects.get(username=username)</span><br><span class="line">                <span class="keyword">if</span> user.check_password(password) <span class="keyword">and</span> self.user_can_authenticate(user):</span><br><span class="line">                    <span class="keyword">return</span> user</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">user_can_authenticate</span><span class="params">(self, user)</span>:</span></span><br><span class="line">        is_active = getattr(user, <span class="string">'is_active'</span>, <span class="literal">None</span>) <span class="comment"># 유저가 활성화 되었는지</span></span><br><span class="line">        <span class="keyword">return</span> is_active <span class="keyword">or</span> is_active <span class="keyword">is</span> <span class="literal">None</span> <span class="comment"># 유저가 없는 경우 is_active는 None이므로 True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_user</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> UserModel.objects.get(pk=user_id) <span class="comment"># 유저를 pk로 가져온다</span></span><br><span class="line">        <span class="keyword">except</span> UserModel.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<p>장고의 프로젝트 settings.py파일</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line">AUTHENTICATION_BACKENDS = [</span><br><span class="line">    <span class="string">'my_user.my_auth.UserBackend'</span>, <span class="comment"># 우리가 만든 AUTH를 먼저 검사</span></span><br><span class="line">    <span class="string">'django.contrib.auth.backends.ModelBackend'</span>, <span class="comment"># Django가 관리하는 AUTH</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/02/08/Setup-SocialAuth-for-Django/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/01/20/HowToMakeWebCrawler/">
+                <span class="level-item">나만의 웹 크롤러 만들기 with Requests/BeautifulSoup</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

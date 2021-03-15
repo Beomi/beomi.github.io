@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-162222.jpg" alt="트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-21T17:00:00.000Z">2019-12-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DataCollection/">DataCollection</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DataCollection/Twitter/">Twitter</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자
+            
+        </h1>
+        <div class="content">
+            <p><a href="/2019/12/21/Crawling_Twitter_Following/">앞서 쓴 글(1편)</a>에서는 몇가지 조건들과 나쁜 상황을 걸어 단순한 수집이 아니라 <strong>뭔가 꼼수가 필요한 상황</strong>을 가정해 보았다.</p>
+<p>API를 유료로 못쓴다? ➡️ 못쓸정도로 느리다! 😨</p>
+<p>따라서 다른 방법인 직접 데이터 크롤링이 필요했고, 이번에는 Twint와 HTML 웹 크롤링을 통해서 수집을 해 본 과정을 적어보았다.</p>
+<a id="more"></a>
+
+<h2 id="HTML-웹-크롤링을-해보자"><a href="#HTML-웹-크롤링을-해보자" class="headerlink" title="HTML 웹 크롤링을 해보자!"></a>HTML 웹 크롤링을 해보자!</h2><p>인증이 필요해서 ➡️ 느린 속도(Quota limit)가 걸린다면,</p>
+<p>인증 없이 수집할 수 있다면 ➡️ 빠른 속도로 수집할 수 있겠다!</p>
+<h3 id="1-Twint-내가-짠-것보다는-3k-스타-오픈소스가-낫겠지"><a href="#1-Twint-내가-짠-것보다는-3k-스타-오픈소스가-낫겠지" class="headerlink" title="1) Twint: 내가 짠 것보다는 3k 스타 오픈소스가 낫겠지?"></a>1) Twint: 내가 짠 것보다는 3k 스타 오픈소스가 낫겠지?</h3><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-154713.png" alt="Twint on Github"></p>
+<p>처음에는 기존에 존재하는 트위터 수집 라이브러리를 사용해보자!는 생각을 했다.</p>
+<p>내가 생각했다면, 분명 다른 누군가는 만들어뒀을거라는 나름 타당한 생각에 검색을 했고, 가장 적합한 라이브러리라고 생각했던 것이 바로 Twint였다.</p>
+<blockquote>
+<p><strong>Spoiler:</strong> Twint는 쓸만하지 않았다.</p>
+</blockquote>
+<p>Twint를 이용해 로컬에서 적당한 사이즈(1k 팔로잉 이하)를 크롤링 하는 것에 성공했지만 MultiProcess를 통해 돌릴 경우 생각보다 굉장히 낮은 성능을 보이는 면을 보여, AWS Lambda에 올려 병렬로 수집하고자 했다. 수집에 성공시 Boto3를 통해 DynamoDB에 적재하는 방법을 취했다. (아래 코드가 AWS Lambda에 올린 코드.)</p>
+<blockquote>
+<p>Sqlite를 사용하기까지 해서 이상한 코드(8-9번째 줄)까지 추가로 지정해줘야 했다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> imp</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"></span><br><span class="line">db = boto3.client(<span class="string">'dynamodb'</span>)</span><br><span class="line"></span><br><span class="line">sys.modules[<span class="string">"sqlite"</span>] = imp.new_module(<span class="string">"sqlite"</span>)</span><br><span class="line">sys.modules[<span class="string">"sqlite3.dbapi2"</span>] = imp.new_module(<span class="string">"sqlite.dbapi2"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_following</span><span class="params">(username)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> twint</span><br><span class="line">    twint.output.follows_list = []</span><br><span class="line">    c = twint.Config()</span><br><span class="line">    c.Username = username</span><br><span class="line">    c.Store_object = <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    twint.run.Following(c)</span><br><span class="line">    following = twint.output.follows_list</span><br><span class="line">    <span class="keyword">return</span> list(set(following))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lambda_handler</span><span class="params">(event, context)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> event.get(<span class="string">'body'</span>):</span><br><span class="line">        event = json.loads(event[<span class="string">'body'</span>])</span><br><span class="line">        print(<span class="string">"HTTPAPI /"</span>, event[<span class="string">'username'</span>])</span><br><span class="line">    username = event[<span class="string">'username'</span>]</span><br><span class="line">    followings = get_following(username)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> followings == [<span class="string">'message'</span>]:</span><br><span class="line">        db.put_item(</span><br><span class="line">        	TableName=<span class="string">'tweet-followings'</span>,</span><br><span class="line">        	Item=&#123;</span><br><span class="line">        		<span class="string">'username'</span>: &#123;<span class="string">'S'</span>: username&#125;,</span><br><span class="line">        		<span class="string">'following'</span>: &#123;<span class="string">'SS'</span>: followings&#125;,</span><br><span class="line">        	&#125;</span><br><span class="line">        )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">'statusCode'</span>: <span class="number">200</span>,</span><br><span class="line">        <span class="string">'body'</span>: json.dumps(followings),</span><br><span class="line">        <span class="string">'headers'</span>: &#123;<span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>&#125;,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>한편, Twint 자체가 Async하게 동작하고있음에도 굉장히 느린 속도를 보이기도 하고 동시에 일부 대형 유저에서는 <strong>데이터 유실</strong>이 발생하기도 해, 해당 부분에 대한 신뢰도가 굉장히 낮아지게 되어, 다른 방법을 찾아보기로 했다.</p>
+<h3 id="2-직접-짠-크롤링-코드-차라리-내가-짜고-말지"><a href="#2-직접-짠-크롤링-코드-차라리-내가-짜고-말지" class="headerlink" title="2) 직접 짠 크롤링 코드: 차라리 내가 짜고 말지!"></a>2) 직접 짠 크롤링 코드: 차라리 내가 짜고 말지!</h3><p>앞서 말한 것과 같이, Twint에 대한 신뢰도가 팍팍 떨어지고 나서 데이터를 싹 버리고 새로 수집하는데, 기왕 이렇게 된 것 내가 직접 코드를 짜고 말지! 하는 생각을 했다.</p>
+<p>간단하게, <code>requests</code> 그리고 <code>beautifulsoup4</code> 로 어떻게 수집, 안될까?</p>
+<h4 id="1st-try-어라-생각보다-잘-되는데"><a href="#1st-try-어라-생각보다-잘-되는데" class="headerlink" title="1st try: 어라? 생각보다 잘 되는데?"></a>1st try: 어라? 생각보다 잘 되는데?</h4><p>정말로 심플하게 웹 페이지에 들어가서 수집하는 코드를 돌렸다.</p>
+<p>유저의 아이디를 입력하면 해당 유저의 팔로잉을 모아 s3에 저장하는 코드를 구성했다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> r</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"></span><br><span class="line">BASE_URL = <span class="string">'https://mobile.twitter.com'</span></span><br><span class="line">s3 = boto3.client(<span class="string">'s3'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lambda_handler</span><span class="params">(event, context)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> event.get(<span class="string">'Records'</span>):</span><br><span class="line">        event = json.loads(event[<span class="string">'Records'</span>][<span class="number">0</span>][<span class="string">'Sns'</span>][<span class="string">'Message'</span>])    </span><br><span class="line">    username = event[<span class="string">'username'</span>]</span><br><span class="line">    users = []</span><br><span class="line">    url = <span class="string">f'/<span class="subst">&#123;username&#125;</span>/following?lang=en'</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            s = bs(r.get(BASE_URL + url).text, <span class="string">'html.parser'</span>)</span><br><span class="line">            f_count = int(s.select_one(<span class="string">'span.count'</span>).text.replace(<span class="string">','</span>, <span class="string">''</span>))</span><br><span class="line">            users += [i[<span class="string">'name'</span>] <span class="keyword">for</span> i <span class="keyword">in</span> s.select(<span class="string">'div.user-list td.screenname a[name]'</span>)]</span><br><span class="line">            url = <span class="string">f"<span class="subst">&#123;s.select_one(<span class="string">'div.w-button-more &gt; a'</span>)[<span class="string">'href'</span>]&#125;</span>&amp;lang=en"</span></span><br><span class="line">        <span class="keyword">except</span> TypeError <span class="keyword">as</span> e:</span><br><span class="line">            print(<span class="string">"Cursor Ended"</span>)</span><br><span class="line">            print(len(set(users)))</span><br><span class="line">            </span><br><span class="line">            s3.put_object(</span><br><span class="line">              Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">              Key=<span class="string">f'twitter/following/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">              Body=json.dumps(&#123;</span><br><span class="line">                <span class="string">'username'</span>: username,</span><br><span class="line">                <span class="string">'following'</span>: users,</span><br><span class="line">                <span class="string">'count'</span>: f_count,</span><br><span class="line">                <span class="string">'len'</span>: len(users),</span><br><span class="line">              &#125;)</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+
+<p>한번에 20개의 데이터를 보여주고, 각 항목에 나오는 HTML을 파싱해 유저의 <code>screen_name</code> (트위터의 <code>@id</code>)을 수집했다. </p>
+<p>그리고 ‘더 보기’ 버튼이 있으면 해당 Cursor가 존재하기 때문에 해당 커서로 넘어가고, 만약 커서가 없다 = 종료되었다고 보고 크롤링을 종료했다.</p>
+<p>하지만, 문제가 발생했다.</p>
+<h4 id="2nd-try-그럼-한번에-잘-될리가-없지-😅"><a href="#2nd-try-그럼-한번에-잘-될리가-없지-😅" class="headerlink" title="2nd try: 그럼, 한번에 잘 될리가 없지. 😅"></a>2nd try: 그럼, 한번에 잘 될리가 없지. 😅</h4><p>유저들 중에서 ‘정상적 페이지’가 나오지 않는 유저가 자주 발생했다.</p>
+<blockquote>
+<p><strong>NOTE</strong> : 크롤링 진행시 Edge case를 미리 목록으로 만들고 진행하는 것이 낫다.</p>
+<p>또한, 크롤링한 데이터는 메모리가 아닌 Json 등의 파일로 적재하고 수집한 것은 다시 수집하지 않도록 만드는 것이 필수다!</p>
+</blockquote>
+<p>이유는 다양했다.</p>
+<ol>
+<li>Protected 계정: 유저가 자신의 정보를 보지 못하도록 비공개로 돌린 계정으로, 팔로우/팔로워 숫자는 볼 수 있지만 누구인지는 알 수 없다.</li>
+<li>“Sorry, that page doesn’t exist” 계정: 유저가 계정명을 변경했거나 탈퇴한 경우.</li>
+<li>‘suspended’ 계정: 유저가 트위터 약관을 위반해 트위터에서 차단한 경우. (Spam 등)</li>
+</ol>
+<p>특히 3번의 경우 정말로 예상치 못한 경우여서 데이터 수집을 중간에 놓치기도 했다.</p>
+<p>그래서 몇번의 시행착오 끝에(이틀 넘게 걸렸다) 코드를 완성했다.</p>
+<p>아래 코드는 위의 모든 엣지 케이스를 통과하는 방향으로 진행되었고, 결과를 확인했을때 99%정도의 확실한 결과를 보여주었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> r</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup <span class="keyword">as</span> bs</span><br><span class="line"><span class="keyword">import</span> boto3</span><br><span class="line"></span><br><span class="line">BASE_URL = <span class="string">'https://mobile.twitter.com'</span></span><br><span class="line">s3 = boto3.client(<span class="string">'s3'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lambda_handler</span><span class="params">(event, context)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> event.get(<span class="string">'Records'</span>):</span><br><span class="line">        event = json.loads(event[<span class="string">'Records'</span>][<span class="number">0</span>][<span class="string">'Sns'</span>][<span class="string">'Message'</span>])    </span><br><span class="line">    username = event[<span class="string">'username'</span>]</span><br><span class="line">    </span><br><span class="line">    user_html = r.get(<span class="string">f'<span class="subst">&#123;BASE_URL&#125;</span>/<span class="subst">&#123;username&#125;</span>?lang=en'</span>).text</span><br><span class="line">    <span class="comment"># Proteced User 제거하기 </span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">'protected'</span> <span class="keyword">in</span> user_html:</span><br><span class="line">        print(<span class="string">f"User [<span class="subst">&#123;username&#125;</span>] is protected"</span>)</span><br><span class="line">        s3.put_object(</span><br><span class="line">            Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">            Key=<span class="string">f'twitter/following-protected/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">            Body=json.dumps(&#123;</span><br><span class="line">                <span class="string">'username'</span>: username,</span><br><span class="line">            &#125;)</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="string">"Sorry, that page doesn't exist"</span> <span class="keyword">in</span> user_html:</span><br><span class="line">        print(<span class="string">f"User [<span class="subst">&#123;username&#125;</span>] does not exist(deleted)"</span>)</span><br><span class="line">        s3.put_object(</span><br><span class="line">            Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">            Key=<span class="string">f'twitter/following-deleted/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">            Body=json.dumps(&#123;</span><br><span class="line">                <span class="string">'username'</span>: username,</span><br><span class="line">            &#125;)</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">    users = []</span><br><span class="line">    </span><br><span class="line">    url = <span class="string">f'/<span class="subst">&#123;username&#125;</span>/following?lang=en'</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            s = bs(r.get(BASE_URL + url).text, <span class="string">'html.parser'</span>)</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                f_count = int(s.select_one(<span class="string">'span.count'</span>).text.replace(<span class="string">','</span>, <span class="string">''</span>))</span><br><span class="line">            <span class="keyword">except</span> AttributeError:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    f_count = int(s.select(<span class="string">'div.statnum'</span>)[<span class="number">-1</span>].text.replace(<span class="string">','</span>, <span class="string">''</span>))</span><br><span class="line">                <span class="keyword">except</span> IndexError <span class="keyword">as</span> e:</span><br><span class="line">                    <span class="keyword">if</span> <span class="string">"Sorry, that page doesn't exist"</span> <span class="keyword">in</span> s.select_one(<span class="string">'body'</span>).text:</span><br><span class="line">                        print(<span class="string">f"User [<span class="subst">&#123;username&#125;</span>] is deleted"</span>)</span><br><span class="line">                        s3.put_object(</span><br><span class="line">                            Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">                            Key=<span class="string">f'twitter/following-deleted/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">                            Body=json.dumps(&#123;</span><br><span class="line">                                <span class="string">'username'</span>: username,</span><br><span class="line">                            &#125;)</span><br><span class="line">                        )</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                    <span class="keyword">if</span> <span class="string">'suspended'</span> <span class="keyword">in</span> r.get(<span class="string">f'<span class="subst">&#123;BASE_URL&#125;</span>/<span class="subst">&#123;username&#125;</span>?lang=en'</span>).text:</span><br><span class="line">                        print(<span class="string">f"User [<span class="subst">&#123;username&#125;</span>] is suspended"</span>)</span><br><span class="line">                        s3.put_object(</span><br><span class="line">                            Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">                            Key=<span class="string">f'twitter/following-suspended/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">                            Body=json.dumps(&#123;</span><br><span class="line">                                <span class="string">'username'</span>: username,</span><br><span class="line">                            &#125;)</span><br><span class="line">                        )</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            users += [i[<span class="string">'name'</span>] <span class="keyword">for</span> i <span class="keyword">in</span> s.select(<span class="string">'div.user-list td.screenname a[name]'</span>)]</span><br><span class="line">            url = <span class="string">f"<span class="subst">&#123;s.select_one(<span class="string">'div.w-button-more &gt; a'</span>)[<span class="string">'href'</span>]&#125;</span>&amp;lang=en"</span></span><br><span class="line">        <span class="keyword">except</span> TypeError <span class="keyword">as</span> e:</span><br><span class="line">            print(<span class="string">"Cursor Ended"</span>)</span><br><span class="line">            print(len(set(users)))</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                is_complete = f_count == len(users)</span><br><span class="line">            <span class="keyword">except</span> UnboundLocalError <span class="keyword">as</span> e:</span><br><span class="line">                print(e)</span><br><span class="line">                print(<span class="string">f"[UnboundLocalError] username: <span class="subst">&#123;username&#125;</span>"</span>)</span><br><span class="line">                s3.put_object(</span><br><span class="line">                    Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">                    Key=<span class="string">f'twitter/following-no-fcount/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">                    Body=json.dumps(&#123;</span><br><span class="line">                        <span class="string">'username'</span>: username,</span><br><span class="line">                        <span class="string">'following'</span>: users,</span><br><span class="line">                        <span class="string">'count'</span>: <span class="number">-1</span>,</span><br><span class="line">                        <span class="string">'len'</span>: len(users),</span><br><span class="line">                    &#125;)</span><br><span class="line">                )</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> is_complete:</span><br><span class="line">                s3.put_object(</span><br><span class="line">                    Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">                    Key=<span class="string">f'twitter/following/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">                    Body=json.dumps(&#123;</span><br><span class="line">                        <span class="string">'username'</span>: username,</span><br><span class="line">                        <span class="string">'following'</span>: users,</span><br><span class="line">                        <span class="string">'count'</span>: f_count,</span><br><span class="line">                        <span class="string">'len'</span>: len(users),</span><br><span class="line">                    &#125;)</span><br><span class="line">                )</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">f"Unexpected End on crawling, counnt:<span class="subst">&#123;f_count&#125;</span>, len:<span class="subst">&#123;len(users)&#125;</span>"</span>)</span><br><span class="line">                s3.put_object(</span><br><span class="line">                    Bucket=<span class="string">'datas3asdfasdf'</span>,</span><br><span class="line">                    Key=<span class="string">f'twitter/following-needmore/<span class="subst">&#123;username&#125;</span>.json'</span>,</span><br><span class="line">                    Body=json.dumps(&#123;</span><br><span class="line">                        <span class="string">'username'</span>: username,</span><br><span class="line">                        <span class="string">'following'</span>: users,</span><br><span class="line">                        <span class="string">'count'</span>: f_count,</span><br><span class="line">                        <span class="string">'len'</span>: len(users),</span><br><span class="line">                    &#125;)</span><br><span class="line">                )</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>와! 잘 된다!</p>
+<h4 id="그렇다면-전부-끝난걸까-➡️-그럴리가요…"><a href="#그렇다면-전부-끝난걸까-➡️-그럴리가요…" class="headerlink" title="그렇다면, 전부 끝난걸까? ➡️ 그럴리가요…"></a>그렇다면, 전부 끝난걸까? ➡️ 그럴리가요…</h4><p>앞서 작성한 코드를 AWS Lambda에 태워 S3에 적재하는 방향으로 진행했다.</p>
+<p>해당 Lambda 함수는 AWS SNS를 통해 트리거되도록 만들어, Rate Limit exceed (Boto3을 통해 Lambda를 <strong>많이</strong> 호출시 발생하는 오류)를 회피하도록 구성했다.</p>
+<p>한편, 여전히 문제는 남아있었다.</p>
+<h2 id="AWS-Lambda는-15분이-최대-😢"><a href="#AWS-Lambda는-15분이-최대-😢" class="headerlink" title="AWS Lambda는 15분이 최대 😢"></a>AWS Lambda는 15분이 최대 😢</h2><p>항상 Lambda를 쓸 때 마다 투덜거리는 투로 올리는 말이지만, 서버리스가 정말 좋긴 하지만 Lambda에는 여전히 <strong>15분 max 제약</strong>이 걸려있다.</p>
+<p>실제로 수천개 (2k~5k) 이내의 유저는 손쉽게 &amp; 안정적으로 데이터 수집을 완료했지만, 10k+ 계정들에서는 시간 부족의 문제로 수집되지 않는 등 이슈가 생겼다.</p>
+<p>대체 어떻게 해야 다 모을 수 있을까?</p>
+<blockquote>
+<p><a href="/2019/12/22/Crawling_Twitter_Following_3/">트위터에서 많은 팔로워를 크롤링하는 방법 3편: 1초에 5천개 데이터 가져오기</a>으로 이어집니다.</p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/crawling/" rel="tag">crawling</a>, <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>, <a class="has-link-grey -link" href="/tags/twitter/" rel="tag">twitter</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/22/Crawling_Twitter_Following_3/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">트위터에서 많은 팔로워를 크롤링하는 방법 [3]: 1초에 5천개 데이터 가져오기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/12/21/Crawling_Twitter_Following/">
+                <span class="level-item">트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까?</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#HTML-웹-크롤링을-해보자">
+        <span class="has-mr-6">1</span>
+        <span>HTML 웹 크롤링을 해보자!</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-Twint-내가-짠-것보다는-3k-스타-오픈소스가-낫겠지">
+        <span class="has-mr-6">1.1</span>
+        <span>1) Twint: 내가 짠 것보다는 3k 스타 오픈소스가 낫겠지?</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-직접-짠-크롤링-코드-차라리-내가-짜고-말지">
+        <span class="has-mr-6">1.2</span>
+        <span>2) 직접 짠 크롤링 코드: 차라리 내가 짜고 말지!</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1st-try-어라-생각보다-잘-되는데">
+        <span class="has-mr-6">1.2.1</span>
+        <span>1st try: 어라? 생각보다 잘 되는데?</span>
+        </a></li><li>
+        <a class="is-flex" href="#2nd-try-그럼-한번에-잘-될리가-없지-😅">
+        <span class="has-mr-6">1.2.2</span>
+        <span>2nd try: 그럼, 한번에 잘 될리가 없지. 😅</span>
+        </a></li><li>
+        <a class="is-flex" href="#그렇다면-전부-끝난걸까-➡️-그럴리가요…">
+        <span class="has-mr-6">1.2.3</span>
+        <span>그렇다면, 전부 끝난걸까? ➡️ 그럴리가요…</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#AWS-Lambda는-15분이-최대-😢">
+        <span class="has-mr-6">2</span>
+        <span>AWS Lambda는 15분이 최대 😢</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

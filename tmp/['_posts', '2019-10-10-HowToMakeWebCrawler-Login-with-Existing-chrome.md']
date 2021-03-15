@@ -1,0 +1,16 @@
+---
+title: "네이버 로그인 Recaptcha 없애기"
+date: 2019-10-10
+layout: post
+categories:
+- python
+- howtomakewebcrawler
+published: false
+thumbnail: 
+---
+
+## 네이버 로그인을 뚫어보자?
+
+블로그에서 가장 인기가 많고 잘 팔리는 selenium 글, [나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기](https://beomi.github.io/2017/02/27/HowToMakeWebCrawler-With-Selenium/) 에서 네이버 로그인을 하는 것에 대해서 다루고 있다.
+
+하지만 2019년 오늘 같은 코드로 작업을 하면 

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>AWS SSM로 VPN없이 Private 자원 접근하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-13-183313.png" alt="AWS SSM로 VPN없이 Private 자원 접근하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-02-12T15:00:00.000Z">2020-02-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                AWS SSM로 VPN없이 Private 자원 접근하기
+            
+        </h1>
+        <div class="content">
+            <p>AWS EC2 혹은 RDS를 사용할때 가장 편리한 방법은 EIP를 부여받아 고정 IP를 할당한 뒤 직접 SSH등으로 접속해 제어하는 방법이다. 하지만 이러한 방법은 보안상 취약하기 때문에 DB등 중요한 데이터가 들어있는 자원은 외부 IP를 부여하지 않고 사용하게 된다.</p>
+<p>하지만 이렇게 될 경우, <strong>“VPC 내부에서만 액세스 가능하다”</strong>는 문제가 생긴다. 즉, AWS의 같은 VPC, 같은 내부 IP를 받은 자원에서만 접근이 가능하다는 점이다.</p>
+<p>공개 ip가 부여되지 않기 때문에 인터넷에서 직접적으로 요청을 받는 것이 불가능하다.</p>
+<p>이를 해결하기 위해서는..</p>
+<ol>
+<li><p>❌ AWS에 VPN 서버를 세팅하고 VPN에 연결해 작업한다.<br>👉 VPN 서버를 따로 관리해야하는 어려움이 있다.</p>
+</li>
+<li><p>❌ AWS Client VPN 서비스(AWS Managed)를 사용한다.<br>👉 요금이 비싸다. (최소 월 $70+)</p>
+</li>
+<li><p>🤩 <strong>AWS SSM + Bastion EC2 + SSH 터널링을 이용한다.</strong><br>👉 이번 글에서 다루는 내용! EC2 비용 하나로 서버 세팅 없이 간단히 접속하기</p>
+</li>
+</ol>
+<p>이번 글에서는 3번 방법을 이용해 SSM으로 SSH를 대체하고, SSM 연결을 SSH 세션처럼 이용해 SSH 터널링을 이용해 내부 RDS에 접근하는 과정을 다뤄본다.</p>
+<a id="more"></a>
+
+<h2 id="0-AWS-SSM"><a href="#0-AWS-SSM" class="headerlink" title="0. AWS SSM?"></a>0. AWS SSM?</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-061756.png" alt="AWS SSM으로 VPN 없이 EC2 접근하기"></p>
+<p>AWS SSM은 VPN을 이용하지 않고서 안전하게 AWS 자원에 접근할 수 있도록 만들어주는 명령어다. EC2 등 인스턴스들에 연결된 Security Group에서는 SSH 서비스를 위한 22번 포트를 열지 않아도 되며, 개발자들이 EC2에 접근하기 위해 키 파일을 공유하지 않아도 되며, AWS에 생성한 유저의 접근권한 조절을 통해 어떤 EC2에 로그인 할 수 있는지도 제어할 수 있다. 또한, SSH Session 기능을 통해 일반적인 SSH의 Remote Proxy를 이용할 수도 있다.</p>
+<blockquote>
+<p>@2020. 02. 14. SSM은 Bastion 인스턴스 없이 사용할 수 있도록 만들어졌지만, 아직 <code>localhost</code> 에 대해서만 SSH Forwarding을 지원하기 때문에 RDS 등 다른 인스턴스에 접근하려면 Bastion EC2를 생성해야 한다. 이후 업데이트로 추가되면 EC2조차도 필요 없어지면 더 사용성이 높아질 듯 하다.</p>
+</blockquote>
+<h2 id="1-AWS-EC2에-SSM-세팅하기"><a href="#1-AWS-EC2에-SSM-세팅하기" class="headerlink" title="1. AWS EC2에 SSM 세팅하기"></a>1. AWS EC2에 SSM 세팅하기</h2><h3 id="Security-Groups-설정하기"><a href="#Security-Groups-설정하기" class="headerlink" title="Security Groups 설정하기"></a>Security Groups 설정하기</h3><p>AWS 내 자원끼리 통신하기 위해서는 여러 설정이 필요하지만, 만약 <code>default</code> vpc를 사용한다면 기본적으로 내부 자원끼리 통신하도록 Route Table이 설정되어있다.</p>
+<p>이와 함께 해당 자원들이 있는 Security Group에 대해 같은 Security Group 내의 모든 트래픽을 열어줄 수 있다. </p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-063953.png" alt="보안그룹 내 모든 트래픽 허용하기"></p>
+<blockquote>
+<p>모든 트래픽이 아닌 특정 프로토콜과 포트만을 열어서 사용할 수도 있다.</p>
+<p>또한, 이후 Bastion으로 사용하는 EC2를 소스로 지정해 해당 EC2에서만 접근 가능하도록 설정할 수도 있다.</p>
+</blockquote>
+<h3 id="IAM-EC2-역할-설정하기"><a href="#IAM-EC2-역할-설정하기" class="headerlink" title="IAM EC2 역할 설정하기"></a>IAM EC2 역할 설정하기</h3><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-064728.png" alt="IAM 역할 생성 첫 페이지"></p>
+<p>위 스크린샷처럼 AWS IAM에서 새 역할 생성을 한 뒤, <code>AWS 서비스 - EC2</code> 를 선택한다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-064955.png" alt="AmazonSSMManagedInstanceCore 권한 연결하기"></p>
+<p>정책에서 <code>AmazonSSMManagedInstanceCore</code> 를 검색한 뒤 체크박스를 클릭해 권한 정책을 연결한다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-065046.png" alt="태그 추가는 옵션"></p>
+<p>태그 추가는 옵션이니 빈칸으로 두고 넘어가도 된다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-065157.png" alt="역할 이름 붙이기"></p>
+<p>역할 이름은 적당한 이름으로 붙이고 ‘역할 만들기’ 버튼을 누르면 역할이 생성된다.</p>
+<h3 id="EC2-생성하기"><a href="#EC2-생성하기" class="headerlink" title="EC2 생성하기"></a>EC2 생성하기</h3><p>이제 위에서 만들어준 Security Group과 IAM Role을 가진 EC2 인스턴스를 생성해보자.</p>
+<p>인스턴스 종류는 AmazonLinux2, t3.nano를 이용한다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-065520.png" alt="Amazon Linux2 AMI를 이용해 인스턴스 생성하기"></p>
+<blockquote>
+<p>사실 아마존에서 제공하는 모든 AMI에는 SSM을 위한 세팅이 이미 되어있다.<br>따라서 개발자에게 편리한 OS를 선택하면 된다.</p>
+</blockquote>
+<p>우리가 사용하는 인스턴스는 이후 RDS등과 연결하기 위한 내부 네트워크를 제공하기 때문에, 네트워크 성능이 적절히 나오며 저렴한 EC2를 선택해주면 된다. 이번 글에서는 저렴한 <code>t3a.nano</code> 인스턴스를 이용해본다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-065727.png" alt="t3a.nano 인스턴스 선택하기"></p>
+<p>❗️<strong>(중요)</strong> 인스턴스를 선택한 뒤, 해당 인스턴스의 IAM 역할을 지정해줘야 한다.</p>
+<p>앞서 만들어준 <code>EC2-SSM-Bastion</code> 역할을 선택해 준 뒤, 다음을 눌러준다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-070014.png" alt="EC2 인스턴스에 IAM 역할 붙이기"></p>
+<p>스토리지 설정과 태그는 기본값 그대로 넘기면 된다. 이후 Security Group 설정에서 ‘기존 보안그룹 선택’을 고른 뒤, 앞서 만든 <code>ssmProxyAllow</code> 보안그룹을 선택한 뒤 인스턴스를 시작해준다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-070405.png" alt="Security Group 설정하기"></p>
+<h3 id="RDS-보안그룹-바꾸기"><a href="#RDS-보안그룹-바꾸기" class="headerlink" title="RDS 보안그룹 바꾸기"></a>RDS 보안그룹 바꾸기</h3><p>기존에 사용하던 Private Subnet의 RDS 혹은 Aurora Serverless DB가 있다면 해당하는 자원들의 Security Groups에 <code>ssmProxyAllow</code> 그룹을 추가한다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-073909.png" alt="RDS에 VPC 보안그룹 ssmProxyAllow 추가"></p>
+<p>‘퍼블릭 액세스 가능성’이 ‘아니오’인 경우에는 엔드포인트 역시 내부 IP를 반환합니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-074033.png" alt="`172.31.3.x`로 내부 IP 대역을 반환하는 엔드포인트"></p>
+<h3 id="사용자-IAM에-권한-추가하기"><a href="#사용자-IAM에-권한-추가하기" class="headerlink" title="사용자 IAM에 권한 추가하기"></a>사용자 IAM에 권한 추가하기</h3><p>유저가 만약 Admin 권한이 아니라면 아래 권한을 추가해줘야 SSM을 통해 SSH 세션등을 열고 프록시를 쓸 수 있다.</p>
+<blockquote>
+<p>만약 특정 인스턴스만 지정하고 싶다면 아래 json의 10,11번째에서 <code>*</code> 대신 인스턴스 명을 지정해주면 된다.</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"Version"</span>: <span class="string">"2012-10-17"</span>,</span><br><span class="line">  <span class="attr">"Statement"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"Effect"</span>: <span class="string">"Allow"</span>,</span><br><span class="line">      <span class="attr">"Action"</span>: [</span><br><span class="line">        <span class="string">"ssm:StartSession"</span></span><br><span class="line">      ],</span><br><span class="line">      <span class="attr">"Resource"</span>: [</span><br><span class="line">        <span class="string">"arn:aws:ec2:*:*:instance/*"</span>,</span><br><span class="line">        <span class="string">"arn:aws:ssm:*:*:managed-instance/*"</span>,</span><br><span class="line">        <span class="string">"arn:aws:ssm:*:*:document/AWS-RunShellScript"</span>,</span><br><span class="line">        <span class="string">"arn:aws:ssm:*:*:document/AWS-StartPortForwardingSession"</span>,</span><br><span class="line">        <span class="string">"arn:aws:ssm:*:*:document/AWS-StartSSHSession"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"Effect"</span>: <span class="string">"Allow"</span>,</span><br><span class="line">      <span class="attr">"Action"</span>: [</span><br><span class="line">        <span class="string">"ssm:TerminateSession"</span></span><br><span class="line">      ],</span><br><span class="line">      <span class="attr">"Resource"</span>: [</span><br><span class="line">        <span class="string">"arn:aws:ssm:*:*:session/$&#123;aws:username&#125;-*"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-로컬-PC에-SSM-Client-설치하기-macOS-기준"><a href="#2-로컬-PC에-SSM-Client-설치하기-macOS-기준" class="headerlink" title="2. 로컬 PC에 SSM Client 설치하기 - macOS 기준"></a>2. 로컬 PC에 SSM Client 설치하기 - macOS 기준</h2><h3 id="AWSCLI-설치하기"><a href="#AWSCLI-설치하기" class="headerlink" title="AWSCLI 설치하기"></a>AWSCLI 설치하기</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install awscli</span><br></pre></td></tr></table></figure>
+
+<p><code>aws</code> 명령어를 사용하기 위해 <code>awscli</code> 를 설치해준다.</p>
+<blockquote>
+<p>첫 설치인 경우 아래 명령어로 AWS AccessKey와 SecretKey를 등록해줍니다. (해당 유저는 당연히 앞서 설정한 SSM 권한을 가진 유저여야 합니다.)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aws configure</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="AWS-SSM-Extension-설치하기"><a href="#AWS-SSM-Extension-설치하기" class="headerlink" title="AWS SSM Extension 설치하기"></a>AWS SSM Extension 설치하기</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew tap dkanejs&#x2F;aws-session-manager-plugin</span><br><span class="line">brew install aws-session-manager-plugin</span><br></pre></td></tr></table></figure>
+
+<p>위 과정을 진행하면 <code>aws ssm</code> 명령어를 사용할 수 있다.</p>
+<h2 id="3-로컬-SSH-Config-수정하기"><a href="#3-로컬-SSH-Config-수정하기" class="headerlink" title="3. 로컬 SSH Config 수정하기"></a>3. 로컬 SSH Config 수정하기</h2><p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-14-075025.png" alt="SSH 명령어로 인스턴스 접근하기"></p>
+<p><code>ssh 인스턴스-id</code> 명령어를 통해 SSH에 접근하기 위해서는 아래 부분을 <code>~/.ssh/config</code> 파일 가장 아래에 붙여넣으면 된다.</p>
+<p>User와 IdentityFile은 적절한 유저명과 파일 위치 절대경로로 설정해주면 된다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host i-* mi-*</span><br><span class="line">    ProxyCommand sh -c <span class="string">"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"</span></span><br><span class="line">    User ec2-user <span class="comment"># 혹은 ubuntu 등, 실제 유저 이름</span></span><br><span class="line">    IdentityFile ~/.keys/키파일이름.pem</span><br></pre></td></tr></table></figure>
+
+<p>이후 위 스크린샷처럼 <code>ssh 인스턴스명</code> 으로 해당 인스턴스에 SSH로 접근할 수 있다.</p>
+<h2 id="4-SSH-터널링으로-Private-RDS-연결하기"><a href="#4-SSH-터널링으로-Private-RDS-연결하기" class="headerlink" title="4. SSH 터널링으로 Private RDS 연결하기"></a>4. SSH 터널링으로 Private RDS 연결하기</h2><p>3번과 같이 <code>ssh 인스턴스명</code> 으로 Bastion EC2에 접근할 수 있게 되면 SSH 터널링을 이용해 내부 IP를 가진 RDS에 접속할 수 있다.</p>
+<p>아래 명령어를 입력하면 <code>127.0.0.1:3306</code> 에 <code>database-1.crp78xs4s1n9.ap-northeast-2.rds.amazonaws.com:3306</code> 가 연결된다. 즉, DB연결 툴에서 <code>127.0.0.1:3306</code> 으로 접속하면 위 RDS에 접근할 수 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 127.0.0.1:3306:database-1.crp78xs4s1n9.ap-northeast-2.rds.amazonaws.com:3306 i-0f067ac2deb58ee88</span><br></pre></td></tr></table></figure>
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><p>Blogs</p>
+<ul>
+<li><a href="https://musma.github.io/2019/11/29/about-aws-ssm.html">AWS SSM으로 EC2 인스턴스에 접근하기 (SSH 대체)</a></li>
+<li><a href="https://cloudbriefly.com/post/configuring-ssm-agent-on-an-amazon-lightsail-instance/">Configuring SSM Agent on an Amazon Lightsail Instance</a></li>
+</ul>
+</li>
+<li><p>Official Docs</p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/ko_kr/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">AWS CLI용 Session Manager Plugin 설치</a></li>
+<li><a href="https://docs.aws.amazon.com/ko_kr/systems-manager/latest/userguide/getting-started-restrict-access-examples.html">Session Manager에 대한 IAM 정책의 추가 샘플</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/aws/" rel="tag">aws</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/02/24/Pytorch-with-TPU-on-Colab/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Colab에서 PyTorch 모델 TPU로 학습하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/02/03/Lookup-HopsWorks/">
+                <span class="level-item">데이터 분석 파이프라인 풀세트, HopsWorks 설치기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#0-AWS-SSM">
+        <span class="has-mr-6">1</span>
+        <span>0. AWS SSM?</span>
+        </a></li><li>
+        <a class="is-flex" href="#1-AWS-EC2에-SSM-세팅하기">
+        <span class="has-mr-6">2</span>
+        <span>1. AWS EC2에 SSM 세팅하기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Security-Groups-설정하기">
+        <span class="has-mr-6">2.1</span>
+        <span>Security Groups 설정하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#IAM-EC2-역할-설정하기">
+        <span class="has-mr-6">2.2</span>
+        <span>IAM EC2 역할 설정하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#EC2-생성하기">
+        <span class="has-mr-6">2.3</span>
+        <span>EC2 생성하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#RDS-보안그룹-바꾸기">
+        <span class="has-mr-6">2.4</span>
+        <span>RDS 보안그룹 바꾸기</span>
+        </a></li><li>
+        <a class="is-flex" href="#사용자-IAM에-권한-추가하기">
+        <span class="has-mr-6">2.5</span>
+        <span>사용자 IAM에 권한 추가하기</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2-로컬-PC에-SSM-Client-설치하기-macOS-기준">
+        <span class="has-mr-6">3</span>
+        <span>2. 로컬 PC에 SSM Client 설치하기 - macOS 기준</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AWSCLI-설치하기">
+        <span class="has-mr-6">3.1</span>
+        <span>AWSCLI 설치하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#AWS-SSM-Extension-설치하기">
+        <span class="has-mr-6">3.2</span>
+        <span>AWS SSM Extension 설치하기</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-로컬-SSH-Config-수정하기">
+        <span class="has-mr-6">4</span>
+        <span>3. 로컬 SSH Config 수정하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-SSH-터널링으로-Private-RDS-연결하기">
+        <span class="has-mr-6">5</span>
+        <span>4. SSH 터널링으로 Private RDS 연결하기</span>
+        </a></li><li>
+        <a class="is-flex" href="#References">
+        <span class="has-mr-6">6</span>
+        <span>References</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

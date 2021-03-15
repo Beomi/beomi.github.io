@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>한국어 NLP와 딥러닝을 위한 도커이미지 만들기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-125505.jpg" alt="한국어 NLP와 딥러닝을 위한 도커이미지 만들기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-19T15:00:00.000Z">2019-12-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/DeepLearning/">DeepLearning</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                한국어 NLP와 딥러닝을 위한 도커이미지 만들기
+            
+        </h1>
+        <div class="content">
+            <h2 id="딥러닝-도커"><a href="#딥러닝-도커" class="headerlink" title="딥러닝 + 도커?"></a>딥러닝 + 도커?</h2><p>딥러닝 프로젝트를 진행할 때 귀찮은 것 중 하나는 여러 라이브러리를 관리하고 어떤 버전을 설치했는지를 매번 체크하는 것이다.</p>
+<p>Tensorflow나 PyTorch의 경우 매 시즌별로 버전 업데이트가 이뤄지며 동시에 api가 이전 버전과 달라져 어떤 것을 사용해야 하는지 선택이 곤란해지는 때가 있다.</p>
+<a id="more"></a>
+
+<p>한편 위 문제는 양반일 정도로 귀찮은 것이 하나 더 있다. 바로 CUDA와 cuDNN, APEX등을 <strong>버전을 맞춰</strong> 설치하고 PATH를 잡아서 진행하는 부분은 정말 끔찍하다.</p>
+<p>다만 딥러닝만이 아닌 웹 개발을 진행한다 하더라도 버전 관리와 재현성이 제공되는 개발환경은 필수이기 때문에 도커를 사용해서 관리하는 것은 사실상 기본이 되어가고 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-121136.png" alt="귀여운 도커 아이콘을 찾아보았다"></p>
+<h2 id="딥러닝-도커-이미지"><a href="#딥러닝-도커-이미지" class="headerlink" title="딥러닝 도커 이미지"></a>딥러닝 도커 이미지</h2><p>딥러닝에 도커를 사용하는 이유는 또 다른 이유도 있다.</p>
+<p>딥러닝 라이브러리들에서 GPU 가속을 사용하기 위해서는 앞서 말했던 것과 같이 CUDA와 여러 GPU 관련 라이브러리를 <strong>잘</strong> 잡아줘야 한다. 하지만 이 작업이 생각보다 귀찮은 것은 차치하더라도, Tensorflow나 PyTorch가 (특히 TF가..!!!) 요구하는 CUDA/cuDNN을 버전 세트를 맞춰주는 것도 한세월.</p>
+<p>하지만 최근 몇년 사이 딥러닝을 위한 도커 이미지가 넘쳐나고 있다.</p>
+<p>당장 Tensorflow나 PyTorch의 공식 이미지부터 시작해 deepo, h2o.ai등 굉장히 다양한 이미지들이 넘쳐나고 있다. 이들을 이용해 추가적인 라이브러리를 설치해 입맛에 맞는 도커 이미지를 만들면 가장 편안하게 연구 개발을 할 수 있다.</p>
+<h2 id="Deepo-이미지로-띄우기"><a href="#Deepo-이미지로-띄우기" class="headerlink" title="Deepo 이미지로 띄우기"></a>Deepo 이미지로 띄우기</h2><p>여러가지를 사용해 보았지만 현재(2019.11.27)시점 체감상 가장 안정적이고 잘 동작하고 나름 설정이 잘 되어있는 - 혹은 개인적 취향에 맞는 - 라이브러리는 바로 <code>deepo</code> 였다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-121145.png" alt="deepo"></p>
+<blockquote>
+<p>Deepo 바로가기: <a href="https://github.com/ufoym/deepo">https://github.com/ufoym/deepo</a></p>
+</blockquote>
+<p>Deepo는 처음부터 도커기반 딥러닝 이미지 프로젝트였고, CPU와 GPU 모든 경우이고 동시에 현재 자주 사용중인 딥러닝 라이브러리 대부분을 지원한다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-121150.png" alt="Deepo 도커 이미지 tag들"></p>
+<blockquote>
+<p><a href="https://github.com/ufoym/deepo#available-tags">https://github.com/ufoym/deepo#available-tags</a> 에서 볼 수 있는 Deepo에서 제공하는 태그들.</p>
+<p>웬만한 것들은 다 지원하는 셈이다.</p>
+</blockquote>
+<p>따라서 이 도커 이미지 위에 우리가 원하는 추가 패키지들을 설치하고 세팅을 진행하면 보다 편안-한 마음으로 개발을 할 수 있다.</p>
+<h2 id="Deepo-이미지-중-어떤-것을-사용하나"><a href="#Deepo-이미지-중-어떤-것을-사용하나" class="headerlink" title="Deepo 이미지 중 어떤 것을 사용하나?"></a>Deepo 이미지 중 어떤 것을 사용하나?</h2><p>개인적으로는 PyTorch를 가장 많이 사용하고 종종 Tensorflow도 사용하기 때문에 위 이미지 중 전체가 다 설치되어있는 <code>all</code> 시리즈를 사용한다.</p>
+<p>그 중에서도 CUDA버전을 명시적으로 지정하는 <code>all-jupyter-py36-cu100</code> (혹은 <code>all-jupyter-py36-cu101</code>)을 이용해서 진행하면 좋다. </p>
+<p>최신버전을 사용하려면 <code>all-jupyter</code> 을 사용하면 된다.</p>
+<blockquote>
+<p>이 버전에 따라서 Pre installed 라이브러리들의 버전이 달라진다.</p>
+</blockquote>
+<h2 id="도커-이미지-만들기"><a href="#도커-이미지-만들기" class="headerlink" title="도커 이미지 만들기"></a>도커 이미지 만들기</h2><p>도커 이미지는 보통 아래 요소들로 만들어진다.</p>
+<ol>
+<li><p><code>FROM</code>: 어떤 이미지에서 받아서 진행할지 </p>
+</li>
+<li><p><code>RUN</code>: 어떤 명령어를 실행해서 이미지로 만들지</p>
+</li>
+<li><p><code>WORKDIR</code>: 현재 있는 폴더에서 명령을 실행할지</p>
+</li>
+</ol>
+<p>각 요소 하나하나가 실행될 때 마다 도커 이미지의 <code>layer</code>가 된다. = 이미지가 무거워진다!</p>
+<p>따라서 <code>apt-get</code> 와 같이 한번만 실행하면 되는 경우에는 한 세트로 넣어서 돌리는 것이 유리하다.</p>
+<h3 id="Ubuntu-기반인-deepo"><a href="#Ubuntu-기반인-deepo" class="headerlink" title="Ubuntu 기반인 deepo"></a>Ubuntu 기반인 deepo</h3><p>deepo는 ubuntu 기반으로 이미지를 제작하기 때문에 <code>apt</code> 등을 보다 편안하게 사용할 수 있다.</p>
+<p><code>RUN</code> 을 사용할 경우, 상위 이미지(deepo)에서 지정한 <code>root</code> 유저로 실행되기 때문에 <code>apt</code> 와 같은 명령어를 sudo 권한 없이도 실행할 수 있다.</p>
+<p>1) Ubuntu 기반으로 불러오기</p>
+<p><code>FROM</code> 을 이용해 Deepo 이미지를 불러오자.</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ufoym/deepo:all-jupyter</span><br></pre></td></tr></table></figure>
+
+<p>2) KoNLPy를 사용하기 위해 JVM을 설치해준다. 이와 함께 python, curl, wget등을 같이 설치해주자.</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install JVM for Konlpy</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; \</span></span><br><span class="line"><span class="bash">    apt-get upgrade -y &amp;&amp; \</span></span><br><span class="line"><span class="bash">    apt-get install -y \</span></span><br><span class="line"><span class="bash">    openjdk-8-jdk wget curl git python3-dev \</span></span><br><span class="line"><span class="bash">    language-pack-ko</span></span><br></pre></td></tr></table></figure>
+
+<p>3) 언어팩 설정을 하기 위해 가장 많이 지원되는 <code>en_US.UTF-8</code> 을 시스템 언어로 지정해주자.</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="bash"> locale-gen en_US.UTF-8 &amp;&amp; \</span></span><br><span class="line"><span class="bash">    update-locale LANG=en_US.UTF-8</span></span><br></pre></td></tr></table></figure>
+
+<p>4) zsh를 설치한다. (Optional, 하지만 나중에 작업 편함)</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install zsh</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apt-get install -y zsh &amp;&amp; \</span></span><br><span class="line"><span class="bash">    sh -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>"</span></span></span><br></pre></td></tr></table></figure>
+
+<p>5) Kakao에서 발표한 CNN기반 토크나이저인 Khaiii를 설치한다.</p>
+<ul>
+<li>빌드 시간이 조금 오래걸린다.</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Khaiii</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /deps</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/kakao/khaiii.git</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /deps/khaiii</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install cython &amp;&amp; \</span></span><br><span class="line"><span class="bash">    pip install --upgrade pip &amp;&amp; \</span></span><br><span class="line"><span class="bash">    pip install -r requirements.txt &amp;&amp; \</span></span><br><span class="line"><span class="bash">    mkdir build</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /deps/khaiii/build</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> cmake .. &amp;&amp; make all &amp;&amp; make resource &amp;&amp; make install &amp;&amp; make package_python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /deps/khaiii/build/package_python</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install .</span></span><br></pre></td></tr></table></figure>
+
+<p>6) Jupyter Notebook 환경을 좀더 편리하게 사용하기 위해 Extension들을 설치해준다.</p>
+<ul>
+<li>추가적으로 필요한 Extension이 있다면 이 단계에서 설치하는 것을 추천한다.</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Setup Jupyter extensions</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install jupyter_nbextensions_configurator jupyter_contrib_nbextensions &amp;&amp; \</span></span><br><span class="line"><span class="bash">    jupyter nbextensions_configurator <span class="built_in">enable</span> &amp;&amp; \</span></span><br><span class="line"><span class="bash">    jupyter contrib nbextension install</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install jupyter_http_over_ws &amp;&amp; \</span></span><br><span class="line"><span class="bash">    jupyter serverextension <span class="built_in">enable</span> --py jupyter_http_over_ws</span></span><br></pre></td></tr></table></figure>
+
+<p>7) 기타 Python라이브러리와 mecab을 설치한다.</p>
+<ul>
+<li>기타 라이브러리를 설치해준다. 간단히 소개하자면…<ul>
+<li>Pandas_explode는 pandas Dataframe에 <code>.explode(&#39;column&#39;)</code> 등을 사용 가능하게 만들어준다. (속도가 빠르진 않다.)</li>
+<li>autopep8은 PEP8을 자동으로 맞춰준다. (ipynb파일도 지원함)</li>
+<li>s3fs - <code>s3://</code> 주소를 사용 가능하도록 만들어준다. (<code>pd.read_csv</code> 등에서 유용)</li>
+<li>fastparquet - <code>parquet</code> 파일 형식을 읽고 쓸 수 있도록 해준다.</li>
+<li>soynlp / konlpy - 한국어 토크나이저</li>
+<li>dask - Pandas와 비슷하지만 Distributed Computing을 지원하는 라이브러리</li>
+<li>python-snappy - <code>parquet</code> 파일 사용시 <code>snappy</code> 알고리즘을 사용하는데 이때 필요함</li>
+</ul>
+</li>
+<li>mecab-ko: KoNLPy에서 Mecab 클래스 사용을 위해서 필요<ul>
+<li>mecab은 초당 3~5000개 처리 / 1core</li>
+<li>다른것은 초당 100-300개 처리 / 1core</li>
+<li>(라이젠 1800x 기준)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install another packages</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install -e git+https://github.com/kanth989/pandas_explode<span class="comment">#egg=pandas_explode</span></span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install \</span></span><br><span class="line"><span class="bash">    autopep8 pytorch_pretrained_bert \</span></span><br><span class="line"><span class="bash">    s3fs fastparquet soynlp konlpy \</span></span><br><span class="line"><span class="bash">    randomcolor pynamodb plotly</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install <span class="string">"dask[complete]"</span></span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install python-snappy</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Add Mecab-Ko</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> curl -L https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh | bash</span></span><br></pre></td></tr></table></figure>
+
+<p>8) Docker 이미지를 root아닌 유저로 쓰도록 지정하는 유저 생성하기 (Optional)</p>
+<ul>
+<li><code>user</code> 라는 이름을 가진 유저가 생성된다.</li>
+</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add non-root user</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> adduser --disabled-password --gecos <span class="string">""</span> user</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Reset Workdir</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /code</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>유저를 <code>root</code> 가 아닌 유저로 생성하는 경우의 이점과 단점</strong></p>
+<ul>
+<li><p>장점</p>
+<ul>
+<li>이후 Volume 마운트 시 권한이 꼬이지 않을 수 있고, 조금 더 안전하다.</li>
+</ul>
+</li>
+<li><p>단점</p>
+<ul>
+<li><p>이와 같이 유저를 생성할 경우, <code>sudo</code> 권한을 명시적으로 주지 않는 한 <code>sudo</code>  명령을 쓰지 못한다.</p>
+</li>
+<li><p><code>apt-get</code> 등으로 설치가 필요한 경우 Dockerfile을 새로 빌드해야 한다.</p>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>하지만 간단한 <code>pip install</code> 등은 User 디렉토리에 설치하는 방법을 통해 조금 환경 제약을 줄일 수도 있다.</p>
+<h2 id="최종본-Dockerfile"><a href="#최종본-Dockerfile" class="headerlink" title="최종본 Dockerfile"></a>최종본 Dockerfile</h2><p>최종본 파일은 <a href="https://github.com/Beomi/deepo-nlp/blob/master/Dockerfile">https://github.com/Beomi/deepo-nlp/blob/master/Dockerfile</a> 에서 받을 수 있다.</p>
+<p>위와 같이 Dockerfile을 작성한 뒤, 아래 명령어를 통해 도커 이미지를 빌드하면 된다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t beomi/deepo:all-jupyter-py36-cu100-konlp .</span><br></pre></td></tr></table></figure>
+
+<h2 id="도커-띄우기-RUN"><a href="#도커-띄우기-RUN" class="headerlink" title="도커 띄우기 RUN!"></a>도커 띄우기 RUN!</h2><p>위와 같이 도커이미지를 만든 뒤, Jupyter Notebook 환경을 원활하게 사용하기 위해서는 여러 세팅이 필요하지만, 그 중에서 몇가지 지원을 하는 방식을 보자.</p>
+<p>아래 파일은 내가 위 도커 이미지를 실행할때 쓰는 Shell Script다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker run --gpus=all -it --rm --ipc=host \</span><br><span class="line">	-p 28888:8888 \</span><br><span class="line">	-p 28787:8787 \</span><br><span class="line">	-u $(id -u <span class="variable">$&#123;USER&#125;</span>):$(id -g <span class="variable">$&#123;USER&#125;</span>) \</span><br><span class="line">	-v $(<span class="built_in">pwd</span>)/.dockervm/tmp:/tmp \</span><br><span class="line">	-v $(<span class="built_in">pwd</span>)/.dockervm:/home/user \</span><br><span class="line">  -v $(<span class="built_in">pwd</span>)/code:/code \</span><br><span class="line">	-v /home/<span class="variable">$&#123;USER&#125;</span>:/home/<span class="variable">$&#123;USER&#125;</span>:ro \</span><br><span class="line">	beomi/deepo:all-jupyter-py36-cu100-konlp \</span><br><span class="line">	zsh -c <span class="string">'</span></span><br><span class="line"><span class="string">	export SHELL=zsh;</span></span><br><span class="line"><span class="string">	export PATH=$PATH:/root/.local/bin:/root/.local/lib/python3.6/site-packages;</span></span><br><span class="line"><span class="string">	jupyter notebook \</span></span><br><span class="line"><span class="string">	--no-browser \</span></span><br><span class="line"><span class="string">	--ip=0.0.0.0 \</span></span><br><span class="line"><span class="string">	--notebook-dir=/code'</span></span><br></pre></td></tr></table></figure>
+
+<p>하나씩 뜯어보자.</p>
+<p>1) GPU설정 &amp; ipc=host</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --gpus&#x3D;all -it --rm --ipc&#x3D;host \</span><br></pre></td></tr></table></figure>
+
+<p><code>nvidia-docker</code> 를 사용해야 도커 환경 내에서 CUDA가속을 사용할 수 있다.</p>
+<blockquote>
+<p>Nvidia Docker 공식 레포: <a href="https://github.com/NVIDIA/nvidia-docker">https://github.com/NVIDIA/nvidia-docker</a></p>
+</blockquote>
+<p>도커 이미지 실행시 어떤 GPU를 사용할지 지정해야 하는데, <code>--gpus=all</code> 로 사용할 경우 해당 시스템에 있는 모든 GPU를 사용하도록 지정하고, <code>-gpus &#39;&quot;device=1,2&quot;&#39;</code> 와 같이 지정시 PCIe Bus기준 1,2번에 해당하는 것만 사용하도록 지정할 수 있다.</p>
+<p>2) 도커 이미지로 연결할 포트 지정</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-p 18888:8888 \</span><br><span class="line">-p 18787:8787 \</span><br></pre></td></tr></table></figure>
+
+<p><code>-p</code> 명령어를 통해 어떤 <code>외부포트</code> 를 어떤 <code>내부포트</code> 로 연결할지 지정할 수 있다.</p>
+<p>위와같이 <code>-p 18888:8888</code> 로 지정할 경우 <code>해당컴퓨터IP:18888</code> 로 접속시 Jupyter Notebook 포트인 내부 8888에 접근할 수 있게 된다.</p>
+<p>3) 유저명으로 접근</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-u $(id -u $&#123;USER&#125;):$(id -g $&#123;USER&#125;) \</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 사용시 현재컴퓨터에 로그인한 유저의 ID와 Group ID를 알 수 있다.</p>
+<blockquote>
+<p>만약 첫 유저라면 보통은 1000:1000 속성을 가지게 된다.</p>
+</blockquote>
+<p>앞서 Dockerfile에서 지정했던 유저는 1000번이기 때문에 만약 혼자 사용하는 컴퓨터라면 유저 권한을 맞춰줄 수 있다.</p>
+<blockquote>
+<p>만약 여럿이서 사용하는 서버라면 Dockerfile 빌드시 유저 id를 다르게 생성하면 된다.</p>
+</blockquote>
+<p>4) 로컬의 임의의 폴더(<code>.dockervm</code>)을 연결</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-v $(pwd)&#x2F;.dockervm&#x2F;tmp:&#x2F;tmp \</span><br><span class="line">-v $(pwd)&#x2F;.dockervm:&#x2F;home&#x2F;user \</span><br><span class="line"> -v $(pwd)&#x2F;code:&#x2F;code \</span><br></pre></td></tr></table></figure>
+
+<p>위와 같이 임의의 폴더에 도커 내부의 폴더와 연결하면, <code>pip install --user</code> 와 같은 명령어를 통해 설치한 패키지는 도커 이미지를 재시작 할 경우에도 여전히 설치된 상태를 유지할 수 있고, JupyterNotebook의 패스워드 역시 매번 새로운 토큰 대신 고정된 패스워드를 사용할 수 있다.</p>
+<p>또한 로컬의 code 폴더와 내부의 code 폴더를 맞춰 쉽게 액세스 할 수 있도록 실제 작업환경 공간을 맞춰준다.</p>
+<p>5) 로컬의 유저 폴더를 내부에 ReadOnly로 연결</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-v &#x2F;home&#x2F;$&#123;USER&#125;:&#x2F;home&#x2F;$&#123;USER&#125;:ro \</span><br></pre></td></tr></table></figure>
+
+<p>Docker의 Volume Mount시 <code>:ro</code> 옵션을 붙이면 ReadOnly 모드로 동작한다. 특정 파일들을 접근할 때 매번 도커 이미지 내에 업로드 하는 대신, 로컬의 파일을 손쉽게 가져다 쓸 수 있도록 만들어 준다.</p>
+<p>6) ZSH를 이용한 JupyterNotebook 실행</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">beomi&#x2F;deepo:all-jupyter-py36-cu100-konlp \</span><br><span class="line">zsh -c &#39;</span><br><span class="line">export SHELL&#x3D;zsh;</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;home&#x2F;user&#x2F;.local&#x2F;bin:&#x2F;home&#x2F;user&#x2F;.local&#x2F;lib&#x2F;python3.6&#x2F;site-packages;</span><br><span class="line">jupyter notebook \</span><br><span class="line">--no-browser \</span><br><span class="line">--ip&#x3D;0.0.0.0 \</span><br><span class="line">--notebook-dir&#x3D;&#x2F;code&#39;</span><br></pre></td></tr></table></figure>
+
+<p>마지막 단계인 도커 이미지 실행 단계이다.</p>
+<p>단순하게 <code>jupyter notebook</code> 이라고 실행하면 문제가 발생한다. <code>PATH</code> 지정이 되지 않아 앞서 설치한 패키지가 인식되지 않을 수 있기 때문이다.</p>
+<p>따라서 <code>PATH</code> 를 오버라이딩해줘 Python이 인식하도록 만들어줄 수 있다.</p>
+<p>이후 No browser(CLI인 경우) 옵션, 그리고 모든 hostname을 통해 접근 가능하도록 <code>0.0.0.0</code> 으로 지정하고, JupyterNotebook이 실행될 기본 폴더를 <code>/code</code> 로 지정해주면 끝이 난다.</p>
+<h2 id="정리"><a href="#정리" class="headerlink" title="정리"></a>정리</h2><p>딥러닝, 혹은 자연어 처리 등을 위해 Docker 이미지를 직접 만들어서 쓰는건 사실 당연한 일이다. 아무리 기존의 딥러닝 이미지들이 잘 되어있다고 하더라도 특히 한국어를 위한 이미지는 많이 부족한 것이 사실이다. </p>
+<p>시스템을 많이 건드리지 않으면서도 커스터마이징을 좀 더 쉽고 빠른 연구가 가능하도록 자신만의 환경을 쌓아가는 것도 중요한 부분이지 않을까 생각해 본다.</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/deeplearning/" rel="tag">deeplearning</a>, <a class="has-link-grey -link" href="/tags/docker/" rel="tag">docker</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/21/Crawling_Twitter_Following/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까?</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/10/20/Learning-VLang/">
+                <span class="level-item">V Lang 톺아보기[1]: 첫 만남</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#딥러닝-도커">
+        <span class="has-mr-6">1</span>
+        <span>딥러닝 + 도커?</span>
+        </a></li><li>
+        <a class="is-flex" href="#딥러닝-도커-이미지">
+        <span class="has-mr-6">2</span>
+        <span>딥러닝 도커 이미지</span>
+        </a></li><li>
+        <a class="is-flex" href="#Deepo-이미지로-띄우기">
+        <span class="has-mr-6">3</span>
+        <span>Deepo 이미지로 띄우기</span>
+        </a></li><li>
+        <a class="is-flex" href="#Deepo-이미지-중-어떤-것을-사용하나">
+        <span class="has-mr-6">4</span>
+        <span>Deepo 이미지 중 어떤 것을 사용하나?</span>
+        </a></li><li>
+        <a class="is-flex" href="#도커-이미지-만들기">
+        <span class="has-mr-6">5</span>
+        <span>도커 이미지 만들기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Ubuntu-기반인-deepo">
+        <span class="has-mr-6">5.1</span>
+        <span>Ubuntu 기반인 deepo</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#최종본-Dockerfile">
+        <span class="has-mr-6">6</span>
+        <span>최종본 Dockerfile</span>
+        </a></li><li>
+        <a class="is-flex" href="#도커-띄우기-RUN">
+        <span class="has-mr-6">7</span>
+        <span>도커 띄우기 RUN!</span>
+        </a></li><li>
+        <a class="is-flex" href="#정리">
+        <span class="has-mr-6">8</span>
+        <span>정리</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

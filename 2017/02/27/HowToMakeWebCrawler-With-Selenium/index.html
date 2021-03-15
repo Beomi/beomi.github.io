@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-01-25-HowToMakeWebCrawler-With-Selenium/selenium1.jpg" alt="나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-02-26T15:00:00.000Z">2017-02-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/howtomakewebcrawler/">howtomakewebcrawler</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                나만의 웹 크롤러 만들기(3): Selenium으로 무적 크롤러 만들기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>좀 더 보기 편한 <a href="https://beomi.github.io/gb-crawling/">깃북 버전의 나만의 웹 크롤러 만들기</a>가 나왔습니다!</p>
+</blockquote>
+<blockquote>
+<p>Updated @ 2019.10.10. Typo/Layout fix, 네이버 로그인 Captcha관련 수정 추가</p>
+</blockquote>
+<p>이전게시글: <a href="/2017/01/20/HowToMakeWebCrawler-With-Login/">나만의 웹 크롤러 만들기(2): Login with Session</a></p>
+<h2 id="Selenium이란"><a href="#Selenium이란" class="headerlink" title="Selenium이란?"></a>Selenium이란?</h2><p>Selenium은 주로 웹앱을 테스트하는데 이용하는 프레임워크다. <code>webdriver</code>라는 API를 통해 운영체제에 설치된 Chrome등의 브라우저를 제어하게 된다.</p>
+<p>브라우저를 직접 동작시킨다는 것은 JavaScript를 이용해 비동기적으로 혹은 뒤늦게 불러와지는 컨텐츠들을 가져올 수 있다는 것이다. 즉, ‘눈에 보이는’ 컨텐츠라면 모두 가져올 수 있다는 뜻이다. 우리가 requests에서 사용했던 <code>.text</code>의 경우 브라우저에서 ‘소스보기’를 한 것과 같이 동작하여, JS등을 통해 동적으로 DOM이 변화한 이후의 HTML을 보여주지 않는다. 반면 Selenium은 실제 웹 브라우저가 동작하기 때문에 JS로 렌더링이 완료된 후의 DOM결과물에 접근이 가능하다.</p>
+<h2 id="어떻게-설치하나"><a href="#어떻게-설치하나" class="headerlink" title="어떻게 설치하나?"></a>어떻게 설치하나?</h2><h3 id="pip-selenium-package"><a href="#pip-selenium-package" class="headerlink" title="pip selenium package"></a>pip selenium package</h3><p>Selenium을 설치하는 것은 기본적으로 <code>pip</code>를 이용한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>참고: Selenium의 버전은 자주 업데이트 되고, 브라우저의 업데이트 마다 새로운 Driver를 잡아주기 때문에 항상 최신버전을 깔아 주는 것이 좋다.</p>
+</blockquote>
+<p>이번 튜토리얼에서는 <code>BeautifulSoup</code>이 설치되어있다고 가정합니다.</p>
+<blockquote>
+<p>BeautifulSoup은 <code>pip install bs4</code>로 설치 가능합니다.</p>
+</blockquote>
+<h3 id="webdriver"><a href="#webdriver" class="headerlink" title="webdriver"></a>webdriver</h3><p>Selenium은 <code>webdriver</code>라는 것을 통해 디바이스에 설치된 브라우저들을 제어할 수 있다. 이번 가이드에서는 Chrome을 사용해 볼 예정이다.</p>
+<h3 id="Chrome-WebDriver"><a href="#Chrome-WebDriver" class="headerlink" title="Chrome WebDriver"></a>Chrome WebDriver</h3><p>크롬을 사용하려면 로컬에 크롬이 설치되어있어야 한다.</p>
+<p>그리고 크롬 드라이버를 다운로드 받아주자.</p>
+<p><a href="https://sites.google.com/a/chromium.org/chromedriver/downloads">https://sites.google.com/a/chromium.org/chromedriver/downloads</a></p>
+<p>글 수정일자인 2019년 10월 10일에는 크롬 77버전이 최신이며, 해당하는 크롬 드라이버를 받아야 한다.</p>
+<blockquote>
+<p>Update @ 2019.10.10</p>
+<p>크롬에서는 현재 <code>버전별</code> 지정된 chromedriver를 받도록 안내하며, 버전에 일치하지 않는 드라이버를 사용하면 에러가 납니다.</p>
+<p>현재 사용하는 크롬의 버전은 크롬 창에 👉 <code>chrome://version</code> 👈 이 URL을 주소창에 그대로 입력하면(http없이) 버전을 확인할 수 있습니다.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-10-10-085013.png" alt="스크린샷 2019-10-10 오후 5.49.07"></p>
+</blockquote>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-10-10-085538.png" alt="스크린샷 2019-10-10 오후 5.53.25"></p>
+<p>버전을 클릭하면 아래와 같은 OS별 Driver파일이 나열되어있다. 사용하는 OS에 따른 driver를 받아주자.</p>
+<p><img src="https://beomi-tech-blog.s3.amazonaws.com/img/2019-10-10-085753.png" alt="스크린샷 2019-10-10 오후 5.56.03"></p>
+<p>zip파일을 받고 풀어주면 <code>chromedriver</code>라는 파일이 저장된다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2021.41.17.png" alt=""></p>
+<p>위 폴더를 기준으로 할 경우 <code>/Users/beomi/Downloads/chromedriver</code>가 크롬드라이버 파일의 위치가 된다.</p>
+<p>이 경로를 나중에 Selenium 객체를 생성할 때 지정해 주어야 한다. (그래야 python이 chromedriver를 통해 크롬 브라우저를 조작할 수 있다!)</p>
+<h3 id="PhantomJS-webdriver"><a href="#PhantomJS-webdriver" class="headerlink" title="PhantomJS webdriver"></a>PhantomJS webdriver</h3><blockquote>
+<p>단, 2018년+ 기준 PhantomJS는 더이상 개발되지 않고 있기 때문에 앞으로는 크롬의 <code>headless</code>모드를 사용하는 것을 추천합니다.</p>
+</blockquote>
+<p>PhantomJS는 기본적으로 WebTesting을 위해 나온 Headless Browser다.(즉, 화면이 존재하지 않는다)</p>
+<p>하지만 JS등의 처리를 온전하게 해주며 CLI환경에서도 사용이 가능하기 때문에, 만약 CLI서버 환경에서 돌아가는 크롤러라면 PhantomJS를 사용하는 것도 방법이다.</p>
+<p>PhantomJS는 공식 프로젝트의 <a href="http://phantomjs.org/download.html">PhantomJS Download Page</a>에서 받을 수 있다.</p>
+<p>Binary 자체로 제공되기 때문에, Linux를 제외한 OS에서는 외부 dependency없이 바로 실행할 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2021.47.01.png" alt="Extracted PhantomJS Zip file"></p>
+<p>압축을 풀어주면 아래와 같은 많은 파일들이 있지만, 우리가 사용하는 것은 <code>bin</code>폴더 안의 <code>phantomjs</code>파일이다.</p>
+<p>위 폴더 기준으로 할 경우 <code>/Users/beomi/Downloads/phantomjs-2.1.1-macosx/bin/phantomjs</code>가 PhantomJS드라이버의 위치다.</p>
+<h2 id="Selenium으로-사이트-브라우징"><a href="#Selenium으로-사이트-브라우징" class="headerlink" title="Selenium으로 사이트 브라우징"></a>Selenium으로 사이트 브라우징</h2><p>Selenium은 <code>webdriver api</code>를 통해 브라우저를 제어한다.</p>
+<p>우선 <code>webdriver</code>를 import해주자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br></pre></td></tr></table></figure>
+
+<p>이제 <code>driver</code>라는 이름의 webdriver 객체를 만들어 주자.</p>
+<blockquote>
+<p>이름이 꼭 <code>driver</code>일 필요는 없다.</p>
+<p>이번 가이드에서는 크롬을 기본적으로 이용할 예정이다.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># Chrome의 경우 | 아까 받은 chromedriver의 위치를 지정해준다.</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line"><span class="comment"># PhantomJS의 경우 | 아까 받은 PhantomJS의 위치를 지정해준다.</span></span><br><span class="line"><span class="comment"># driver = webdriver.PhantomJS('/Users/beomi/Downloads/phantomjs-2.1.1-macosx/bin/phantomjs')</span></span><br></pre></td></tr></table></figure>
+
+<p>Selenium은 기본적으로 웹 자원들이 모두 로드될때까지 기다려주지만, 암묵적으로 모든 자원이 로드될때 까지 기다리게 하는 시간을 직접 <code>implicitly_wait</code>을 통해 지정할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line"><span class="comment"># 암묵적으로 웹 자원 로드를 위해 3초까지 기다려 준다.</span></span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>이제 특정 url로 브라우저를 켜 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line"><span class="comment"># url에 접근한다.</span></span><br><span class="line">driver.get(<span class="string">'https://google.com'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>만약 chromedriver의 위치가 정확하다면 새 크롬 화면이 뜨고 구글 첫 화면으로 들어가질 것이다.</p>
+<p>Selenium은 driver객체를 통해 여러가지 메소드를 제공한다.</p>
+<blockquote>
+<p>아래의 메소드들은 보통 <code>driver.~~~</code> 방식으로 사용합니다.</p>
+</blockquote>
+<p>URL에 접근하는 메소드,</p>
+<ul>
+<li><code>get(&#39;http://url.com&#39;)</code></li>
+</ul>
+<p>페이지의 단일 element에 접근하는 메소드,</p>
+<ul>
+<li><code>find_element_by_name(&#39;HTML_name&#39;)</code></li>
+<li><code>find_element_by_id(&#39;HTML_id&#39;)</code></li>
+<li><code>find_element_by_xpath(&#39;/html/body/some/xpath&#39;)</code></li>
+<li><code>find_element_by_css_selector(&#39;#css &gt; div.selector&#39;)</code></li>
+<li><code>find_element_by_class_name(&#39;some_class_name&#39;)</code></li>
+<li><code>find_element_by_tag_name(&#39;h1&#39;)</code></li>
+</ul>
+<p>페이지의 여러 elements에 접근하는 메소드 등이 있다. (대부분 <code>element</code> 를 <code>elements</code> 로 바꾸기만 하면 된다.)</p>
+<ul>
+<li><code>find_elements_by_css_selector(&#39;#css &gt; div.selector&#39;)</code></li>
+</ul>
+<p>위 메소드들을 활용시 HTML을 브라우저에서 파싱해주기 때문에 굳이 Python와 BeautifulSoup을 사용하지 않아도 된다.</p>
+<p>하지만 Selenium에 내장된 함수만 사용가능하기 때문에 좀더 사용이 편리한 soup객체를 이용하려면 <code>driver.page_source</code> API를 이용해 현재 렌더링 된 페이지의 Elements를 모두 가져올 수 있다.</p>
+<blockquote>
+<p><code>driver.page_source</code>: 브라우저에 보이는 그대로의 HTML, 크롬 개발자 도구의 <code>Element</code> 탭 내용과 동일.</p>
+<p><code>requests</code> 통해 가져온 <code>req.text</code>: HTTP요청 결과로 받아온 HTML, 크롬 개발자 도구의 <code>페이지 소스</code> 내용과 동일.</p>
+<p>위 2개는 사이트에 따라 같을수도 다를수도 있습니다.</p>
+</blockquote>
+<h2 id="네이버-로그인-하기"><a href="#네이버-로그인-하기" class="headerlink" title="네이버 로그인 하기"></a>네이버 로그인 하기</h2><p>네이버는 requests를 이용해 로그인하는 것이 어렵다. 프론트 단에서 JS처리를 통해 로그인 처리를 하기 때문인데, Selenium을 이용하면 보다 쉽게 로그인을 할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line"><span class="comment"># url에 접근한다.</span></span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>네이버 로그인 화면을 확인 해 보면 아이디를 입력받는 부분의 name이 <code>id</code>, ​비밀번호를 입력받는 부분의 name이 <code>pw</code>인 것을 알 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.19.18.png" alt="Naver Login Page"></p>
+<p><code>find_element_by_name</code>을 통해 아이디/비밀번호 input 태그를 잡아주고, 값을 입력해 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br><span class="line"><span class="comment"># 아이디/비밀번호를 입력해준다.</span></span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.23.11.png" alt="Naver Login Input"></p>
+<p>성공적으로 값이 입력된 것을 확인할 수 있다.</p>
+<p>이제 Login버튼을 눌러 실제로 로그인이 되는지 확인해 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br><span class="line"><span class="comment"># 로그인 버튼을 눌러주자.</span></span><br><span class="line">driver.find_element_by_xpath(<span class="string">'//*[@id="frmNIDLogin"]/fieldset/input'</span>).click()</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Update @ 2019.10.10.</p>
+</blockquote>
+<p>하지만 로그인이 이전처럼 잘 되지 않고 Captcha를 요구하는 창이 뜰 수 있다.</p>
+<p>네이버에서 </p>
+<p>성공적으로 로그인이 되는 것을 확인할 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.28.00.png" alt="Naver Login Success"></p>
+<p>로그인이 필요한 페이지인 네이버 페이의 주문내역 페이지를 가져와보자.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.38.43.png" alt="Naver Pay Order"></p>
+<p>네이버 페이의 Url은 <code>https://order.pay.naver.com/home</code> 이다. 위 페이지의 알림 텍스트를 가져와 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>)</span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br><span class="line">driver.find_element_by_xpath(<span class="string">'//*[@id="frmNIDLogin"]/fieldset/input'</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Naver 페이 들어가기</span></span><br><span class="line">driver.get(<span class="string">'https://order.pay.naver.com/home'</span>)</span><br><span class="line">html = driver.page_source</span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)</span><br><span class="line">notices = soup.select(<span class="string">'div.p_inr &gt; div.p_info &gt; a &gt; span'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> notices:</span><br><span class="line">    print(n.text.strip())</span><br></pre></td></tr></table></figure>
+
+<p>로그인이 잘 되고, 성공적으로 리스트를 받아오는 것을 확인해 볼 수 있다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-02-27%2022.41.46.png" alt="Result"></p>
+<h2 id="정리하기"><a href="#정리하기" class="headerlink" title="정리하기"></a>정리하기</h2><p>Selenium은 웹 테스트 자동화 도구이지만, 멋진 크롤링 도구로 사용할 수 있다.</p>
+<p>또한, BeautifulSoup와 함께 사용도 가능하기 때문에 크롤링을 하는데 제약도 줄어 훨씬 쉽게 크롤링을 할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"><span class="comment"># setup Driver|Chrome : 크롬드라이버를 사용하는 driver 생성</span></span><br><span class="line">driver = webdriver.Chrome(<span class="string">'/Users/beomi/Downloads/chromedriver'</span>)</span><br><span class="line">driver.implicitly_wait(<span class="number">3</span>) <span class="comment"># 암묵적으로 웹 자원을 (최대) 3초 기다리기</span></span><br><span class="line"><span class="comment"># Login</span></span><br><span class="line">driver.get(<span class="string">'https://nid.naver.com/nidlogin.login'</span>) <span class="comment"># 네이버 로그인 URL로 이동하기</span></span><br><span class="line">driver.find_element_by_name(<span class="string">'id'</span>).send_keys(<span class="string">'naver_id'</span>) <span class="comment"># 값 입력</span></span><br><span class="line">driver.find_element_by_name(<span class="string">'pw'</span>).send_keys(<span class="string">'mypassword1234'</span>)</span><br><span class="line">driver.find_element_by_xpath(</span><br><span class="line">    <span class="string">'//*[@id="frmNIDLogin"]/fieldset/input'</span></span><br><span class="line">).click() <span class="comment"># 버튼클릭하기</span></span><br><span class="line">driver.get(<span class="string">'https://order.pay.naver.com/home'</span>) <span class="comment"># Naver 페이 들어가기</span></span><br><span class="line">html = driver.page_source <span class="comment"># 페이지의 elements모두 가져오기</span></span><br><span class="line">soup = BeautifulSoup(html, <span class="string">'html.parser'</span>) <span class="comment"># BeautifulSoup사용하기</span></span><br><span class="line">notices = soup.select(<span class="string">'div.p_inr &gt; div.p_info &gt; a &gt; span'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> notices:</span><br><span class="line">    print(n.text.strip())</span><br></pre></td></tr></table></figure>
+
+<h2 id="다음-가이드"><a href="#다음-가이드" class="headerlink" title="다음 가이드"></a>다음 가이드</h2><p>Selenium으로 많은 사이트에서 여러 정보를 가져와 볼 수 있게 되었습니다. </p>
+<p>하지만 가져온 데이터를 DB에 저장하려면 약간의 어려움이 따르게 됩니다.</p>
+<p>다음 시간에는 Django의 ORM을 이용해 sqlite3 DB에 데이터를 저장해보는 방법에 대해 알아보겠습니다.</p>
+<p>다음 가이드: <a href="/2017/03/01/HowToMakeWebCrawler-Save-with-Django/">나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/03/01/HowToMakeWebCrawler-Save-with-Django/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">나만의 웹 크롤러 만들기(4): Django로 크롤링한 데이터 저장하기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/02/08/Setup-SocialAuth-for-Django/">
+                <span class="level-item">Django에 Social Login 붙이기: Django세팅부터 Facebook/Google 개발 설정까지</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

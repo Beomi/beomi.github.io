@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>KcBERT Finetune with PyTorch-Lightning v1.3.0 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-2-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://cdn.jsdelivr.net/gh/beomi/blog-img@master/2021/03/16/1*VZpuai6qP4iNLc7opAkQxA.jpeg" alt="KcBERT Finetune with PyTorch-Lightning v1.3.0">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-03-15T15:00:00.000Z">2021-03-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/nlp/">nlp</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/nlp/languagemodel/">languagemodel</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                KcBERT Finetune with PyTorch-Lightning v1.3.0
+            
+        </h1>
+        <div class="content">
+            <h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>KcBERT를 공개하며 NSMC를 예제로 PyTorch-Lightning을 이용한 Downstream task Fine-tune을 진행하는 Colab 예제(<a href="https://colab.research.google.com/drive/1dFC0FL-521m7CL_PSd8RLKq67jgTJVhL?usp=sharing">링크</a>)를 만들어 배포해보았다.</p>
+<p>한편, Transformers의 버전과 PyTorch-Lightning, 그리고 PyTorch의 버전 자체가 올라가면서 여러가지의 기능이 추가되고, 여러 함수나 내장 세팅 등이 꽤나 많이 Deprecated되었다.</p>
+<p>사람은 언제나 귀찮음에 지배되기 때문에 코드를 한번 만들고 최소한의 수정만을 하면서 ‘돌아가기는 하는’ 수준으로 코드를 유지했다.</p>
+<p>하지만 실행시마다 뜨는 ‘Deprecate warnings’에 질리는 순간이 오고, 지금이 바로 그 순간이라 기존 코드를 “보다 좋게”, 그리고 기왕 수정하는 김에 <strong>모델 체크포인트 저장(성능에 따른) / Logging 서비스 연동 / Inference 코드 추가</strong>를 진행해보면 어떨까 싶다.</p>
+<blockquote>
+<p>이 글은 <a href="https://colab.research.google.com/drive/1IPkZo1Wd-DghIOK6gJpcb0Dv4_Gv2kXB?usp=sharing">이 Colab 노트북(링크)</a> 에서 직접 실행해 보실 수 있습니다.</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="Args-Hparams"><a href="#Args-Hparams" class="headerlink" title="Args? Hparams?"></a>Args? Hparams?</h2><h3 id="AS-IS"><a href="#AS-IS" class="headerlink" title="AS-IS"></a>AS-IS</h3><p>우선 가장 이슈였던 부분이자 모델 저장이 되지 않는 만악의 근원은 바로 <code>class Args</code> 였다.</p>
+<p>원래는 <code>Tap</code> 이라는 라이브러리를 이용해 CLI에서 args를 쉽게 오버라이딩 할 수 있도록 만드는 것이 목적이었지만… 예제 코드를 Google Colab에서 실행할 수 있도록 제작을 변경하다보니, 단순한 dataset class로 대체해 설정을 단순화하는 방향으로 진행했다.</p>
+<p>아래와 같이 값을 넣을 수 있도록 되어있고, 각 값은 <code>args.random_seed</code> 와 같이 액세스 하거나 오버라이딩 할 수 있도록 세팅을 해 두었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Arg</span>:</span></span><br><span class="line">    random_seed: int = <span class="number">42</span>  <span class="comment"># Random Seed</span></span><br><span class="line">    pretrained_model: str = <span class="string">'beomi/kcbert-large'</span>  <span class="comment"># Transformers PLM name</span></span><br><span class="line">    pretrained_tokenizer: str = <span class="string">''</span>  <span class="comment"># Optional, Transformers Tokenizer Name. Overrides `pretrained_model`</span></span><br><span class="line">    auto_batch_size: str = <span class="string">'power'</span>  <span class="comment"># Let PyTorch Lightening find the best batch size </span></span><br><span class="line">    batch_size: int = <span class="number">0</span>  <span class="comment"># Optional, Train/Eval Batch Size. Overrides `auto_batch_size` </span></span><br><span class="line">    lr: float = <span class="number">5e-6</span>  <span class="comment"># Starting Learning Rate</span></span><br><span class="line">    epochs: int = <span class="number">20</span>  <span class="comment"># Max Epochs</span></span><br><span class="line">    max_length: int = <span class="number">150</span>  <span class="comment"># Max Length input size</span></span><br><span class="line">    report_cycle: int = <span class="number">100</span>  <span class="comment"># Report (Train Metrics) Cycle</span></span><br><span class="line">    train_data_path: str = <span class="string">"nsmc/ratings_train.txt"</span>  <span class="comment"># Train Dataset file </span></span><br><span class="line">    val_data_path: str = <span class="string">"nsmc/ratings_test.txt"</span>  <span class="comment"># Validation Dataset file </span></span><br><span class="line">    cpu_workers: int = os.cpu_count()  <span class="comment"># Multi cpu workers</span></span><br><span class="line">    test_mode: bool = <span class="literal">False</span>  <span class="comment"># Test Mode enables `fast_dev_run`</span></span><br><span class="line">    optimizer: str = <span class="string">'AdamW'</span>  <span class="comment"># AdamW vs AdamP</span></span><br><span class="line">    lr_scheduler: str = <span class="string">'exp'</span>  <span class="comment"># ExponentialLR vs CosineAnnealingWarmRestarts</span></span><br><span class="line">    fp16: bool = <span class="literal">False</span>  <span class="comment"># Enable train on FP16</span></span><br><span class="line">    tpu_cores: int = <span class="number">0</span>  <span class="comment"># Enable TPU with 1 core or 8 cores</span></span><br><span class="line"></span><br><span class="line">args = Arg()</span><br></pre></td></tr></table></figure>
+
+<p>이 부분까지는 크게 문제가 없어보인다. 나름 주석도 괜찮게 되었지 않나? 🤣</p>
+<p>하지만 이 <code>args</code> 는 아주 심각한 문제가 있다. 바로 PyTorch Lightning에서 지원하는 hparams 속성에서 json으로 serializable하지 않다는 것. 이 점이 save된 ckpt에 hparams가 <code>{}</code> 으로 공백으로 비어있는 상황이 발생한다.</p>
+<h3 id="TO-BE"><a href="#TO-BE" class="headerlink" title="TO-BE"></a>TO-BE</h3><p>JSON Serializable하게 바꾸면 된다. 즉, Python dict로 바꿔주자.</p>
+<p>(그리고 쓸모없는 인자들도 좀 지워주자…)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">args = &#123;</span><br><span class="line">    <span class="string">'random_seed'</span>: <span class="number">42</span>, <span class="comment"># Random Seed</span></span><br><span class="line">    <span class="string">'pretrained_model'</span>: <span class="string">'beomi/kcbert-base'</span>,  <span class="comment"># Transformers PLM name</span></span><br><span class="line">    <span class="string">'pretrained_tokenizer'</span>: <span class="string">''</span>,  <span class="comment"># Optional, Transformers Tokenizer Name. Overrides `pretrained_model`</span></span><br><span class="line">    <span class="string">'batch_size'</span>: <span class="number">32</span>,</span><br><span class="line">    <span class="string">'lr'</span>: <span class="number">5e-6</span>,  <span class="comment"># Starting Learning Rate</span></span><br><span class="line">    <span class="string">'epochs'</span>: <span class="number">20</span>,  <span class="comment"># Max Epochs</span></span><br><span class="line">    <span class="string">'max_length'</span>: <span class="number">150</span>,  <span class="comment"># Max Length input size</span></span><br><span class="line">    <span class="string">'train_data_path'</span>: <span class="string">"nsmc/ratings_train.txt"</span>,  <span class="comment"># Train Dataset file </span></span><br><span class="line">    <span class="string">'val_data_path'</span>: <span class="string">"nsmc/ratings_test.txt"</span>,  <span class="comment"># Validation Dataset file </span></span><br><span class="line">    <span class="string">'test_mode'</span>: <span class="literal">False</span>,  <span class="comment"># Test Mode enables `fast_dev_run`</span></span><br><span class="line">    <span class="string">'optimizer'</span>: <span class="string">'AdamW'</span>,  <span class="comment"># AdamW vs AdamP</span></span><br><span class="line">    <span class="string">'lr_scheduler'</span>: <span class="string">'exp'</span>,  <span class="comment"># ExponentialLR vs CosineAnnealingWarmRestarts</span></span><br><span class="line">    <span class="string">'fp16'</span>: <span class="literal">True</span>,  <span class="comment"># Enable train on FP16</span></span><br><span class="line">    <span class="string">'tpu_cores'</span>: <span class="number">0</span>,  <span class="comment"># Enable TPU with 1 core or 8 cores</span></span><br><span class="line">    <span class="string">'cpu_workers'</span>: <span class="number">4</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>물론 이제는 <code>args.batch_size</code> 로 액세스하는 것은 불가능하다. 하지만 그 대신 hparams로 바꿀 수 있다. </p>
+<h3 id="PyTorch-Lightning의-hparams"><a href="#PyTorch-Lightning의-hparams" class="headerlink" title="PyTorch-Lightning의 hparams"></a>PyTorch-Lightning의 hparams</h3><p>PyTorch-Lightning에서의 HyperParams는 아래와 같은 형식으로 세팅해 줄 경우, 자동으로 <code>model.harpams</code> 내에 저장된다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">ManuallyArgsModel</span><span class="params">(LightningModule)</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, arg1, arg2, arg3)</span>:</span></span><br><span class="line"><span class="meta">... </span>        super().__init__()</span><br><span class="line"><span class="meta">... </span>        <span class="comment"># manually assign arguments</span></span><br><span class="line"><span class="meta">... </span>        self.save_hyperparameters()</span><br><span class="line"><span class="meta">... </span>    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line"><span class="meta">... </span>        ...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>model = ManuallyArgsModel(<span class="number">1</span>, <span class="string">'abc'</span>, <span class="number">3.14</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>model.hparams</span><br><span class="line"><span class="string">"arg1"</span>: <span class="number">1</span></span><br><span class="line"><span class="string">"arg2"</span>: <span class="string">'abc'</span></span><br><span class="line"><span class="string">"arg3"</span>: <span class="number">3.14</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Reference: <a href="https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html#save-hyperparameters">https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html#save-hyperparameters</a></p>
+</blockquote>
+<p>하지만 모든 값을 모델 입력에 직접 넣어주는 것은 상당히 귀찮다.</p>
+<p>따라서 <code>**kwargs</code> 를 사용해 모델 Initialize에 넣어준 뒤 <code>self.save_hyperparameters()</code> 를 실행해주면, 해당 값들을 모두 <code>self.hparams</code> 에서  액세스 할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(LightningModule)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, **kwargs)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.save_hyperparameters() <span class="comment"># 이 부분에서 self.hparams에 위 kwargs가 저장된다.</span></span><br><span class="line">        </span><br><span class="line">        self.bert = BertForSequenceClassification.from_pretrained(self.hparams.pretrained_model)</span><br><span class="line">        self.tokenizer = BertTokenizer.from_pretrained(</span><br><span class="line">            self.hparams.pretrained_tokenizer</span><br><span class="line">            <span class="keyword">if</span> self.hparams.pretrained_tokenizer</span><br><span class="line">            <span class="keyword">else</span> self.hparams.pretrained_model</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">[... 중략 ...]</span><br><span class="line"></span><br><span class="line">model = Model(**args)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Logging"><a href="#Logging" class="headerlink" title="Logging"></a>Logging</h2><h3 id="AS-IS-1"><a href="#AS-IS-1" class="headerlink" title="AS-IS"></a>AS-IS</h3><p>현재는 <code>validation_epoch_end</code> 부분에서 Tensorboard에 로깅할 값들을 아래와 같이 Dict 중 <code>log</code> 라는 Key의 value로 새로운 dict를 전달해주는 방식으로 로깅이 이루어지고 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validation_epoch_end</span><span class="params">(self, outputs)</span>:</span></span><br><span class="line">    loss = torch.tensor(<span class="number">0</span>, dtype=torch.float)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> outputs:</span><br><span class="line">        loss += i[<span class="string">'loss'</span>].cpu().detach()</span><br><span class="line">    _loss = loss / len(outputs)</span><br><span class="line"></span><br><span class="line">    loss = float(_loss)</span><br><span class="line">    y_true = []</span><br><span class="line">    y_pred = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> outputs:</span><br><span class="line">        y_true += i[<span class="string">'y_true'</span>]</span><br><span class="line">        y_pred += i[<span class="string">'y_pred'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Acc, Precision, Recall, F1</span></span><br><span class="line">    metrics = [</span><br><span class="line">        metric(y_true=y_true, y_pred=y_pred)</span><br><span class="line">        <span class="keyword">for</span> metric <span class="keyword">in</span></span><br><span class="line">        (accuracy_score, precision_score, recall_score, f1_score)</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    tensorboard_logs = &#123;</span><br><span class="line">        <span class="string">'val_loss'</span>: loss,</span><br><span class="line">        <span class="string">'val_acc'</span>: metrics[<span class="number">0</span>],</span><br><span class="line">        <span class="string">'val_precision'</span>: metrics[<span class="number">1</span>],</span><br><span class="line">        <span class="string">'val_recall'</span>: metrics[<span class="number">2</span>],</span><br><span class="line">        <span class="string">'val_f1'</span>: metrics[<span class="number">3</span>],</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    print()</span><br><span class="line">    pprint(tensorboard_logs)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'loss'</span>: _loss, <span class="string">'log'</span>: tensorboard_logs&#125;</span><br></pre></td></tr></table></figure>
+
+<p>하지만 현재의 방식은, 아래와 같이 PyTorch-Lightning  <code>v0.9.1</code> 에서 Deprecated 되었고 <code>v1.0.0</code> 에 Remove 될 것이라고 한다.</p>
+<p>(실제로 <code>1.0.0</code> 버전에서 사라지지는 않았고, 여전히 지원하고 있기는 하다.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="built_in">local</span>/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:50: UserWarning: The &#123;<span class="built_in">log</span>:dict keyword&#125; was deprecated <span class="keyword">in</span> 0.9.1 and will be removed <span class="keyword">in</span> 1.0.0</span><br><span class="line">Please use self.log(...) inside the lightningModule instead.</span><br><span class="line"><span class="comment"># log on a step or aggregate epoch metric to the logger and/or progress bar (inside LightningModule)</span></span><br><span class="line">self.log(<span class="string">'train_loss'</span>, loss, on_step=True, on_epoch=True, prog_bar=True)</span><br><span class="line">  warnings.warn(*args, **kwargs)</span><br></pre></td></tr></table></figure>
+
+<h3 id="TO-BE-1"><a href="#TO-BE-1" class="headerlink" title="TO-BE"></a>TO-BE</h3><p>따라서 위에서 제공하는 것과 같이 <code>self.log()</code> 기능을 이용해야 한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.log(<span class="string">'train_loss'</span>, loss, on_step=<span class="literal">True</span>, on_epoch=<span class="literal">True</span>, prog_bar=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>실제 코드로 변경한 것은 아래 중복코드 제거와 함께 진행해보았다.</p>
+<h2 id="중복되는-코드-제거하기"><a href="#중복되는-코드-제거하기" class="headerlink" title="중복되는 코드 제거하기"></a>중복되는 코드 제거하기</h2><h3 id="AS-IS-2"><a href="#AS-IS-2" class="headerlink" title="AS-IS"></a>AS-IS</h3><p>기존의 코드는 <code>training_step</code>, <code>validation_step</code>, <code>validation_epoch_end</code> 세 가지로 쪼개져있는데, 실제로는 step 부분이 완전히 동일하기 때문에 이렇게 중복으로 작성할 이유가 전혀 없다.</p>
+<p>또한, training step에서 train loss등을 출력하면, Train dataset에 대해 전체적인 metric이 나오는 것이 아니기 때문에 제거하는 것이 나았다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">training_step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    data, labels = batch</span><br><span class="line">    output = self(input_ids=data, labels=labels)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Transformers 4.0.0+</span></span><br><span class="line">    loss = output.loss</span><br><span class="line">    logits = output.logits</span><br><span class="line">    </span><br><span class="line">    preds = logits.argmax(dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    y_true = labels.cpu().numpy()</span><br><span class="line">    y_pred = preds.cpu().numpy()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Acc, Precision, Recall, F1</span></span><br><span class="line">    metrics = [</span><br><span class="line">        metric(y_true=y_true, y_pred=y_pred)</span><br><span class="line">        <span class="keyword">for</span> metric <span class="keyword">in</span></span><br><span class="line">        (accuracy_score, precision_score, recall_score, f1_score)</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    tensorboard_logs = &#123;</span><br><span class="line">        <span class="string">'train_loss'</span>: loss.cpu().detach().numpy().tolist(),</span><br><span class="line">        <span class="string">'train_acc'</span>: metrics[<span class="number">0</span>],</span><br><span class="line">        <span class="string">'train_precision'</span>: metrics[<span class="number">1</span>],</span><br><span class="line">        <span class="string">'train_recall'</span>: metrics[<span class="number">2</span>],</span><br><span class="line">        <span class="string">'train_f1'</span>: metrics[<span class="number">3</span>],</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (batch_idx % self.args.report_cycle) == <span class="number">0</span>:</span><br><span class="line">        print()</span><br><span class="line">        pprint(tensorboard_logs)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'loss'</span>: loss, <span class="string">'log'</span>: tensorboard_logs&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validation_step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    data, labels = batch</span><br><span class="line">    output = self(input_ids=data, labels=labels)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Transformers 4.0.0+</span></span><br><span class="line">    loss = output.loss</span><br><span class="line">    logits = output.logits</span><br><span class="line"></span><br><span class="line">    preds = logits.argmax(dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    y_true = list(labels.cpu().numpy())</span><br><span class="line">    y_pred = list(preds.cpu().numpy())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">'loss'</span>: loss,</span><br><span class="line">        <span class="string">'y_true'</span>: y_true,</span><br><span class="line">        <span class="string">'y_pred'</span>: y_pred,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TO-BE-2"><a href="#TO-BE-2" class="headerlink" title="TO-BE"></a>TO-BE</h3><p>따라서 아래와 같이 공통함수 <code>step</code> 을 만들어서 <code>training_step</code> 과 <code>validation_step</code> 각각에 대해 동일하게 값을 return하도록 만들어주면 된다.</p>
+<p>또한 step 내에서 logging을 하는 것을 제거해준다.</p>
+<p>그리고 해당 Logging을 각 epoch end에서 처리해주기 위해 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    data, labels = batch</span><br><span class="line">    output = self(input_ids=data, labels=labels)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Transformers 4.0.0+</span></span><br><span class="line">    loss = output.loss</span><br><span class="line">    logits = output.logits</span><br><span class="line"></span><br><span class="line">    preds = logits.argmax(dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    y_true = list(labels.cpu().numpy())</span><br><span class="line">    y_pred = list(preds.cpu().numpy())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">'loss'</span>: loss,</span><br><span class="line">        <span class="string">'y_true'</span>: y_true,</span><br><span class="line">        <span class="string">'y_pred'</span>: y_pred,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">training_step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> self.step(batch, batch_idx)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validation_step</span><span class="params">(self, batch, batch_idx)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> self.step(batch, batch_idx)</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">epoch_end</span><span class="params">(self, outputs, state=<span class="string">'train'</span>)</span>:</span></span><br><span class="line">    loss = torch.tensor(<span class="number">0</span>, dtype=torch.float)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> outputs:</span><br><span class="line">        loss += i[<span class="string">'loss'</span>].cpu().detach()</span><br><span class="line">    loss = loss / len(outputs)</span><br><span class="line"></span><br><span class="line">    y_true = []</span><br><span class="line">    y_pred = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> outputs:</span><br><span class="line">        y_true += i[<span class="string">'y_true'</span>]</span><br><span class="line">        y_pred += i[<span class="string">'y_pred'</span>]</span><br><span class="line">        </span><br><span class="line">    self.log(state+<span class="string">'_loss'</span>, float(loss), on_step=<span class="literal">True</span>, on_epoch=<span class="literal">True</span>, prog_bar=<span class="literal">True</span>)</span><br><span class="line">    self.log(state+<span class="string">'_acc'</span>, accuracy_score(y_true, y_pred), on_step=<span class="literal">True</span>, on_epoch=<span class="literal">True</span>, prog_bar=<span class="literal">True</span>)</span><br><span class="line">    self.log(state+<span class="string">'_precision'</span>, precision_score(y_true, y_pred), on_step=<span class="literal">True</span>, on_epoch=<span class="literal">True</span>, prog_bar=<span class="literal">True</span>)</span><br><span class="line">    self.log(state+<span class="string">'_recall'</span>, recall_score(y_true, y_pred), on_step=<span class="literal">True</span>, on_epoch=<span class="literal">True</span>, prog_bar=<span class="literal">True</span>)</span><br><span class="line">    self.log(state+<span class="string">'_f1'</span>, f1_score(y_true, y_pred), on_step=<span class="literal">True</span>, on_epoch=<span class="literal">True</span>, prog_bar=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'loss'</span>: loss&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_epoch_end</span><span class="params">(self, outputs)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> epoch_end(outputs, state=<span class="string">'train'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validation_epoch_end</span><span class="params">(self, outputs)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> epoch_end(outputs, state=<span class="string">'val'</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="DataLoader-코드-중복-제거"><a href="#DataLoader-코드-중복-제거" class="headerlink" title="DataLoader 코드 중복 제거"></a>DataLoader 코드 중복 제거</h2><h3 id="AS-IS-3"><a href="#AS-IS-3" class="headerlink" title="AS-IS"></a>AS-IS</h3><p>DataLoader를 커스텀으로 정의할 때 <code>path</code>, <code>shuffle</code> 설정을 제외하고서는 모두 동일한 코드다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_dataloader</span><span class="params">(self)</span>:</span></span><br><span class="line">    df = self.read_data(self.args.train_data_path)</span><br><span class="line">    df = self.preprocess_dataframe(df)</span><br><span class="line"></span><br><span class="line">    dataset = TensorDataset(</span><br><span class="line">        torch.tensor(df[<span class="string">'document'</span>].to_list(), dtype=torch.long),</span><br><span class="line">        torch.tensor(df[<span class="string">'label'</span>].to_list(), dtype=torch.long),</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> DataLoader(</span><br><span class="line">        dataset,</span><br><span class="line">        batch_size=self.args.batch_size <span class="keyword">or</span> self.batch_size,</span><br><span class="line">        shuffle=<span class="literal">True</span>,</span><br><span class="line">        num_workers=self.args.cpu_workers,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">val_dataloader</span><span class="params">(self)</span>:</span></span><br><span class="line">    df = self.read_data(self.args.val_data_path)</span><br><span class="line">    df = self.preprocess_dataframe(df)</span><br><span class="line"></span><br><span class="line">    dataset = TensorDataset(</span><br><span class="line">        torch.tensor(df[<span class="string">'document'</span>].to_list(), dtype=torch.long),</span><br><span class="line">        torch.tensor(df[<span class="string">'label'</span>].to_list(), dtype=torch.long),</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> DataLoader(</span><br><span class="line">        dataset,</span><br><span class="line">        batch_size=self.args.batch_size <span class="keyword">or</span> self.batch_size,</span><br><span class="line">        shuffle=<span class="literal">False</span>,</span><br><span class="line">        num_workers=self.args.cpu_workers,</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<h3 id="TO-BE-3"><a href="#TO-BE-3" class="headerlink" title="TO-BE"></a>TO-BE</h3><p>따라서 아래와 같이 <code>dataloader</code> 공용 함수를 만들어 정리를 해주었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dataloader</span><span class="params">(self, path, shuffle=False)</span>:</span></span><br><span class="line">    df = self.read_data(path)</span><br><span class="line">    df = self.preprocess_dataframe(df)</span><br><span class="line"></span><br><span class="line">    dataset = TensorDataset(</span><br><span class="line">        torch.tensor(df[<span class="string">'document'</span>].to_list(), dtype=torch.long),</span><br><span class="line">        torch.tensor(df[<span class="string">'label'</span>].to_list(), dtype=torch.long),</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> DataLoader(</span><br><span class="line">        dataset,</span><br><span class="line">        batch_size=self.hparams.batch_size <span class="keyword">or</span> self.batch_size,</span><br><span class="line">        shuffle=shuffle,</span><br><span class="line">        num_workers=self.hparams.cpu_workers,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_dataloader</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> self.dataloader(self.hparams.train_data_path, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">val_dataloader</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> self.dataloader(self.hparams.val_data_path, shuffle=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Model-CKPT-Callback"><a href="#Model-CKPT-Callback" class="headerlink" title="Model CKPT Callback"></a>Model CKPT Callback</h2><h3 id="AS-IS-4"><a href="#AS-IS-4" class="headerlink" title="AS-IS"></a>AS-IS</h3><p>현재는 작업폴더(ipynb 있는 곳) 내의 <code>./lightning_logs/version_5</code> 형식과 같은 폴더에 Tensorboard형식의 로그, 그리고 마지막 step의 체크포인트가 저장된다.</p>
+<p>하지만 마지막 step이 아닌, logging에서 나타나는 여러 값(<code>val_acc</code> 등)을 모니터링하며 <strong>가장 성능이 좋은 모델</strong>을 찾기 위해서는 추가적인 작업이 필요하다.</p>
+<h3 id="TO-BE-4"><a href="#TO-BE-4" class="headerlink" title="TO-BE"></a>TO-BE</h3><p>아래와 같이 <code>ModelCheckpoint</code> 콜백을 사용해 아래와 같이 어떤 파일 이름으로, 어떤 Metric을 모니터링할지, 몇 개의 파일을 저장할지 지정해주면 결과값과 함께 데이터를 저장할 수 있다.</p>
+<p>아래 코드에서는 epoch, val_acc 기준 소수점 아래 4자리까지 기록해 저장한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pytorch_lightning.callbacks <span class="keyword">import</span> ModelCheckpoint</span><br><span class="line"></span><br><span class="line">checkpoint_callback = ModelCheckpoint(</span><br><span class="line">    filename=<span class="string">'epoch&#123;epoch&#125;-val_acc&#123;val_acc:.4f&#125;'</span>,</span><br><span class="line">    monitor=<span class="string">'val_acc'</span>,</span><br><span class="line">    save_top_k=<span class="number">3</span>,</span><br><span class="line">    mode=<span class="string">'max'</span>,</span><br><span class="line">    auto_insert_metric_name=<span class="literal">False</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = Trainer(</span><br><span class="line">    callbacks=[checkpoint_callback],</span><br><span class="line">    ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>NOTE</strong>: 글 작성 시기인 2021.03.16 기준 <code>pytorch-lightning</code>의 Stable버전이 <code>v1.2.3</code>으로, <code>auto_insert_metric_name</code> 옵션을 지원하지 않습니다. 따라서 Colab code에서는 master branch를 받아 설치합니다.</p>
+</blockquote>
+<h2 id="Main-Function-for-DDP-수정"><a href="#Main-Function-for-DDP-수정" class="headerlink" title="Main Function (for DDP) 수정"></a>Main Function (for DDP) 수정</h2><h3 id="AS-IS-5"><a href="#AS-IS-5" class="headerlink" title="AS-IS"></a>AS-IS</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"Using PyTorch Ver"</span>, torch.__version__)</span><br><span class="line">    print(<span class="string">"Fix Seed:"</span>, args.random_seed)</span><br><span class="line">    seed_everything(args.random_seed)</span><br><span class="line">    model = Model(args)</span><br></pre></td></tr></table></figure>
+
+<h3 id="TO-BE-5"><a href="#TO-BE-5" class="headerlink" title="TO-BE"></a>TO-BE</h3><p>위에서 사용한 <code>args</code> 인자에 attribute로 액세스 하지 못하기 때문에 아래처럼 전달해줘야 한다.</p>
+<p>또한, Model Init 인자에 Dict를 <code>kwargs</code> 형식으로 전달해주기 위해 아래와 같이 dic을 unpacking해서 전달해준다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"Using PyTorch Ver"</span>, torch.__version__)</span><br><span class="line">    print(<span class="string">"Fix Seed:"</span>, args[<span class="string">'random_seed'</span>])</span><br><span class="line">    seed_everything(args[<span class="string">'random_seed'</span>])</span><br><span class="line">    model = Model(**args)</span><br></pre></td></tr></table></figure>
+
+<h2 id="맺으며"><a href="#맺으며" class="headerlink" title="맺으며"></a>맺으며</h2><p>이전 게시글, <a href="/2020/12/04/Transformers4/">BertForSequenceClassification on Transformers v4.0.0</a>을 맺으며 말한 것과 동일하게 마무리한다.</p>
+<blockquote>
+<blockquote>
+<p>“잘 돌아가는 코드는 건드리는게 아니지만, 코드는 가만 내비두면 썩는다.”</p>
+</blockquote>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/bert/" rel="tag">bert</a>, <a class="has-link-grey -link" href="/tags/finetune/" rel="tag">finetune</a>, <a class="has-link-grey -link" href="/tags/huggingface/" rel="tag">huggingface</a>, <a class="has-link-grey -link" href="/tags/kcbert/" rel="tag">kcbert</a>, <a class="has-link-grey -link" href="/tags/transformers/" rel="tag">transformers</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/03/15/KcBERT-MLM-Finetune/">
+                <span class="level-item">KcBERT MLM Finetune으로 Domain adaptation하기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right ">
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    카탈로그
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#들어가며">
+        <span class="has-mr-6">1</span>
+        <span>들어가며</span>
+        </a></li><li>
+        <a class="is-flex" href="#Args-Hparams">
+        <span class="has-mr-6">2</span>
+        <span>Args? Hparams?</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AS-IS">
+        <span class="has-mr-6">2.1</span>
+        <span>AS-IS</span>
+        </a></li><li>
+        <a class="is-flex" href="#TO-BE">
+        <span class="has-mr-6">2.2</span>
+        <span>TO-BE</span>
+        </a></li><li>
+        <a class="is-flex" href="#PyTorch-Lightning의-hparams">
+        <span class="has-mr-6">2.3</span>
+        <span>PyTorch-Lightning의 hparams</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Logging">
+        <span class="has-mr-6">3</span>
+        <span>Logging</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AS-IS-1">
+        <span class="has-mr-6">3.1</span>
+        <span>AS-IS</span>
+        </a></li><li>
+        <a class="is-flex" href="#TO-BE-1">
+        <span class="has-mr-6">3.2</span>
+        <span>TO-BE</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#중복되는-코드-제거하기">
+        <span class="has-mr-6">4</span>
+        <span>중복되는 코드 제거하기</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AS-IS-2">
+        <span class="has-mr-6">4.1</span>
+        <span>AS-IS</span>
+        </a></li><li>
+        <a class="is-flex" href="#TO-BE-2">
+        <span class="has-mr-6">4.2</span>
+        <span>TO-BE</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#DataLoader-코드-중복-제거">
+        <span class="has-mr-6">5</span>
+        <span>DataLoader 코드 중복 제거</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AS-IS-3">
+        <span class="has-mr-6">5.1</span>
+        <span>AS-IS</span>
+        </a></li><li>
+        <a class="is-flex" href="#TO-BE-3">
+        <span class="has-mr-6">5.2</span>
+        <span>TO-BE</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Model-CKPT-Callback">
+        <span class="has-mr-6">6</span>
+        <span>Model CKPT Callback</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AS-IS-4">
+        <span class="has-mr-6">6.1</span>
+        <span>AS-IS</span>
+        </a></li><li>
+        <a class="is-flex" href="#TO-BE-4">
+        <span class="has-mr-6">6.2</span>
+        <span>TO-BE</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Main-Function-for-DDP-수정">
+        <span class="has-mr-6">7</span>
+        <span>Main Function (for DDP) 수정</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AS-IS-5">
+        <span class="has-mr-6">7.1</span>
+        <span>AS-IS</span>
+        </a></li><li>
+        <a class="is-flex" href="#TO-BE-5">
+        <span class="has-mr-6">7.2</span>
+        <span>TO-BE</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#맺으며">
+        <span class="has-mr-6">8</span>
+        <span>맺으며</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>

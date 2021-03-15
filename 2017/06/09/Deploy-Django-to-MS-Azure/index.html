@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Django MS Azure에 Fabric으로 배포하기 - Beomi&#39;s Tech blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89162642-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-89162642-1');
+</script>
+
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body class="is-1-column">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                Beomi&#39;s Tech Blog
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="https://junbuml.ee">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure.jpg" alt="Django MS Azure에 Fabric으로 배포하기">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-06-08T15:00:00.000Z">2017-06-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/django/">django</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/django/fabric/">fabric</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Django MS Azure에 Fabric으로 배포하기
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>If you looking for English version, goto <a href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/">Deploy Django to MS Azure with Fabric3</a>.</p>
+</blockquote>
+<blockquote>
+<p>이번 가이드에서는 <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial</a>를 Fabric으로 Azure 가상 컴퓨터(Ubuntu16.04LTS)에 올리는 과정을 다룹니다.</p>
+</blockquote>
+<p>지금 이 글을 읽고 있는 분들은 아마 장고걸즈 워크숍에 참가해 <a href="https://tutorial.djangogirls.org/ko/">DjangoGirls Tutorial</a>을 따라가다 이제 <code>배포</code>를 해볼 단계에 도착하셨을거에요.</p>
+<p>오늘 우리가 만들어본(만들고 있는) Django 프로젝트를 MS가 서비스하는 <a href="http://azure.com">Azure(애저)</a>에 배포해보는 시간을 가져볼거에요.</p>
+<p>만약 여러분이 <code>AzurePass</code>를 아직 계정에 등록하지 않았다면, <a href="/2017/06/21/Activate-MS-AzurePass/">Azure 가입하고 AzurePass 등록하기</a>를 먼저 진행해 주세요.</p>
+<h2 id="윈도우의-경우-cmder-설치하기"><a href="#윈도우의-경우-cmder-설치하기" class="headerlink" title="(윈도우의 경우) cmder 설치하기"></a>(윈도우의 경우) <code>cmder</code> 설치하기</h2><p>윈도우에서는 <code>git</code>와 <code>ssh</code>등의 명령어를 <code>cmd</code>에서 바로 사용할 수 없어요. 그래서 우리는 <code>cmder</code>라는 멋진 프로그램을 사용할 거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-18%2010.30.18.png" alt=""></p>
+<p>우선 <a href="https://github.com/cmderdev/cmder/releases/download/v1.3.2/cmder.zip">cmder.zip</a>을 클릭해 cmder를 받아주세요. (84MB정도라 시간이 조금 걸릴거에요.)</p>
+<p>다운받은 <code>cmder.zip</code> 파일의 압축을 풀어주세요.(이것도 시간이 조금 걸릴거에요.) 그러면 다음과 같은 내용이 보일거에요. </p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/1-folder.PNG" alt=""></p>
+<p>여기 있는 <code>cmder.exe</code> 파일을 실행해주세요. 실행하면 아래와 같은 Security Warning이 뜰 수 있어요. <code>RUN</code>을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/2-securityWarning.PNG" alt=""></p>
+<p>만약 여러분이 cmder를 처음 실행하신다면 아래와 같은 워닝이 뜰거에요. 제일 첫번째 옵션인 “Unblock and continue”를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/3-UnblockBinaries.PNG" alt=""></p>
+<p>첫 실행시 아래 화면에서 약간 시간이 걸릴 수 있어요. 다음번 실행부터는 뜨지 않을테니 잠시만 기다려주세요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/4-firstlook.PNG" alt=""></p>
+<p>아래 화면이 뜨면 여러분이 멋진 cmder를 쓸 준비를 마친거랍니다!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/azure_fabric/5-final.PNG" alt=""></p>
+<p>장고걸즈 튜토리얼을 따라오는 중이시라면 <code>djangogirls</code>라는 폴더를 만드셨을거에요.</p>
+<blockquote>
+<p>폴더로 이동하는 명령어가 <code>cd</code>입니다! <code>cd djangogirls</code>라고 입력해주세요.</p>
+</blockquote>
+<p>이제 배포를 진행해볼게요.</p>
+<h2 id="Azure-가상컴퓨터-만들기"><a href="#Azure-가상컴퓨터-만들기" class="headerlink" title="Azure 가상컴퓨터 만들기"></a>Azure 가상컴퓨터 만들기</h2><p><a href="https://portal.azure.com/">Azure Portal</a>에 들어가 로그인 하시면 아래와 같은 화면을 볼 수 있습니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.07.02.png" alt="Azure Portal 초기 대시보드"></p>
+<p>이제 대시보드 왼쪽의 메뉴에서 <code>가상 컴퓨터</code>를 눌러보시면 아래와 같은 화면이 나옵니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.10.34.png" alt=""></p>
+<p>이제 가상 컴퓨터를 추가해봅시다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.11.19.png" alt=""></p>
+<p><code>+ 추가</code> 버튼을 눌러주시면 아래와 같은 수많은 선택지가 나오는데요, 우리는 그 중에서 <code>Ubuntu Server</code>(우분투 서버)를 사용할거랍니다. <code>Ubuntu Server</code>를 클릭해주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.12.02.png" alt=""></p>
+<p>우분투 서버를 클릭하면 아래와 같이 서버 버전들이 나옵니다. 우리는 오늘 <code>Ubuntu Server 16.04 LTS</code>를 사용할거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.13.01.png" alt=""></p>
+<p>우분투 서버 16.04를 선택하고 나면 아래와 같이 <code>만들기</code> 버튼이 나올거에요. 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.14.29.png" alt=""></p>
+<p>만들기 버튼을 누르면 아래 사진처럼 기본 사항을 설정하는 창이 나올거에요. 내용을 화면 사진 그대로 채워주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.16.28.png" alt=""></p>
+<blockquote>
+<p>사용자 이름은 가이드 다음부분에서 이용할 <code>django</code>로 하셔야 합니다.</p>
+</blockquote>
+<blockquote>
+<p>암호는 각자 사용하는 암호를 입력하시면 되는데요, 12자리 이상을 요구하기 때문에 약간 어려우실 수 있어요!</p>
+</blockquote>
+<blockquote>
+<p>위치는 대한민국 중부/남부로 해주세요. (안되는 경우 아시아 남동부로 해주세요!)</p>
+</blockquote>
+<p>이제 서버의 크기를 골라야 하는데요, 오늘 우리는 장고 서버만을 띄울 것이기 때문에 가장 왼쪽에 있는 <code>DS1_V2</code>를 이용할거에요.</p>
+<blockquote>
+<p>AzurePass를 등록하면 돈을 지불하지 않아도 되니 걱정하지 마세요!</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.19.53.png" alt=""></p>
+<p>이제 다음으로 넘어가면 저장소 설정을 해야 해요. 이부분에서는 ‘관리 디스크 사용’을 ‘예’로 클릭해주세요.</p>
+<p>그 다음으로는 아래쪽의 <code>네트워크 보안 그룹(방화벽)</code>을 클릭해 주세요. 클릭하시면 아래와 같이 <code>SSH (TCP/22)</code>만 인바운드 규칙에 들어가 있는 것을 확인할 수 있어요. 우리는 여기서 <code>HTTP (TCP/80)</code>을 추가해 줄 거에요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.22.01.png" alt=""></p>
+<p><code>+ 인바운드 규칙 추가</code> 버튼을 눌러주시고 사진과 같이 칸을 채워주시고 확인 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.24.23.png" alt=""></p>
+<p>이제 설정이 모두 끝났어요! 아래쪽의 <code>확인</code>버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.24.54.png" alt=""></p>
+<p>다시 한번 확인 버튼을 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.18.png" alt=""></p>
+<p>이제 정말로 다음 <code>확인</code>버튼만 누르면 서버 설치가 끝나요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.25.53.png" alt=""></p>
+<p>이제 조금만 기다려주시면 서버 설치가 끝난답니다!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.28.15.png" alt=""></p>
+<blockquote>
+<p>아이콘의 설명이 <code>Creating</code>에서 <code>Running</code>으로 바뀌면 설치가 끝난거에요.</p>
+</blockquote>
+<h2 id="Azure-설정-확인하기"><a href="#Azure-설정-확인하기" class="headerlink" title="Azure 설정 확인하기"></a>Azure 설정 확인하기</h2><p>Running으로 바뀐 아이콘을 클릭해주시면 아래 화면으로 들어올 수 있어요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.30.25.png" alt=""></p>
+<p>애저에서 가상컴퓨터가 생기면 <code>공용 IP 주소</code>라는걸 하나 갖게 된답니다. <code>ip</code>라는 것은 서버나 컴퓨터가 인터넷에 접속할 수 있게 해주는 일련의 번호인데요, 우리는 이 <code>ip</code>를 통해 우리 장고 프로젝트를 서버에 올리는 작업을 진행할 수 있어요.</p>
+<p>지금 화면에 보이는 가상컴퓨터의 ip는 <code>52.231.30.148</code>인데요, 이렇게 숫자로만 되어있으면 우리는 기억하기가 어려워요.</p>
+<p>그래서 <code>djangogirls.com</code>와 같이 사람이 이해하고 외우기도 쉬운 <code>도메인</code>을 저 <code>ip</code>주소에 붙여줄거에요.</p>
+<p>자, 우선 여러분의 가상 컴퓨터의 ip를 복사(Ctrl+C / CMD+C)해두세요!</p>
+<h2 id="무료-도메인-얻어-가상컴퓨터에-연결하기"><a href="#무료-도메인-얻어-가상컴퓨터에-연결하기" class="headerlink" title="무료 도메인 얻어 가상컴퓨터에 연결하기"></a>무료 도메인 얻어 가상컴퓨터에 연결하기</h2><p><code>.com</code>, <code>.net</code>와 같이 유명한 도메인은 돈을 주고 사야한답니다.(1년에 만원정도 나가요) 하지만 우리는 오늘 무료 도메인을 연결해 볼 거에요.</p>
+<p>우선 <a href="http://dot.tk/">Dot.tk</a>로 들어오세요.</p>
+<p>이 Dot.tk에서는 <code>.tk</code> 도메인을 무료로 제공하고 있어요. 우선 <code>djangogirls-seoul-tutorial</code>이라는 이름으로 찾아볼게요. 값을 입력하고 <code>Check Availability</code>를 눌러주세요!</p>
+<blockquote>
+<p>여러분은 여러분이 원하는 주소를 검색해보세요! (ex: myfirstdjango 등등)</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.36.35.png" alt=""></p>
+<p>오, 다행히 주소가 남아있어요. 이제 <code>Get it now!</code>버튼을 눌러 장바구니에 담아볼게요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.38.28.png" alt=""></p>
+<p>장바구니에 담은 도메인을 <code>Checkout</code>버튼을 눌러주면 아래 화면으로 넘어올거에요. <code>Use DNS</code>버튼을 눌러주신 후에 IP address 칸에 아까 애저 가상컴퓨터의 ip를 입력해주신 후 <code>Continue</code>를 눌러주세요.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.39.27.png" alt=""></p>
+<p><code>Continue</code>를 누르면 로그인 화면이 나와요. 구글이나 페이스북의 소셜 로그인을 이용할 수 있어요!</p>
+<blockquote>
+<p>페이스북은 가끔 오류가 나기도 해요. 그럴때는 구글이나 MS Live계정으로 다시한번 시도해주세요.</p>
+</blockquote>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.40.52.png" alt=""></p>
+<p>로그인이 완료되면 아래와 같이 자신의 정보를 입력하는 부분이 나와요. 꼭 다 채울필요는 없어요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.42.39.png" alt=""></p>
+<p>주문 거래 동의 체크상자를 클릭한 후 계속 버튼을 누르면 주문이 완료된답니다! 좋아요!</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-06-10%2000.45.21.png" alt=""></p>
+<h2 id="Fabric3-설치하기"><a href="#Fabric3-설치하기" class="headerlink" title="Fabric3 설치하기"></a>Fabric3 설치하기</h2><p>이제 여러분의 서버는 <code>여러분이입력한이름.tk</code>라는 인터넷 주소로 연결되었어요.</p>
+<p>하지만 아직 여러분의 서버에는 아무것도 설치되어있지 않아요. 물론 장고도 설치되어있지 않아요.</p>
+<p>이제 <code>Fabric3</code>이라는 멋진 자동화 도구를 통해 명령어 한 줄로(마치 startapp처럼) 진짜 서버에 배포하는 멋진 작업을 해볼거에요!</p>
+<p>우선 여러분의 가상환경에 <code>fabric3</code>을 설치해줘야 해요. <code>fabric3</code>은 아래 명령어를 통해 설치할 수 있어요.</p>
+<blockquote>
+<p><code>fabric</code>이 아니라 <code>fabric3</code>입니다! 3을 빼먹지 마세요. 그냥 <code>fabric</code>은 파이썬2용이랍니다.</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install fabric3</span><br></pre></td></tr></table></figure>
+
+<h2 id="deploy-json-수정하기"><a href="#deploy-json-수정하기" class="headerlink" title="deploy.json 수정하기"></a><code>deploy.json</code> 수정하기</h2><p>이제 <a href="https://gist.github.com/Beomi/0cc830bd5cda029c277cba648386b28c/archive/0152df8617a63c6678b7b64c54892dc5b4ce19d8.zip">Fabfile for Django</a>를 클릭해 압축파일을 받아 풀어주세요.</p>
+<p>안에 <code>deploy.json</code>와 <code>fabfile.py</code>가 보일거에요. 이 두 파일을 여러분의 장고 폴더(<code>manage.py</code>파일이 있는 곳)안에 넣어주세요.</p>
+<p><code>deploy.json</code>파일 안에는 우리 서버의 정보를 적어넣을 수 있어요. </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"REPO_URL"</span>:<span class="string">"깃헙Repo주소"</span>,</span><br><span class="line">  <span class="attr">"PROJECT_NAME"</span>:<span class="string">"프로젝트폴더(settings.py가있는 폴더)의 이름(ex: mysite)"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_HOST"</span>:<span class="string">"여러분이 만든 도메인주소(ex: djangogirls-seoul-tutorial.tk )"</span>,</span><br><span class="line">  <span class="attr">"REMOTE_USER"</span>:<span class="string">"django"</span>,</span><br><span class="line">  <span class="attr">"STATIC_ROOT"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"STATIC_URL"</span>:<span class="string">"static"</span>,</span><br><span class="line">  <span class="attr">"MEDIA_ROOT"</span>:<span class="string">"media"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>파일에 있는 <code>REPO_URL</code>, <code>PROJECT_NAME</code>, <code>REMOTE_HOST</code> 부분을 채워주세요. 나머지 값은 우리가 따라한 튜토리얼에서 이미 설정되어있어요.</p>
+<blockquote>
+<p>모든 값은 “큰 따옴표” 안에 들어가야 한다는 것을 주의하세요!</p>
+</blockquote>
+<h2 id="Fabric으로-서버에-올리기"><a href="#Fabric으로-서버에-올리기" class="headerlink" title="Fabric으로 서버에 올리기"></a>Fabric으로 서버에 올리기</h2><p>Fabric을 사용하기 위한 명령어는 <code>fab</code>이라는 명령어입니다. 이 <code>fab</code>뒤에 <code>new_server</code>, <code>deploy</code>, <code>createsuperuser</code>등을 덧붙여 실제로 원격 서버에 명령을 내리는거에요.</p>
+<p>서버에 처음 올릴 때는 <code>fab new_server</code> 명령어를 이용하세요. 파이썬3 설치부터 Apache2설치와 <code>mod_wsgi</code>설치까지 완료해준답니다. </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab new_server</span><br></pre></td></tr></table></figure>
+
+<p>만약 여러분이 장고 소스를 수정(커밋&amp;푸시)후 서버에 올리고 싶으시다면 <code>fab deploy</code> 명령어를 이용하세요. 장고 앱을 새로 실행해주고 <code>manage.py migrate</code>, <code>manage.py collectstaticfiles</code>등의 명령을 서버에 실행해 준답니다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab deploy</span><br></pre></td></tr></table></figure>
+
+<p>우리가 진행하는 튜토리얼에서는 슈퍼유저 만들기 항목이 있어요. 여러분의 컴퓨터에서는 <code>manage.py createsuperuser</code>를 통해 만들었지만 서버에 띄운 장고에 슈퍼유저를 만들어 주려면 <code>fab create_superuser</code>를 이용해주세요.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fab create_superuser</span><br></pre></td></tr></table></figure>
+
+<h2 id="짜잔"><a href="#짜잔" class="headerlink" title="짜잔!"></a>짜잔!</h2><p>여러분은 이제 Azure에 올라간 <strong>진짜</strong> 웹 서비스 하나를 만들었어요! 이제 여러분은 장고로 웹 서비스를 만드는 것의 처음부터 끝까지를 모두 알게되었어요! 축하합니다 :D</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/06/10/Deploy-Django-to-MS-Azure-EN/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Deploy Django to MS Azure with Fabric3</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/06/01/Add-Sentry-to-Django/">
+                <span class="level-item">배포한 Django 서비스 Exception Sentry로 받아보기</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    Beomi&#39;s Tech Blog
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Junbum Lee&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://beomi.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+</body>
+</html>
