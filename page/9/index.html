@@ -705,6 +705,55 @@ VGA: AMD HD7970 3G (HIS 라데온 HD 7970 기가에디션 OC D5 3GB IceQ X² 잘
                 <time class="level-item has-text-grey" datetime="2016-07-21T15:00:00.000Z">2016-07-22</time>
                 
                 <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Python/">Python</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2016/07/22/ubuntu14-04ec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9c/">Ubuntu14.04에서 pip로 mysqlclient 설치 실패시</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="아래-내용은-root-계정-virtualenv환경에서-진행됩니다"><a href="#아래-내용은-root-계정-virtualenv환경에서-진행됩니다" class="headerlink" title="아래 내용은 root 계정 + virtualenv환경에서 진행됩니다."></a>아래 내용은 root 계정 + virtualenv환경에서 진행됩니다.</h1><p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-36-07.png" alt="스크린샷 2016-07-22 16.36.07"></p>
+<p>Ubuntu 14.04 LTS / Python3.4.4 에서 pip로 mysqlclient를 설치하려고 하면 다음과 같은 에러가 발행한다.</p>
+<pre><code>OSError: mysql_config not found</code></pre><p>이 에러는 다음의 apt 패키지 설치로 해결할 수 있다.</p>
+<p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-36-54.png" alt="스크린샷 2016-07-22 16.36.54"></p>
+<pre><code>apt install libmysqlclient-dev</code></pre><p>그러나, 이 모듈을 설치한 이후에도 아래와 같은 에러가 발생 할 수 있다.</p>
+<p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-38-00.png" alt="스크린샷 2016-07-22 16.38.00"></p>
+<pre><code>unable to execute &apos;x86_64-linux-gnu-gcc&apos;: No such file or directory</code></pre><p>즉, GCC가 없어 컴파일을 할 수 없다는 에러이기 때문에 다음과 같이 build-essential을 설치해줘야 한다.</p>
+<p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-38-29.png" alt="스크린샷 2016-07-22 16.38.29"></p>
+<pre><code>apt install build-essential</code></pre><p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-39-02.png" alt="스크린샷 2016-07-22 16.39.02"></p>
+<p>다음을 모두 설치한 후에는 위와 같이 설치가 깔끔하게 된다.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-07-21T15:00:00.000Z">2016-07-22</time>
+                
+                <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/MacOS/">MacOS</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/MacOS/Python/">Python</a>
                 </div>
                 
@@ -749,55 +798,6 @@ source /usr/local/bin/virtualenvwrapper.sh</code></pre><p>위 내용을 붙여�
 <p>가상환경을 빠져나오기 위해서는</p>
 <p>​<br>    deactivate</p>
 <p>를 입력하면 된다.</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-07-21T15:00:00.000Z">2016-07-22</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Python/">Python</a>
-                </div>
-                
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2016/07/22/ubuntu14-04ec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9c/">Ubuntu14.04에서 pip로 mysqlclient 설치 실패시</a>
-            
-        </h1>
-        <div class="content">
-            <h1 id="아래-내용은-root-계정-virtualenv환경에서-진행됩니다"><a href="#아래-내용은-root-계정-virtualenv환경에서-진행됩니다" class="headerlink" title="아래 내용은 root 계정 + virtualenv환경에서 진행됩니다."></a>아래 내용은 root 계정 + virtualenv환경에서 진행됩니다.</h1><p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-36-07.png" alt="스크린샷 2016-07-22 16.36.07"></p>
-<p>Ubuntu 14.04 LTS / Python3.4.4 에서 pip로 mysqlclient를 설치하려고 하면 다음과 같은 에러가 발행한다.</p>
-<pre><code>OSError: mysql_config not found</code></pre><p>이 에러는 다음의 apt 패키지 설치로 해결할 수 있다.</p>
-<p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-36-54.png" alt="스크린샷 2016-07-22 16.36.54"></p>
-<pre><code>apt install libmysqlclient-dev</code></pre><p>그러나, 이 모듈을 설치한 이후에도 아래와 같은 에러가 발생 할 수 있다.</p>
-<p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-38-00.png" alt="스크린샷 2016-07-22 16.38.00"></p>
-<pre><code>unable to execute &apos;x86_64-linux-gnu-gcc&apos;: No such file or directory</code></pre><p>즉, GCC가 없어 컴파일을 할 수 없다는 에러이기 때문에 다음과 같이 build-essential을 설치해줘야 한다.</p>
-<p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-38-29.png" alt="스크린샷 2016-07-22 16.38.29"></p>
-<pre><code>apt install build-essential</code></pre><p><img src="https://livingmethod.files.wordpress.com/2016/07/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-07-22-16-39-02.png" alt="스크린샷 2016-07-22 16.39.02"></p>
-<p>다음을 모두 설치한 후에는 위와 같이 설치가 깔끔하게 된다.</p>
 
         </div>
         
@@ -2510,7 +2510,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Back to Top" href="javascript:;">
+<a id="back-to-top" title="Kembali ke atas" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
