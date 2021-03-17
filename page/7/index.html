@@ -249,6 +249,84 @@
 <div class="card">
     
     <div class="card-image">
+        <a href="/2017/03/28/Make-Capture-to-GDrive-App/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Tips/app_store.jpg" alt="편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 앱으로 만들고 키보드 단축키 연결하기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-03-27T15:00:00.000Z">2017-03-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/tips/">tips</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/tips/githubpages/">githubpages</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/03/28/Make-Capture-to-GDrive-App/">편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 앱으로 만들고 키보드 단축키 연결하기</a>
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>본 가이드는 MacOS에서 이용가능합니다.</p>
+</blockquote>
+<p>이전 가이드: <a href="/2017/03/27/Use-GoogleDrive-as-Image-Server/">편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 업로드 ShellScript편</a></p>
+<blockquote>
+<p>터미널에서 <code>gdrive list</code>라고 했을때 에러가 나지 않는 상태에서 아래 가이드를 진행해주세요.</p>
+</blockquote>
+<h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>이전 가이드에서 스크린샷을 찍고 구글드라이브에 올린 후 이미지의 공유 URL을 가져오는 스크립트를 작성했습니다.</p>
+<p>하지만 키보드 Shortcuts를 이용한 편리성에는 따라가기가 어렵죠. <code>.sh</code>스크립트를 키보드로 연동하는 방법 중 여러가지 방법이 있지만, 이번에는 <code>MacOS App</code>으로 만든 후 앱을 실행하는 것을 <code>서비스</code>에 등록하고 <code>Automator</code>를 통해 키보드와 앱실행 서비스를 연동하는 과정을 다룹니다.</p>
+<blockquote>
+<p>만약 잘 동작하는 맥용 앱을 바로 다운받으시려면 <a href="/others/CaptureToGdrive.zip">CaptureToGdrive.zip</a>을 받아주신 후 압축을 푸신 후 앱을 Application폴더로 옮기신 후 <a href="http://macnews.tistory.com/4277">[백투더맥 Q&amp;A] 키보드 단축키로 응용 프로그램을 실행하는 바로 가기 만들기</a> 과정을 따라가시면 됩니다.</p>
+</blockquote>
+<h2 id="SH파일을-앱으로-만들기"><a href="#SH파일을-앱으로-만들기" class="headerlink" title="SH파일을 앱으로 만들기"></a>SH파일을 앱으로 만들기</h2><p>우선 <code>.sh</code>파일로 된 스크립트를 맥용 앱으로 Wrapping해주는 작업이 필요합니다. 이번 가이드에서는 이 작업을 간소화해주는 <a href="http://sveinbjorn.org/platypus">platypus</a>를 이용합니다.</p>
+<p>platypus는 <a href="http://sveinbjorn.org/files/software/platypus.zip">platypus.zip</a>을 받고 압축을 풀어 사용하시면 됩니다.</p>
+<p>앱을 실행하면 아래와 같은 화면이 뜹니다.</p>
+<p><img src="https://drive.google.com/uc?id=0B91qXw6kE4VfWWV2RWpnX056X2s" alt=""></p>
+<p>App Name을 <code>CaptureToGdrive</code>로, Script Type을 <code>bash</code>로, Script Path는 아래의 <code>+New</code>를 눌러 아래와 같이 코드를 입력해 줍시다.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">screencapture -tpng -i /tmp/temp_shot_gdrive.png</span><br><span class="line">DATEFILENAME=`date +<span class="string">"%Y%m%d%H%M"</span>`</span><br><span class="line">ID=`/usr/<span class="built_in">local</span>/bin/gdrive upload /tmp/temp_shot_gdrive.png --name screenshot<span class="variable">$&#123;DATEFILENAME&#125;</span>.png --share | egrep <span class="string">"^Uploaded"</span> | awk <span class="string">'&#123;print $2&#125;'</span>`</span><br><span class="line">URL=<span class="string">"https://drive.google.com/uc?id=<span class="variable">$&#123;ID&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;URL&#125;</span> | pbcopy</span><br></pre></td></tr></table></figure>
+
+<p>위 코드는 이전 가이드에서 다뤘던 것과 약간 다른데요, <code>gdrive</code>명령어의 위치를 명확히 <code>/usr/local/bin/gdrive</code>로 바꿔준점이 다릅니다. 쉘 스크립트를 사용할 때 명확히 하지 않으면 gdrive의 PATH를 잡지 못해 에러가 나기 때문입니다.</p>
+<blockquote>
+<p>만약 다른 위치에 까셨다면 <code>which gdrive</code>명령을 통해 그 위치로 변경해주시면 됩니다.</p>
+</blockquote>
+<p><img src="https://drive.google.com/uc?id=0B91qXw6kE4VfRElUbERjYjhmSnM" alt=""></p>
+<p>스크립트를 입력하고 나면 AppName이 초기화되는 사소한 문제가 있으니 다시 AppName을 등록해 줍시다.</p>
+<p>스크린샷 촬영은 인터페이스가 필요없기 때문에 <code>Interface</code>는 <code>None</code>으로, root권한이 필요없고 백그라운드일 필요도 없고 프로그램이 굳이 계속 떠 있을 필요가 없기때문에 모든 체크박스는 아래와 같이 체크해제 해두시면 됩니다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-03-28%2015.07.29.png" alt=""></p>
+<p>이제 CreateApp을 클릭하고 아래와 같이 클릭한 후 Create를 누르면 앱이 만들어집니다 :)</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-03-28%2015.15.22.png" alt=""></p>
+<p>만들어진 앱을 실행해 보시고 잘 되시는지 확인해보세요.</p>
+<h2 id="앱을-키보드로-연결하기"><a href="#앱을-키보드로-연결하기" class="headerlink" title="앱을 키보드로 연결하기"></a>앱을 키보드로 연결하기</h2><p>이 부분은 좀 더 잘 정리되어있는 <a href="http://macnews.tistory.com/4277">[백투더맥 Q&amp;A] 키보드 단축키로 응용 프로그램을 실행하는 바로 가기 만들기</a>을 참고하시기 바랍니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>이번 가이드에서는 업로드 되는 폴더를 정확히 명시하지는 않았습니다. <code>gdrive</code>패키지에서 <code>-p</code>를 이용하면 폴더를 지정가능하다고 하지만 테스트 결과 제대로 업로드 되지 않는 것을 확인했기 때문에, 현재 주로 사용하지는 않는 다른 구글 아이디에 gdrive를 연결해 두었습니다.</p>
+<p>Imgur, Dropbox등 여러 이미지 Serving 업체들이 있지만, 구글이 가진 구글 Fiber망과 서비스의 안정성은 여타 서비스들이 따라가기 어려운 점이라고 생각합니다 :)</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
         <a href="/2017/03/28/Use-GoogleDrive-as-Image-Server/" class="image is-7by1">
             <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Tips/google-drive-logo.jpg" alt="편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 업로드 ShellScript편">
         </a>
@@ -341,84 +419,6 @@
 <div class="card">
     
     <div class="card-image">
-        <a href="/2017/03/28/Make-Capture-to-GDrive-App/" class="image is-7by1">
-            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/Tips/app_store.jpg" alt="편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 앱으로 만들고 키보드 단축키 연결하기">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-03-27T15:00:00.000Z">2017-03-28</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/tips/">tips</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/tips/githubpages/">githubpages</a>
-                </div>
-                
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2017/03/28/Make-Capture-to-GDrive-App/">편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 앱으로 만들고 키보드 단축키 연결하기</a>
-            
-        </h1>
-        <div class="content">
-            <blockquote>
-<p>본 가이드는 MacOS에서 이용가능합니다.</p>
-</blockquote>
-<p>이전 가이드: <a href="/2017/03/27/Use-GoogleDrive-as-Image-Server/">편리한 깃헙페이지 블로깅을 위한 이미지서버, 구글드라이브: 업로드 ShellScript편</a></p>
-<blockquote>
-<p>터미널에서 <code>gdrive list</code>라고 했을때 에러가 나지 않는 상태에서 아래 가이드를 진행해주세요.</p>
-</blockquote>
-<h2 id="들어가며"><a href="#들어가며" class="headerlink" title="들어가며"></a>들어가며</h2><p>이전 가이드에서 스크린샷을 찍고 구글드라이브에 올린 후 이미지의 공유 URL을 가져오는 스크립트를 작성했습니다.</p>
-<p>하지만 키보드 Shortcuts를 이용한 편리성에는 따라가기가 어렵죠. <code>.sh</code>스크립트를 키보드로 연동하는 방법 중 여러가지 방법이 있지만, 이번에는 <code>MacOS App</code>으로 만든 후 앱을 실행하는 것을 <code>서비스</code>에 등록하고 <code>Automator</code>를 통해 키보드와 앱실행 서비스를 연동하는 과정을 다룹니다.</p>
-<blockquote>
-<p>만약 잘 동작하는 맥용 앱을 바로 다운받으시려면 <a href="/others/CaptureToGdrive.zip">CaptureToGdrive.zip</a>을 받아주신 후 압축을 푸신 후 앱을 Application폴더로 옮기신 후 <a href="http://macnews.tistory.com/4277">[백투더맥 Q&amp;A] 키보드 단축키로 응용 프로그램을 실행하는 바로 가기 만들기</a> 과정을 따라가시면 됩니다.</p>
-</blockquote>
-<h2 id="SH파일을-앱으로-만들기"><a href="#SH파일을-앱으로-만들기" class="headerlink" title="SH파일을 앱으로 만들기"></a>SH파일을 앱으로 만들기</h2><p>우선 <code>.sh</code>파일로 된 스크립트를 맥용 앱으로 Wrapping해주는 작업이 필요합니다. 이번 가이드에서는 이 작업을 간소화해주는 <a href="http://sveinbjorn.org/platypus">platypus</a>를 이용합니다.</p>
-<p>platypus는 <a href="http://sveinbjorn.org/files/software/platypus.zip">platypus.zip</a>을 받고 압축을 풀어 사용하시면 됩니다.</p>
-<p>앱을 실행하면 아래와 같은 화면이 뜹니다.</p>
-<p><img src="https://drive.google.com/uc?id=0B91qXw6kE4VfWWV2RWpnX056X2s" alt=""></p>
-<p>App Name을 <code>CaptureToGdrive</code>로, Script Type을 <code>bash</code>로, Script Path는 아래의 <code>+New</code>를 눌러 아래와 같이 코드를 입력해 줍시다.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">screencapture -tpng -i /tmp/temp_shot_gdrive.png</span><br><span class="line">DATEFILENAME=`date +<span class="string">"%Y%m%d%H%M"</span>`</span><br><span class="line">ID=`/usr/<span class="built_in">local</span>/bin/gdrive upload /tmp/temp_shot_gdrive.png --name screenshot<span class="variable">$&#123;DATEFILENAME&#125;</span>.png --share | egrep <span class="string">"^Uploaded"</span> | awk <span class="string">'&#123;print $2&#125;'</span>`</span><br><span class="line">URL=<span class="string">"https://drive.google.com/uc?id=<span class="variable">$&#123;ID&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;URL&#125;</span> | pbcopy</span><br></pre></td></tr></table></figure>
-
-<p>위 코드는 이전 가이드에서 다뤘던 것과 약간 다른데요, <code>gdrive</code>명령어의 위치를 명확히 <code>/usr/local/bin/gdrive</code>로 바꿔준점이 다릅니다. 쉘 스크립트를 사용할 때 명확히 하지 않으면 gdrive의 PATH를 잡지 못해 에러가 나기 때문입니다.</p>
-<blockquote>
-<p>만약 다른 위치에 까셨다면 <code>which gdrive</code>명령을 통해 그 위치로 변경해주시면 됩니다.</p>
-</blockquote>
-<p><img src="https://drive.google.com/uc?id=0B91qXw6kE4VfRElUbERjYjhmSnM" alt=""></p>
-<p>스크립트를 입력하고 나면 AppName이 초기화되는 사소한 문제가 있으니 다시 AppName을 등록해 줍시다.</p>
-<p>스크린샷 촬영은 인터페이스가 필요없기 때문에 <code>Interface</code>는 <code>None</code>으로, root권한이 필요없고 백그라운드일 필요도 없고 프로그램이 굳이 계속 떠 있을 필요가 없기때문에 모든 체크박스는 아래와 같이 체크해제 해두시면 됩니다.</p>
-<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-03-28%2015.07.29.png" alt=""></p>
-<p>이제 CreateApp을 클릭하고 아래와 같이 클릭한 후 Create를 누르면 앱이 만들어집니다 :)</p>
-<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-03-28%2015.15.22.png" alt=""></p>
-<p>만들어진 앱을 실행해 보시고 잘 되시는지 확인해보세요.</p>
-<h2 id="앱을-키보드로-연결하기"><a href="#앱을-키보드로-연결하기" class="headerlink" title="앱을 키보드로 연결하기"></a>앱을 키보드로 연결하기</h2><p>이 부분은 좀 더 잘 정리되어있는 <a href="http://macnews.tistory.com/4277">[백투더맥 Q&amp;A] 키보드 단축키로 응용 프로그램을 실행하는 바로 가기 만들기</a>을 참고하시기 바랍니다.</p>
-<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>이번 가이드에서는 업로드 되는 폴더를 정확히 명시하지는 않았습니다. <code>gdrive</code>패키지에서 <code>-p</code>를 이용하면 폴더를 지정가능하다고 하지만 테스트 결과 제대로 업로드 되지 않는 것을 확인했기 때문에, 현재 주로 사용하지는 않는 다른 구글 아이디에 gdrive를 연결해 두었습니다.</p>
-<p>Imgur, Dropbox등 여러 이미지 Serving 업체들이 있지만, 구글이 가진 구글 Fiber망과 서비스의 안정성은 여타 서비스들이 따라가기 어려운 점이라고 생각합니다 :)</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-image">
         <a href="/2017/03/22/Setup-SocialAuth-for-Django-Email-as-User/" class="image is-7by1">
             <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-02-08-Setup-SocialAuth-for-Django/social_login.png" alt="Django에 Social Login와 Email유저 함께 이용하기">
         </a>
@@ -467,6 +467,72 @@
 <blockquote>
 <p>참고: <a href="http://python-social-auth.readthedocs.io/en/latest/use_cases.html#associate-users-by-email">Python Social Auth: Associate users by Email</a></p>
 </blockquote>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2017/03/20/Using-ES6-JSX-on-Client/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/React/react_icon.png" alt="React+JSX(ES6)를 빌드 없이 사용하기: browser.js">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-03-19T15:00:00.000Z">2017-03-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/react/">react</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/react/javascript/">javascript</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/react/javascript/es6/">es6</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/03/20/Using-ES6-JSX-on-Client/">React+JSX(ES6)를 빌드 없이 사용하기: browser.js</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="Babel-ES6를-ES5로"><a href="#Babel-ES6를-ES5로" class="headerlink" title="Babel: ES6를 ES5로"></a>Babel: ES6를 ES5로</h2><p>바벨(Babel)은 ES6(ECMAScript6)을 ES5 문법으로 변환시켜 오래된 브라우저들에서도 ES6의 기능을 이용할 수 있도록 도와주는 자바스크립트 모듈이다. React는 개발시 ES6 문법을 주로 이용하기 때문에 이러한 Babel은 필수적이라고 말할 수 있다.</p>
+<h2 id="그러나…"><a href="#그러나…" class="headerlink" title="그러나…"></a>그러나…</h2><p>React에서 공식적인 이용 방법 중 하나인 CDN을 이용할 경우 (아래 사진처럼) 실제 첫 튜토리얼을 할 경우 JavaScript에서 JSX를 공식적으로 지원하지 않기 때문에 JS문법 에러가 난다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-03-21%2000.17.14.png" alt=""></p>
+<blockquote>
+<p>아래 코드는 작동하지 않는다.</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ReactDOM.render(</span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>,</span><br><span class="line">  document.getElementById('root')</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>물론 실제 배포시에는 빌드 과정을 거쳐 나온 파일을 관리해야 한다. 하지만 React를 처음 배우는 과정에서는 로컬의 한 HTML파일 안에서 모든 과정이 작동하기를 원하게 된다. 따라서 클라이언트 렌더링을 고려할 수 있다.</p>
+<blockquote>
+<p>물론 클라이언트 렌더링은 성능 이슈가 있기 때문에 실 배포시에는 사용하지 않아야 한다.</p>
+</blockquote>
+<h2 id="Browser-js-사용하기"><a href="#Browser-js-사용하기" class="headerlink" title="Browser.js 사용하기"></a>Browser.js 사용하기</h2><p>Babel은 6버전부터 Browser.js를 업데이트 하지 않았다. 하지만 정상적으로 동작하는 파일이 CDN에 존재하기 때문에, HTML문서에 다음 세 줄을 추가해 주면 <code>script</code>태그에 <code>type=&quot;text/babel&quot;</code>이라는 타입을 가진 코드들을 ES6로 간주하고 ES5로 변환해 준다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react@15/dist/react.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react-dom@15/dist/react-dom.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Browser.js파일을 추가해서 우리는 위 코드를 아래와 같이 쓸 수 있게 된다.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react@15/dist/react.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react-dom@15/dist/react-dom.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/babel"</span>&gt;</span></span><br><span class="line">    ReactDOM.render(</span><br><span class="line"><span class="handlebars"><span class="xml">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>,</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</span></span><br><span class="line">    );</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 살펴보면 정상적으로 동작한다는 것을 알 수 있다.</p>
+<h2 id="입문-개발-전용"><a href="#입문-개발-전용" class="headerlink" title="입문/개발 전용!!"></a>입문/개발 전용!!</h2><p>단, 이 방법은 React에 입문하는 사람이 HTML 문서 하나만으로, 그리고 NPM을 사용하지 않고 작업할 경우에 사용할 수 있는 방법이며, 실 프로젝트에서 이와 같이 사용하는 것은 여러 문제를 일으킬 수 있다. </p>
+<p>그러니 입문/개발때에만 사용하자 :) </p>
 
         </div>
         
@@ -686,8 +752,8 @@
 <div class="card">
     
     <div class="card-image">
-        <a href="/2017/03/20/Using-ES6-JSX-on-Client/" class="image is-7by1">
-            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/React/react_icon.png" alt="React+JSX(ES6)를 빌드 없이 사용하기: browser.js">
+        <a href="/2017/03/19/Celery-Getting-Started/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-03-19-Celery-Getting-Started/celery.jpg" alt="[번역]셀러리: 시작하기">
         </a>
     </div>
     
@@ -695,10 +761,10 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-03-19T15:00:00.000Z">2017-03-20</time>
+                <time class="level-item has-text-grey" datetime="2017-03-18T15:00:00.000Z">2017-03-19</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/react/">react</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/react/javascript/">javascript</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/react/javascript/es6/">es6</a>
+                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/celery/">celery</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/celery/celerydocs/">celerydocs</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/celery/celerydocs/translation/">translation</a>
                 </div>
                 
                 
@@ -708,31 +774,84 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/03/20/Using-ES6-JSX-on-Client/">React+JSX(ES6)를 빌드 없이 사용하기: browser.js</a>
+                <a class="has-link-black-ter" href="/2017/03/19/Celery-Getting-Started/">[번역]셀러리: 시작하기</a>
             
         </h1>
         <div class="content">
-            <h2 id="Babel-ES6를-ES5로"><a href="#Babel-ES6를-ES5로" class="headerlink" title="Babel: ES6를 ES5로"></a>Babel: ES6를 ES5로</h2><p>바벨(Babel)은 ES6(ECMAScript6)을 ES5 문법으로 변환시켜 오래된 브라우저들에서도 ES6의 기능을 이용할 수 있도록 도와주는 자바스크립트 모듈이다. React는 개발시 ES6 문법을 주로 이용하기 때문에 이러한 Babel은 필수적이라고 말할 수 있다.</p>
-<h2 id="그러나…"><a href="#그러나…" class="headerlink" title="그러나…"></a>그러나…</h2><p>React에서 공식적인 이용 방법 중 하나인 CDN을 이용할 경우 (아래 사진처럼) 실제 첫 튜토리얼을 할 경우 JavaScript에서 JSX를 공식적으로 지원하지 않기 때문에 JS문법 에러가 난다.</p>
-<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/dropbox/2017-03-21%2000.17.14.png" alt=""></p>
-<blockquote>
-<p>아래 코드는 작동하지 않는다.</p>
+            <blockquote>
+<p>글 작성 시점 최신 버전 <code>v4.0.2</code>의 문서입니다.</p>
 </blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ReactDOM.render(</span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>,</span><br><span class="line">  document.getElementById('root')</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>물론 실제 배포시에는 빌드 과정을 거쳐 나온 파일을 관리해야 한다. 하지만 React를 처음 배우는 과정에서는 로컬의 한 HTML파일 안에서 모든 과정이 작동하기를 원하게 된다. 따라서 클라이언트 렌더링을 고려할 수 있다.</p>
-<blockquote>
-<p>물론 클라이언트 렌더링은 성능 이슈가 있기 때문에 실 배포시에는 사용하지 않아야 한다.</p>
-</blockquote>
-<h2 id="Browser-js-사용하기"><a href="#Browser-js-사용하기" class="headerlink" title="Browser.js 사용하기"></a>Browser.js 사용하기</h2><p>Babel은 6버전부터 Browser.js를 업데이트 하지 않았다. 하지만 정상적으로 동작하는 파일이 CDN에 존재하기 때문에, HTML문서에 다음 세 줄을 추가해 주면 <code>script</code>태그에 <code>type=&quot;text/babel&quot;</code>이라는 타입을 가진 코드들을 ES6로 간주하고 ES5로 변환해 준다.</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react@15/dist/react.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react-dom@15/dist/react-dom.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>Browser.js파일을 추가해서 우리는 위 코드를 아래와 같이 쓸 수 있게 된다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react@15/dist/react.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://unpkg.com/react-dom@15/dist/react-dom.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/babel"</span>&gt;</span></span><br><span class="line">    ReactDOM.render(</span><br><span class="line"><span class="handlebars"><span class="xml">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>,</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</span></span><br><span class="line">    );</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>위 코드를 살펴보면 정상적으로 동작한다는 것을 알 수 있다.</p>
-<h2 id="입문-개발-전용"><a href="#입문-개발-전용" class="headerlink" title="입문/개발 전용!!"></a>입문/개발 전용!!</h2><p>단, 이 방법은 React에 입문하는 사람이 HTML 문서 하나만으로, 그리고 NPM을 사용하지 않고 작업할 경우에 사용할 수 있는 방법이며, 실 프로젝트에서 이와 같이 사용하는 것은 여러 문제를 일으킬 수 있다. </p>
-<p>그러니 입문/개발때에만 사용하자 :) </p>
+<p>원문: <a href="http://docs.celeryproject.org/en/latest/getting-started/index.html">http://docs.celeryproject.org/en/latest/getting-started/index.html</a></p>
+<h1 id="셀러리-시작하기"><a href="#셀러리-시작하기" class="headerlink" title="셀러리: 시작하기"></a>셀러리: 시작하기</h1><p>출시버전: v4.0.2</p>
+<p>출시일: 2017. 03. 15.</p>
+<p>번역일: 2017. 03. 19. ~</p>
+<h2 id="셀러리-입문하기"><a href="#셀러리-입문하기" class="headerlink" title="셀러리 입문하기"></a><a href="/2017/03/19/Introduction-to-Celery/">셀러리 입문하기</a></h2><ul>
+<li><p>태스크 큐란 무엇인가? (What’s a Task Queue?)</p>
+</li>
+<li><p>뭐가 필요한가요? (What do I need?)</p>
+</li>
+<li><p>시작하기 (Get Started)</p>
+</li>
+<li><p>셀러리는.. (Celery is..)</p>
+</li>
+<li><p>셀러리의 기능들 (Features)</p>
+</li>
+<li><p>프레임워크와 함께 이용하기 (Framework Integration)</p>
+</li>
+<li><p>빠르게 찾아보기 (Quick Jump)</p>
+</li>
+<li><p>셀러리 설치하기 (Installation)</p>
+</li>
+</ul>
+<h2 id="브로커-Brokers"><a href="#브로커-Brokers" class="headerlink" title="브로커 (Brokers)"></a>브로커 (Brokers)</h2><ul>
+<li><p>브로커 가이드 (Broker Instructions)</p>
+<ul>
+<li>RabbitMQ 사용하기 (Using RabbitMQ)</li>
+<li>Redis 사용하기 (Using Redis)</li>
+<li>Amazon SQS 사용하기 (Using Amazon SQS)</li>
+</ul>
+</li>
+<li><p>브로커간 기능 (Broker Overview)</p>
+</li>
+</ul>
+<h2 id="셀러리-한-발자국-내밀기-First-Steps-with-Celery"><a href="#셀러리-한-발자국-내밀기-First-Steps-with-Celery" class="headerlink" title="셀러리 한 발자국 내밀기 (First Steps with Celery)"></a>셀러리 한 발자국 내밀기 (First Steps with Celery)</h2><ul>
+<li><p>브로커 선택하기 (Choosing a Broker)</p>
+</li>
+<li><p>셀러리 설치하기 (Installing Celery)</p>
+</li>
+<li><p>앱 (Application)</p>
+</li>
+<li><p>셀러리 워커 서버 띄우기 (Running the Celery worker server)</p>
+</li>
+<li><p>태스크 호출하기 (Calling the task)</p>
+</li>
+<li><p>결과 유지하기 (Keeping Results)</p>
+</li>
+<li><p>설정하기 (Configuration)</p>
+</li>
+<li><p>더 나아가기 (Where to go from here)</p>
+</li>
+<li><p>문제 해결하기 (Troubleshooting)</p>
+</li>
+</ul>
+<h2 id="더-알아보기-Next-Steps"><a href="#더-알아보기-Next-Steps" class="headerlink" title="더 알아보기 (Next Steps)"></a>더 알아보기 (Next Steps)</h2><ul>
+<li><p>셀러리를 기존 앱에서 사용하기 (Using Celery in your Application)</p>
+</li>
+<li><p>태스크 호출하기 (Calling Tasks)</p>
+</li>
+<li><p>Canvas: 워크플로 디자인하기 (Canvas: Designing Work-flows)</p>
+</li>
+<li><p>라우팅 (Routing)</p>
+</li>
+<li><p>원격 제어 (Remote Control)</p>
+</li>
+<li><p>타임존 (Timezone)</p>
+</li>
+<li><p>최적화 (Optimization)</p>
+</li>
+<li><p>더, 더, 더. (What to do now?)</p>
+</li>
+</ul>
 
         </div>
         
@@ -862,125 +981,6 @@
 <p>통합 패키지가 굳이 필요하지는 않지만 개발을 더 쉽게 해주고 DB 커넥션 등에서 중요한 hook를 추가하기도 하기때문에 이용하는 편이 낫습니다.</p>
 <h2 id="설치하기"><a href="#설치하기" class="headerlink" title="설치하기"></a>설치하기</h2><p>셀러리는 PyPI를 통해 쉽게 설치할 수 있습니다.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -U pip</span><br></pre></td></tr></table></figure>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-image">
-        <a href="/2017/03/19/Celery-Getting-Started/" class="image is-7by1">
-            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2017-03-19-Celery-Getting-Started/celery.jpg" alt="[번역]셀러리: 시작하기">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-03-18T15:00:00.000Z">2017-03-19</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/python/">python</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/celery/">celery</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/celery/celerydocs/">celerydocs</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/python/celery/celerydocs/translation/">translation</a>
-                </div>
-                
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2017/03/19/Celery-Getting-Started/">[번역]셀러리: 시작하기</a>
-            
-        </h1>
-        <div class="content">
-            <blockquote>
-<p>글 작성 시점 최신 버전 <code>v4.0.2</code>의 문서입니다.</p>
-</blockquote>
-<p>원문: <a href="http://docs.celeryproject.org/en/latest/getting-started/index.html">http://docs.celeryproject.org/en/latest/getting-started/index.html</a></p>
-<h1 id="셀러리-시작하기"><a href="#셀러리-시작하기" class="headerlink" title="셀러리: 시작하기"></a>셀러리: 시작하기</h1><p>출시버전: v4.0.2</p>
-<p>출시일: 2017. 03. 15.</p>
-<p>번역일: 2017. 03. 19. ~</p>
-<h2 id="셀러리-입문하기"><a href="#셀러리-입문하기" class="headerlink" title="셀러리 입문하기"></a><a href="/2017/03/19/Introduction-to-Celery/">셀러리 입문하기</a></h2><ul>
-<li><p>태스크 큐란 무엇인가? (What’s a Task Queue?)</p>
-</li>
-<li><p>뭐가 필요한가요? (What do I need?)</p>
-</li>
-<li><p>시작하기 (Get Started)</p>
-</li>
-<li><p>셀러리는.. (Celery is..)</p>
-</li>
-<li><p>셀러리의 기능들 (Features)</p>
-</li>
-<li><p>프레임워크와 함께 이용하기 (Framework Integration)</p>
-</li>
-<li><p>빠르게 찾아보기 (Quick Jump)</p>
-</li>
-<li><p>셀러리 설치하기 (Installation)</p>
-</li>
-</ul>
-<h2 id="브로커-Brokers"><a href="#브로커-Brokers" class="headerlink" title="브로커 (Brokers)"></a>브로커 (Brokers)</h2><ul>
-<li><p>브로커 가이드 (Broker Instructions)</p>
-<ul>
-<li>RabbitMQ 사용하기 (Using RabbitMQ)</li>
-<li>Redis 사용하기 (Using Redis)</li>
-<li>Amazon SQS 사용하기 (Using Amazon SQS)</li>
-</ul>
-</li>
-<li><p>브로커간 기능 (Broker Overview)</p>
-</li>
-</ul>
-<h2 id="셀러리-한-발자국-내밀기-First-Steps-with-Celery"><a href="#셀러리-한-발자국-내밀기-First-Steps-with-Celery" class="headerlink" title="셀러리 한 발자국 내밀기 (First Steps with Celery)"></a>셀러리 한 발자국 내밀기 (First Steps with Celery)</h2><ul>
-<li><p>브로커 선택하기 (Choosing a Broker)</p>
-</li>
-<li><p>셀러리 설치하기 (Installing Celery)</p>
-</li>
-<li><p>앱 (Application)</p>
-</li>
-<li><p>셀러리 워커 서버 띄우기 (Running the Celery worker server)</p>
-</li>
-<li><p>태스크 호출하기 (Calling the task)</p>
-</li>
-<li><p>결과 유지하기 (Keeping Results)</p>
-</li>
-<li><p>설정하기 (Configuration)</p>
-</li>
-<li><p>더 나아가기 (Where to go from here)</p>
-</li>
-<li><p>문제 해결하기 (Troubleshooting)</p>
-</li>
-</ul>
-<h2 id="더-알아보기-Next-Steps"><a href="#더-알아보기-Next-Steps" class="headerlink" title="더 알아보기 (Next Steps)"></a>더 알아보기 (Next Steps)</h2><ul>
-<li><p>셀러리를 기존 앱에서 사용하기 (Using Celery in your Application)</p>
-</li>
-<li><p>태스크 호출하기 (Calling Tasks)</p>
-</li>
-<li><p>Canvas: 워크플로 디자인하기 (Canvas: Designing Work-flows)</p>
-</li>
-<li><p>라우팅 (Routing)</p>
-</li>
-<li><p>원격 제어 (Remote Control)</p>
-</li>
-<li><p>타임존 (Timezone)</p>
-</li>
-<li><p>최적화 (Optimization)</p>
-</li>
-<li><p>더, 더, 더. (What to do now?)</p>
-</li>
-</ul>
 
         </div>
         

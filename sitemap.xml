@@ -4,7 +4,7 @@
   <url>
     <loc>https://beomi.github.io/2021/03/16/KcBERT-Downstream-Finetune/</loc>
     
-    <lastmod>2021-03-16T08:33:03.748Z</lastmod>
+    <lastmod>2021-03-17T04:02:06.090Z</lastmod>
     
   </url>
   
@@ -37,13 +37,6 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2020/12/04/Transformers4/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.244Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://beomi.github.io/2020/07/01/Review-the-Interview/</loc>
     
     <lastmod>2021-03-15T14:54:57.244Z</lastmod>
@@ -51,21 +44,21 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2020/02/13/AWS-SSM-with-Bastion/</loc>
+    <loc>https://beomi.github.io/2020/12/04/Transformers4/</loc>
     
-    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2020/02/24/Pytorch-with-TPU-on-Colab/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    <lastmod>2021-03-15T14:54:57.244Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://beomi.github.io/2020/01/29/Use-parquet-on-pandas/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2020/02/13/AWS-SSM-with-Bastion/</loc>
     
     <lastmod>2021-03-15T14:54:57.243Z</lastmod>
     
@@ -86,7 +79,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2020/01/05/Clustering_Twitter_Users/</loc>
+    <loc>https://beomi.github.io/2020/02/24/Pytorch-with-TPU-on-Colab/</loc>
     
     <lastmod>2021-03-15T14:54:57.243Z</lastmod>
     
@@ -100,7 +93,14 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2019/07/08/Papago-API-with-Python/</loc>
+    <loc>https://beomi.github.io/2020/01/05/Clustering_Twitter_Users/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.243Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2019/10/20/Learning-VLang/</loc>
     
     <lastmod>2021-03-15T14:54:57.242Z</lastmod>
     
@@ -114,14 +114,14 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2019/10/20/Learning-VLang/</loc>
+    <loc>https://beomi.github.io/2019/12/21/Crawling_Twitter_Following/</loc>
     
     <lastmod>2021-03-15T14:54:57.242Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2019/12/21/Crawling_Twitter_Following/</loc>
+    <loc>https://beomi.github.io/2019/07/08/Papago-API-with-Python/</loc>
     
     <lastmod>2021-03-15T14:54:57.242Z</lastmod>
     
@@ -135,6 +135,13 @@
   </url>
   
   <url>
+    <loc>https://beomi.github.io/2019/12/22/Crawling_Twitter_Following_3/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://beomi.github.io/2019/12/31/Postmortem-2019/</loc>
     
     <lastmod>2021-03-15T14:54:57.242Z</lastmod>
@@ -142,9 +149,9 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2019/12/22/Crawling_Twitter_Following_3/</loc>
+    <loc>https://beomi.github.io/2018/03/09/Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi/</loc>
     
-    <lastmod>2021-03-15T14:54:57.242Z</lastmod>
+    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
     
   </url>
   
@@ -156,7 +163,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2018/03/09/Truncated_or_oversized_response_headers_received_from_daemon_process_django_wsgi/</loc>
+    <loc>https://beomi.github.io/2018/03/18/Create_GPU_spot_EC2_for_ML/</loc>
     
     <lastmod>2021-03-15T14:54:57.241Z</lastmod>
     
@@ -170,7 +177,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2018/03/18/Create_GPU_spot_EC2_for_ML/</loc>
+    <loc>https://beomi.github.io/2019/06/24/alba300-0/</loc>
     
     <lastmod>2021-03-15T14:54:57.241Z</lastmod>
     
@@ -191,13 +198,6 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2019/06/24/alba300-0/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.241Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://beomi.github.io/2017/12/15/Direct-upload-to-S3-with-Lambda/</loc>
     
     <lastmod>2021-03-15T14:54:57.240Z</lastmod>
@@ -212,7 +212,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2018/02/02/Connect-django-to-MSSQL/</loc>
+    <loc>https://beomi.github.io/2017/12/30/Blog-1Year-2017/</loc>
     
     <lastmod>2021-03-15T14:54:57.240Z</lastmod>
     
@@ -226,13 +226,6 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2018/02/19/django_orm_for_multiple_db_with_sqldriver/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://beomi.github.io/2018/02/12/Add-packages-installed-with-pip-usermode/</loc>
     
     <lastmod>2021-03-15T14:54:57.240Z</lastmod>
@@ -240,7 +233,14 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/12/30/Blog-1Year-2017/</loc>
+    <loc>https://beomi.github.io/2018/02/02/Connect-django-to-MSSQL/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.240Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2018/02/19/django_orm_for_multiple_db_with_sqldriver/</loc>
     
     <lastmod>2021-03-15T14:54:57.240Z</lastmod>
     
@@ -248,20 +248,6 @@
   
   <url>
     <loc>https://beomi.github.io/2017/11/10/Export-HighQuality-Image-with-KeyNote/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/11/29/HTML-Table-to-CSV/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/11/27/EMR-and-PySpark/</loc>
     
     <lastmod>2021-03-15T14:54:57.239Z</lastmod>
     
@@ -276,6 +262,20 @@
   
   <url>
     <loc>https://beomi.github.io/2017/11/20/Deploy-Gitbook-to-Github-Pages/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/27/EMR-and-PySpark/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.239Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/11/29/HTML-Table-to-CSV/</loc>
     
     <lastmod>2021-03-15T14:54:57.239Z</lastmod>
     
@@ -303,14 +303,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/10/20/DB-To-SQLAlchemy-Model/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/10/18/Setup-Babel-with-webpack/</loc>
+    <loc>https://beomi.github.io/2017/10/17/Deploy-Flask-with-Fabric/</loc>
     
     <lastmod>2021-03-15T14:54:57.238Z</lastmod>
     
@@ -318,6 +311,13 @@
   
   <url>
     <loc>https://beomi.github.io/2017/10/21/SQLAlchemy-Query-to-Pandas-DataFrame/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/10/18/Setup-Babel-with-webpack/</loc>
     
     <lastmod>2021-03-15T14:54:57.238Z</lastmod>
     
@@ -338,16 +338,9 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/10/17/Deploy-Flask-with-Fabric/</loc>
+    <loc>https://beomi.github.io/2017/10/20/DB-To-SQLAlchemy-Model/</loc>
     
     <lastmod>2021-03-15T14:54:57.238Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/08/25/DjangoCBV-queryset-vs-get_queryset/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.237Z</lastmod>
     
   </url>
   
@@ -366,9 +359,9 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/06/10/Deploy-Django-to-MS-Azure-EN/</loc>
+    <loc>https://beomi.github.io/2017/08/25/DjangoCBV-queryset-vs-get_queryset/</loc>
     
-    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    <lastmod>2021-03-15T14:54:57.237Z</lastmod>
     
   </url>
   
@@ -380,14 +373,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/07/04/Call-Sublime-from-Terminal/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/</loc>
+    <loc>https://beomi.github.io/2017/06/10/Deploy-Django-to-MS-Azure-EN/</loc>
     
     <lastmod>2021-03-15T14:54:57.236Z</lastmod>
     
@@ -401,14 +387,21 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/07/12/understanding_js_scope_function_vs_arrow/</loc>
+    <loc>https://beomi.github.io/2017/07/07/Beautify-ZSH/</loc>
     
     <lastmod>2021-03-15T14:54:57.236Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/07/07/Beautify-ZSH/</loc>
+    <loc>https://beomi.github.io/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/07/12/understanding_js_scope_function_vs_arrow/</loc>
     
     <lastmod>2021-03-15T14:54:57.236Z</lastmod>
     
@@ -422,6 +415,13 @@
   </url>
   
   <url>
+    <loc>https://beomi.github.io/2017/07/04/Call-Sublime-from-Terminal/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.236Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://beomi.github.io/2017/07/16/Use-Autoenv/</loc>
     
     <lastmod>2021-03-15T14:54:57.236Z</lastmod>
@@ -429,14 +429,14 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/04/20/HowToMakeWebCrawler-Notice-with-Telegram/</loc>
+    <loc>https://beomi.github.io/2017/03/20/Using-ES6-JSX-on-Client/</loc>
     
     <lastmod>2021-03-15T14:54:57.235Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/03/20/Using-ES6-JSX-on-Client/</loc>
+    <loc>https://beomi.github.io/2017/03/28/Make-Capture-to-GDrive-App/</loc>
     
     <lastmod>2021-03-15T14:54:57.235Z</lastmod>
     
@@ -457,14 +457,14 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/06/01/Add-Sentry-to-Django/</loc>
+    <loc>https://beomi.github.io/2017/04/20/HowToMakeWebCrawler-Notice-with-Telegram/</loc>
     
     <lastmod>2021-03-15T14:54:57.235Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/03/28/Make-Capture-to-GDrive-App/</loc>
+    <loc>https://beomi.github.io/2017/06/01/Add-Sentry-to-Django/</loc>
     
     <lastmod>2021-03-15T14:54:57.235Z</lastmod>
     
@@ -499,21 +499,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2017/03/19/Introduction-to-Celery/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://beomi.github.io/2017/02/27/HowToMakeWebCrawler-With-Selenium/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/03/20/Deploy-Django-with-Fabric/</loc>
     
     <lastmod>2021-03-15T14:54:57.234Z</lastmod>
     
@@ -527,35 +513,21 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2016/12/27/Django-TDD-Study-01-Setting-DevEnviron/</loc>
+    <loc>https://beomi.github.io/2017/03/19/Introduction-to-Celery/</loc>
     
-    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/03/20/Deploy-Django-with-Fabric/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.234Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://beomi.github.io/2016/12/26/Django-TDD-Study-00-Starting-Study/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2016/12/28/TelegramBot-with-Celery/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2017/01/20/HowToMakeWebCrawler/</loc>
     
     <lastmod>2021-03-15T14:54:57.233Z</lastmod>
     
@@ -569,7 +541,35 @@
   </url>
   
   <url>
+    <loc>https://beomi.github.io/2016/12/28/TelegramBot-with-Celery/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://beomi.github.io/2017/01/20/HowToMakeWebCrawler-With-Login/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2017/01/20/HowToMakeWebCrawler/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.233Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/12/27/Django-TDD-Study-01-Setting-DevEnviron/</loc>
     
     <lastmod>2021-03-15T14:54:57.233Z</lastmod>
     
@@ -583,14 +583,14 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790ec849c-python3eab8b0ebb098-virtualenvwrapper-ec84a4ecb998/</loc>
+    <loc>https://beomi.github.io/2016/09/14/chrome-native-adblockr-eb8c80ecb2b4ed9598eab8b0/</loc>
     
     <lastmod>2021-03-15T14:54:57.232Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2016/09/14/chrome-native-adblockr-eb8c80ecb2b4ed9598eab8b0/</loc>
+    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790ec849c-python3eab8b0ebb098-virtualenvwrapper-ec84a4ecb998/</loc>
     
     <lastmod>2021-03-15T14:54:57.232Z</lastmod>
     
@@ -611,6 +611,13 @@
   </url>
   
   <url>
+    <loc>https://beomi.github.io/2016/12/22/Fabric-Put-Command-No-Such-File-Exception/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://beomi.github.io/2016/12/22/CKEditor-Lisence-and-Pricing/</loc>
     
     <lastmod>2021-03-15T14:54:57.232Z</lastmod>
@@ -625,28 +632,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2016/12/22/Fabric-Put-Command-No-Such-File-Exception/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.232Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://beomi.github.io/2016/05/27/pipeba19c-mysqlclientec84a4ecb998-eca491-mac-os-xec9790ec849c-egg_info-oserror-ebb09cec839dec8b9c-eb8c80ecb298ebb0a9ebb295/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2016/06/04/windowsec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9cpython3-43-5/</loc>
-    
-    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://beomi.github.io/2016/05/27/eba7a5ec9790ec849c-ec9c88eb8f84rdpeba19c-eca091ec868dec8b9c-ed959cec9881eca084ed9998ed9598eab8b0/</loc>
     
     <lastmod>2021-03-15T14:54:57.231Z</lastmod>
     
@@ -660,7 +646,7 @@
   </url>
   
   <url>
-    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9c/</loc>
+    <loc>https://beomi.github.io/2016/06/04/windowsec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9cpython3-43-5/</loc>
     
     <lastmod>2021-03-15T14:54:57.231Z</lastmod>
     
@@ -674,7 +660,21 @@
   </url>
   
   <url>
+    <loc>https://beomi.github.io/2016/07/22/ubuntu14-04ec9790ec849c-pipeba19c-mysqlclient-ec84a4ecb998-ec8ba4ed8ca8ec8b9c/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://beomi.github.io/2016/07/21/mac-os-xec9790ec849c-pip-virtualenvwrapper-ec84a4ecb998-ec8b9c-uninstalling-six-ec9790ec849c-exception-ebb09cec839d-ec8b9c/</loc>
+    
+    <lastmod>2021-03-15T14:54:57.231Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://beomi.github.io/2016/05/27/eba7a5ec9790ec849c-ec9c88eb8f84rdpeba19c-eca091ec868dec8b9c-ed959cec9881eca084ed9998ed9598eab8b0/</loc>
     
     <lastmod>2021-03-15T14:54:57.231Z</lastmod>
     

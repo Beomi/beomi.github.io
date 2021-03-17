@@ -7,7 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>카테고리: Postmortem - Beomi&#39;s Tech blog</title>
+<title>카테고리: postmortem - Beomi&#39;s Tech blog</title>
 
 
 
@@ -108,7 +108,7 @@
         <ul>
             <li><a href="/categories">카테고리</a></li>
             
-            <li class="is-active"><a href="#" aria-current="page">Postmortem</a></li>
+            <li class="is-active"><a href="#" aria-current="page">postmortem</a></li>
         </ul>
         </nav>
     </div>
@@ -118,8 +118,8 @@
 <div class="card">
     
     <div class="card-image">
-        <a href="/2019/12/31/Postmortem-2019/" class="image is-7by1">
-            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-31-072554.jpg" alt="2019년 회고, 2년치 연말정산">
+        <a href="/2020/07/01/Review-the-Interview/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/typora/headway-5QgIuuBxKwM-unsplash.74d0f8.jpg" alt="면접에서 나온 통계 질문 리뷰">
         </a>
     </div>
     
@@ -127,10 +127,10 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-30T15:00:00.000Z">2019-12-31</time>
+                <time class="level-item has-text-grey" datetime="2020-06-30T15:00:00.000Z">2020-07-01</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Postmortem/">Postmortem</a>
+                <a class="has-link-grey -link" href="/categories/postmortem/">postmortem</a>
                 </div>
                 
                 
@@ -140,22 +140,23 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/12/31/Postmortem-2019/">2019년 회고, 2년치 연말정산</a>
+                <a class="has-link-black-ter" href="/2020/07/01/Review-the-Interview/">면접에서 나온 통계 질문 리뷰</a>
             
         </h1>
         <div class="content">
-            <p>2018년에는 회고를 쓰지 않았다.</p>
-<p>정확히 말하면.. 회고를 쓰기에 너무 많은 일이 있었기 때문이 아니었을까.</p>
-<p>2019년의 회고글이지만, 2018년과 19년은 마치 1년처럼 끊김없이 이어진 기분이었다.</p>
-<p>그래서 이번 회고는 2019년 회고이지만 2018년도 함께 정리해보려 한다. </p>
-<p>👨🏻‍💻👩🏻‍💻 (대략 열심히 타이핑 중이라는 뜻)</p>
+            <h2 id="Bayes-Rule-Bayes’-theorem이란"><a href="#Bayes-Rule-Bayes’-theorem이란" class="headerlink" title="Bayes Rule / Bayes’ theorem이란?"></a>Bayes Rule / Bayes’ theorem이란?</h2><p>베이즈 룰, 혹은 베이즈 정리라고 부르는 Bayes Rule은 아래와 같다.</p>
+<p>결론부터 말하면, 베이즈 정리는 <strong>인과를 역전한다</strong> 라는 의미가 있다.</p>
+<p>수식적으로 이해하려면 아래와 같다.</p>
+<p>이때 우리가 알고자 하는 정보는 $Pr(A|B)$이고, 알고있는/알고있다 가정한 정보들은 $Pr(B|A), Pr(A), Pr(B)$ 이다.</p>
+<p>$$\Pr(A|B)={\frac  {\Pr(B|A)\Pr(A)}{\Pr(B)}}\propto {\mathcal  L}(A|B)\Pr(A)$$</p>
+<p>간단한 예시를 들어보자.</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/12/31/Postmortem-2019/#more">자세히 보기</a>
+                <a class="button is-size-7 is-light" href="/2020/07/01/Review-the-Interview/#more">자세히 보기</a>
                 </div>
             </div>
         </div>
@@ -1817,22 +1818,6 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
-
-    
-</body>
-</html>">
   MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
     for(i=0; i < all.length; i += 1) {

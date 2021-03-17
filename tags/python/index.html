@@ -7,7 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>태그: Python - Beomi&#39;s Tech blog</title>
+<title>태그: python - Beomi&#39;s Tech blog</title>
 
 
 
@@ -107,7 +107,7 @@
         <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
             <li><a href="/tags">태그</a></li>
-            <li class="is-active"><a href="#" aria-current="page">Python</a></li>
+            <li class="is-active"><a href="#" aria-current="page">python</a></li>
         </ul>
         </nav>
     </div>
@@ -116,14 +116,20 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2020/02/03/Lookup-HopsWorks/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-181524.jpg" alt="데이터 분석 파이프라인 풀세트, HopsWorks 설치기">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-05-26T15:00:00.000Z">2016-05-27</time>
+                <time class="level-item has-text-grey" datetime="2020-02-02T15:00:00.000Z">2020-02-03</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Python/">Python</a>
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/DataScience/">DataScience</a>
                 </div>
                 
                 
@@ -133,41 +139,333 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2016/05/27/pipeba19c-mysqlclientec84a4ecb998-eca491-mac-os-xec9790ec849c-egg_info-oserror-ebb09cec839dec8b9c-eb8c80ecb298ebb0a9ebb295/">pip로 mysqlclient설치 중 mac os x에서 egg_info / OSError 발생시 대처방법</a>
+                <a class="has-link-black-ter" href="/2020/02/03/Lookup-HopsWorks/">데이터 분석 파이프라인 풀세트, HopsWorks 설치기</a>
             
         </h1>
         <div class="content">
-            <p><a href="https://livingmethod.files.wordpress.com/2016/05/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-05-27-e1848be185a9e18492e185ae-6-19-59.png"><img src="https://livingmethod.files.wordpress.com/2016/05/e18489e185b3e1848fe185b3e18485e185b5e186abe18489e185a3e186ba-2016-05-27-e1848be185a9e18492e185ae-6-19-59.png?w=809" alt="스크린샷 2016-05-27 오후 6.19.59">
-</a></p>
-<pre><code>(venv) Beomiui-MacBook:Downloads beomi$ pip install mysqlclient-1.3.7.tar.gz
- Processing ./mysqlclient-1.3.7.tar.gz
- Complete output from command python setup.py egg_info:
- /bin/sh: mysql_config: command not found
- Traceback (most recent call last):
- File &quot;&quot;, line 20, in
- File &quot;/var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build/setup.py&quot;, line 17, in
- metadata, options = get_config()
- File &quot;/private/var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build/setup_posix.py&quot;, line 44, in get_config
- libs = mysql_config(&quot;libs_r&quot;)
- File &quot;/private/var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build/setup_posix.py&quot;, line 26, in mysql_config
- raise EnvironmentError(&quot;%s not found&quot; % (mysql_config.path,))
- OSError: mysql_config not found
-
-----------------------------------------
- Command &quot;python setup.py egg_info&quot; failed with error code 1 in /var/folders/52/v_mf5ys167q67b6cn_hnfzg00000gn/T/pip-0zi6xkoz-build
- You are using pip version 7.1.2, however version 8.1.2 is available.
- You should consider upgrading via the &apos;pip install --upgrade pip&apos; command.</code></pre><p>​<br>    (venv) Beomiui-MacBook:Downloads beomi$ brew install mysql<br>     ==&gt; Downloading <a href="https://homebrew.bintray.com/bottles/mysql-5.7.12.el_capitan.bottle.tar.gz">https://homebrew.bintray.com/bottles/mysql-5.7.12.el_capitan.bottle.tar.gz</a><br>     ######################################################################## 100.0%<br>     ==&gt; Pouring mysql-5.7.12.el_capitan.bottle.tar.gz<br>     ==&gt; /usr/local/Cellar/mysql/5.7.12/bin/mysqld –initialize-insecure –user=beomi –basedir=/usr/local/Cellar/mysql/5.7.12 –datadir=/usr/local/var/mysql –tmpdir=/tmp<br>     ==&gt; Caveats<br>     We’ve installed your MySQL database without a root password. To secure it run:<br>     mysql_secure_installation<br>    To connect run:<br>     mysql -uroot<br>    To have launchd start mysql now and restart at login:<br>     brew services start mysql<br>     Or, if you don’t want/need a background service you can just run:<br>     mysql.server start<br>     ==&gt; Summary<br>     🍺 /usr/local/Cellar/mysql/5.7.12: 13,281 files, 444.8M</p>
-<pre><code>(venv) Beomiui-MacBook:Downloads beomi$ pip install mysqlclient-1.3.7.tar.gz
-Processing ./mysqlclient-1.3.7.tar.gz
-Installing collected packages: mysqlclient
-Running setup.py install for mysqlclient
-Successfully installed mysqlclient-1.3.7
-You are using pip version 7.1.2, however version 8.1.2 is available.
-You should consider upgrading via the &apos;pip install --upgrade pip&apos; command.</code></pre><p>이와 같이</p>
-<pre><code>brew install mysql</code></pre><p>을 진행하면 된다.</p>
-
+            <p>성윤님의 블로그에서 <a href="https://zzsza.github.io/mlops/2020/02/02/feature-store/#Hopsworks">Machine Learning의 Feature Store란?</a> 글을 보고서 <code>hopsworks</code> 라는 제품에 관심을 갖게 되었다.</p>
+<p>과연 어떤 기능을 갖고 있는 것일까? 내가 생각하는 것 처럼 데이터 버저닝부터 모델링 버전까지 모두 관리해주는 좋은 ‘실험실’을 구축해줄 수 있는 것일까? 라는 호기심에 설치를 시도해보었다.</p>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/02/03/Lookup-HopsWorks/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2020/01/29/Use-parquet-on-pandas/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-02-03-174825.jpg" alt="Pandas에서 Parquet 사용하기 with Snappy/Gzip">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-28T15:00:00.000Z">2020-01-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DevEnv/">DevEnv</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DevEnv/DataScience/">DataScience</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/01/29/Use-parquet-on-pandas/">Pandas에서 Parquet 사용하기 with Snappy/Gzip</a>
+            
+        </h1>
+        <div class="content">
+            <p>Pandas나 PySpark등을 사용하다보면 <code>*.csv</code> 포맷으로는 만족하지 못하는 경우가 많다.</p>
+<p>예를들어..</p>
+<ul>
+<li><p>Data Type이 저장되지 않는다.</p>
+</li>
+<li><p>너무 많은 데이터는 저장해도 CSV의 이점(엑셀로 열어볼 수 있다)을 살리지 못한다.</p>
+</li>
+<li><p>특정 Column만 선택하는 것이 불가능하다. (= 전체 파일을 항상 모두 열어야 한다)</p>
+</li>
+<li><p>용량이 상대적으로 작지만 크다 (압축을 하지 않은 경우)</p>
+</li>
+<li><p>(종종) Escaping이 잘 되지 않은 경우에는 파일 Parsing이 깨진다.</p>
+</li>
+<li><p>한글이 들어간 csv의 경우 “MS Excel”에서는 BOM이 없으면 UTF-8을 제대로 인식하지 못한다. (한편, euc-kr 인코딩은 잘 읽는다.)</p>
+</li>
+</ul>
+<p>등등.. 여러가지 이슈가 있다.</p>
+<p>그렇다면, 어떤 형식을 써야 할까?</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/01/29/Use-parquet-on-pandas/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2020/01/05/Clustering_Twitter_Users/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-04-183122.png" alt="NLP 튜토리얼: 라벨링 없이 트위터 유저들을 자동으로 나누어보기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-04T15:00:00.000Z">2020-01-05</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/NLP/">NLP</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/NLP/Unsupervised/">Unsupervised</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/01/05/Clustering_Twitter_Users/">NLP 튜토리얼: 라벨링 없이 트위터 유저들을 자동으로 나누어보기</a>
+            
+        </h1>
+        <div class="content">
+            <p>트위터에는 굉장히 다양한 유저들이 있다.</p>
+<p>그리고 트위터 유저들은 “BIO”라고 부르는 자기소개 페이지에 자신에 대한 정보를 적어둔다.</p>
+<p><img src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2020-01-02-090649.png" alt="Github 트위터 공식 계정"></p>
+<p>위 스크린샷과 같이, 자신의 계정이 어떤 계정인지를 간단한 160자 내로  드러내는 것이 바로 BIO다.</p>
+<p>그렇다면, 이런 계정들이 ‘어떤’ 계정인지 BIO를 이용해 분류해 볼 수 있지 않을까?</p>
+<p>하지만 모든 유저를 우리가 손으로 라벨을 붙여 학습시키는 것은 힘들다.</p>
+<p>그렇다면 알아서 분류하려면 어떻게 해야할까?</p>
+<p>간단한 자연어 처리를 통해 라벨링 없이 유저를 클러스터링해보자.</p>
+<blockquote>
+<p>🌟 바로바로 실행하면서 따라올 수 있는 Google Colab 👨🏻‍💻👩🏻‍💻👇</p>
+<p><a href="https://colab.research.google.com/drive/1bgv3CHZDp2smIWXQwAUD3j5z8LAYbLVz">https://colab.research.google.com/drive/1bgv3CHZDp2smIWXQwAUD3j5z8LAYbLVz</a></p>
+</blockquote>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/01/05/Clustering_Twitter_Users/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/12/22/Crawling_Twitter_Following_3/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-22-093821.jpg" alt="트위터에서 많은 팔로워를 크롤링하는 방법 [3]: 1초에 5천개 데이터 가져오기">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-22T14:00:00.000Z">2019-12-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DataCollection/">DataCollection</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DataCollection/Twitter/">Twitter</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/12/22/Crawling_Twitter_Following_3/">트위터에서 많은 팔로워를 크롤링하는 방법 [3]: 1초에 5천개 데이터 가져오기</a>
+            
+        </h1>
+        <div class="content">
+            <p><a href="/2019/12/22/Crawling_Twitter_Following_2/">앞서 쓴 글(2편)</a>에서는 Twint와 직접 만든 크롤러를 이용해 데이터를 수집하는 내용을 정리했다. 하지만 여전히 큰 문제가 남아있었다.</p>
+<blockquote>
+<p>“1만명까지는 어떻게든 모을 수 있다. 그런데 <strong>10만 이상의 팔로워/팔로잉</strong>을 가진 유저의 데이터는 대체 어떻게 가져와야 하나?”</p>
+</blockquote>
+<p>여기서는 몇 가지의 이슈가 충돌했다.</p>
+<ol>
+<li><strong>“여러 계정을 한번에 가져와야 한다.”</strong>: 수집해야하는 계정이 여전히 1k+개.</li>
+<li><strong>“15분 이상의 긴 수집 시간이 필요하다.”</strong>: Lambda에서는 어렵다.</li>
+<li><strong>“한 IP에서 너무 많은 요청을 하면 안된다.”</strong>: 한 IP에서 너무 많은 요청을 하면 걸릴 수 있다.</li>
+<li><strong>“HTML 웹 크롤링은 간혹 일부만 수집후 종료되더라.”</strong>: 트위터에서 간혹 팔로잉/팔로워를 모두 수집하지 않았음에도 (5만명중 1만명만 수집 등) 이후 Cursor를 제공하지 않아 크롤링이 정지되는 경우가 있었다.</li>
+</ol>
+<p>그러다, 이 <strong>이슈를 한번에 해결할 수 있는 방법(꼼수)</strong>를 찾게 되었다.</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/12/22/Crawling_Twitter_Following_3/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/12/22/Crawling_Twitter_Following_2/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-162222.jpg" alt="트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-21T17:00:00.000Z">2019-12-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DataCollection/">DataCollection</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DataCollection/Twitter/">Twitter</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/12/22/Crawling_Twitter_Following_2/">트위터에서 많은 팔로워를 크롤링하는 방법 [2]: HTML 웹 크롤링을 해보자</a>
+            
+        </h1>
+        <div class="content">
+            <p><a href="/2019/12/21/Crawling_Twitter_Following/">앞서 쓴 글(1편)</a>에서는 몇가지 조건들과 나쁜 상황을 걸어 단순한 수집이 아니라 <strong>뭔가 꼼수가 필요한 상황</strong>을 가정해 보았다.</p>
+<p>API를 유료로 못쓴다? ➡️ 못쓸정도로 느리다! 😨</p>
+<p>따라서 다른 방법인 직접 데이터 크롤링이 필요했고, 이번에는 Twint와 HTML 웹 크롤링을 통해서 수집을 해 본 과정을 적어보았다.</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/12/22/Crawling_Twitter_Following_2/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/12/21/Crawling_Twitter_Following/" class="image is-7by1">
+            <img class="thumbnail" src="https://d1sr4ybm5bj1wl.cloudfront.net/img/2019-12-21-151535.png" alt="트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까?">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-20T15:00:00.000Z">2019-12-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/DataCollection/">DataCollection</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/DataCollection/Twitter/">Twitter</a>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/12/21/Crawling_Twitter_Following/">트위터에서 많은 팔로워를 크롤링하는 방법 [1]: 어떤 점들을 고려해야 할까?</a>
+            
+        </h1>
+        <div class="content">
+            <p>트위터에는 수많은 유저가 있다. 그 중에서는 단 1명의 팔로워도 모으지 못한 유저도 있지만 반대로 수백 수천만명의 팔로워를 가진 유저도 있다.</p>
+<blockquote>
+<p>Twitter의 트위터 공식 계정에는 약 5천6백만명의 팔로워가 있다.</p>
+</blockquote>
+<p>당장 우리가 ‘팔로워’ 를 클릭해 내용을 살펴보면 한번에 20명씩 정보를 보여준다. 스크롤을 해서 5천만명의 유저 데이터를 가져올 수는 없다.</p>
+<p>그렇다면 어떤 방법을 써야 저 데이터를 가져올 수 있을까?</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/12/21/Crawling_Twitter_Following/#more">자세히 보기</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -1480,368 +1778,6 @@ You should consider upgrading via the &apos;pip install --upgrade pip&apos; comm
             <a class="level is-marginless" href="/archives/2018/02/">
                 <span class="level-start">
                     <span class="level-item">2월 2018</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">5</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2018/01/">
-                <span class="level-start">
-                    <span class="level-item">1월 2018</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/12/">
-                <span class="level-start">
-                    <span class="level-item">12월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">3</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/11/">
-                <span class="level-start">
-                    <span class="level-item">11월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">7</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/10/">
-                <span class="level-start">
-                    <span class="level-item">10월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">6</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/09/">
-                <span class="level-start">
-                    <span class="level-item">9월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/08/">
-                <span class="level-start">
-                    <span class="level-item">8월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/07/">
-                <span class="level-start">
-                    <span class="level-item">7월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">7</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/06/">
-                <span class="level-start">
-                    <span class="level-item">6월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">4</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/04/">
-                <span class="level-start">
-                    <span class="level-item">4월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/03/">
-                <span class="level-start">
-                    <span class="level-item">3월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">8</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/02/">
-                <span class="level-start">
-                    <span class="level-item">2월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">3</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/01/">
-                <span class="level-start">
-                    <span class="level-item">1월 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/12/">
-                <span class="level-start">
-                    <span class="level-item">12월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">8</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/11/">
-                <span class="level-start">
-                    <span class="level-item">11월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/09/">
-                <span class="level-start">
-                    <span class="level-item">9월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/08/">
-                <span class="level-start">
-                    <span class="level-item">8월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/07/">
-                <span class="level-start">
-                    <span class="level-item">7월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">5</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/06/">
-                <span class="level-start">
-                    <span class="level-item">6월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/05/">
-                <span class="level-start">
-                    <span class="level-item">5월 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        </ul>
-        </div>
-    </div>
-</div>
-    
-    
-</div>
-
-            </div>
-        </div>
-    </section>
-    <footer class="footer">
-    <div class="container">
-        <div class="level">
-            <div class="level-start has-text-centered-mobile">
-                <a class="footer-logo is-block has-mb-6" href="/">
-                
-                    Beomi&#39;s Tech Blog
-                
-                </a>
-                <p class="is-size-7">
-                &copy; 2021 Junbum Lee&nbsp;
-                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
-                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
-                
-                </p>
-            </div>
-            <div class="level-end">
-            
-            </div>
-        </div>
-    </div>
-</footer>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("ko");</script>
-
-
-<script>
-var IcarusThemeSettings = {
-    site: {
-        url: 'https://beomi.github.io',
-        external_link: {"enable":true,"exclude":[]}
-    },
-    article: {
-        highlight: {
-            clipboard: true,
-            fold: 'unfolded'
-        }
-    }
-};
-</script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
-
-
-
-
-
-<script src="/js/animation.js"></script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
-<script src="/js/gallery.js" defer></script>
-
-
-
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
-            my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        });
-    });
-</script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    MathJax.Hub.Config({
-        'HTML-CSS': {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-});
-</script>
-
-
-<a id="back-to-top" title="Back to Top" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
-</a>
-<script src="/js/back-to-top.js" defer></script>
-
-
-
-
-
-
-
-
-<script src="/js/main.js" defer></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
-
-    
-</body>
-</html>    <span class="level-item">2월 2018</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">5</span>
